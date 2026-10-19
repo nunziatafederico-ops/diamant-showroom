@@ -1257,7 +1257,8 @@ addEventListener('resize', resize);
 /* camera distance that fills the free stage: projected extents of the cylinder (not its bounding sphere) against the area left by the open panels */
 function fitDist(){
   const w = innerWidth, h = innerHeight, S = SHOW.on, L = !S && app.classList.contains('open-l'), B = !S && app.classList.contains('open-b'), E = !S && state.explode && state.mode === 'stack';
-  const availH = Math.max(200, h - (S ? 40 : 76) - (B ? (wide() ? 196 : 170) : 56) - (!S && state.section ? 96 : 0)),   // section: label + style pill sit under the model availW = Math.max(200, w - (L && wide() ? 300 : 24) - (E && wide() ? 190 : 0));
+  const availH = Math.max(200, h - (S ? 40 : 76) - (B ? (wide() ? 196 : 170) : 56) - (!S && state.section ? 96 : 0)),   // section: label + style pill sit under the model
+        availW = Math.max(200, w - (L && wide() ? 300 : 24) - (E && wide() ? 190 : 0));
   const vfov = camera.fov * PI / 180, hfov = 2*Math.atan(Math.tan(vfov/2)*camera.aspect);
   const d = camFly ? camFly.dir : tmpDir.copy(camera.position).sub(controls.target).normalize();
   const sph = Math.min(1, Math.abs(d.y)), cph = Math.sqrt(1 - sph*sph);
