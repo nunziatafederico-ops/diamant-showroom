@@ -368,34 +368,31 @@ import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
    CATALOGO — misure dai disegni Diamant (tavole del 17-19/06/2026)
    ================================================================== */
 const WHEELS = {
-  'V3.6':  {t:12, kind:'cont',    prof:'v', d:4, rim:'bronze', title:'Mola D200 V3.6', only:'200'},
-  'V3.12': {t:16, kind:'cont',    prof:'v', d:6, rim:'bronze', title:'Mola D200 V3.12', only:'200'},
-  'V4P.2': {t:12, kind:'tagli',   prof:'p',                    title:'Mola D200 V4P.2', only:'200'},
-  'V33':   {t:12, kind:'tagli',   prof:'pencil', L:1,          title:'Mola D200 V33', only:'200'},
-  'V44':   {t:14, kind:'tagli',   prof:'pencil', L:1,          title:'Mola D200 V44', only:'200'},
-  'V55':   {t:14, kind:'tagli',   prof:'pencil', L:.5,         title:'Mola D200 V55', only:'200'},
-  'V66':   {t:18, kind:'tagli',   prof:'pencil', L:.5,         title:'Mola D200 V66', only:'200'},
-  'V33S':  {t:12, kind:'settori', prof:'pencil', L:1, code:'V33', title:'Mola V33 a settori', only:'200'},
-  'V44S':  {t:14, kind:'settori', prof:'pencil', L:1, code:'V44', title:'Mola V44 a settori', only:'200'},
-  'V55S':  {t:14, kind:'settori', prof:'pencil', L:.5, code:'V55', title:'Mola V55 a settori', only:'200'},
-  'V66S':  {t:18, kind:'settori', prof:'pencil', L:.5, code:'V66', title:'Mola V66 a settori', only:'200'},
-  // Ø100 family for the ISO 40 arbor (from the photos: solid cylinders, bore = shaft)
-  'C100':  {t:17, kind:'d100', grit:'coarse', name:'Grana grossa', title:'Mola Ø100 grana grossa', only:'100'},
-  'F100':  {t:15, kind:'d100', grit:'fine',   name:'Grana fine',   title:'Mola Ø100 grana fine',   only:'100'},
+  'V3.6':  {t:12, kind:'cont',    prof:'v', d:4, rim:'bronze', title:'Mola D200 V3.6'},
+  'V3.12': {t:16, kind:'cont',    prof:'v', d:6, rim:'bronze', title:'Mola D200 V3.12'},
+  'V4P.2': {t:12, kind:'tagli',   prof:'p',                    title:'Mola D200 V4P.2'},
+  'V33':   {t:12, kind:'tagli',   prof:'pencil', L:1,          title:'Mola D200 V33'},
+  'V44':   {t:14, kind:'tagli',   prof:'pencil', L:1,          title:'Mola D200 V44'},
+  'V55':   {t:14, kind:'tagli',   prof:'pencil', L:.5,         title:'Mola D200 V55'},
+  'V66':   {t:18, kind:'tagli',   prof:'pencil', L:.5,         title:'Mola D200 V66'},
+  'V33S':  {t:12, kind:'settori', prof:'pencil', L:1, code:'V33', title:'Mola V33 a settori'},
+  'V44S':  {t:14, kind:'settori', prof:'pencil', L:1, code:'V44', title:'Mola V44 a settori'},
+  'V55S':  {t:14, kind:'settori', prof:'pencil', L:.5, code:'V55', title:'Mola V55 a settori'},
+  'V66S':  {t:18, kind:'settori', prof:'pencil', L:.5, code:'V66', title:'Mola V66 a settori'},
   'SPACER':{t:10, kind:'spacer', name:'Spacer',     title:'Spacer 10 mm',     only:'100'},
   'POLISH':{t:20, kind:'polish', name:'Polishing',  title:'Mola polishing',   only:'100'}
 };
-const ORDER = ['V3.6','V3.12','V4P.2','V33','V44','V55','V66','V33S','V44S','V55S','V66S','C100','F100','SPACER','POLISH'];
+const ORDER = ['V3.6','V3.12','V4P.2','V33','V44','V55','V66','V33S','V44S','V55S','V66S','SPACER','POLISH'];
 const orderFor = c => ORDER.filter(k => !WHEELS[k].only || WHEELS[k].only === c);
 // dall'alto (dado) verso il basso (flangia), come nelle tavole d'assieme
-const PRESETS = { tagli:['V3.6','V3.12','V4P.2','V33','V44','V55'], settori:['V3.6','V3.12','V4P.2','V33S','V44S','V55S'], iso:['POLISH','SPACER','F100','C100'] };   // iso = the set in the photo: coarse, fine, spacer, polishing (top of the list = nut side)
+const PRESETS = { tagli:['V3.6','V3.12','V4P.2','V33','V44','V55'], settori:['V3.6','V3.12','V4P.2','V33S','V44S','V55S'], iso:['POLISH','SPACER','V33S','V3.6'] };   // iso = the set in the photo: coarse, fine, spacer, polishing (top of the list = nut side)
 const MAX_WHEELS = 8;
 // the two arbors: Ø200 wheels on the flanged cone, Ø100 wheels on the ISO 40 taper
 const CONE = {
-  '200': {R:100, space:80, bore:17.5, tk:1, shaftR:17.4, threadR:17.4, yMin:-67,  aside:185, nutR:37, washerR:47.5, label:'Ø 200', sub:'80 mm',
+  '200': {R:100, space:80, bore:17.5, tk:1, shaftR:17.4, threadR:17.4, yMin:-67,  aside:185, nutR:37, washerR:47.5, stag:Math.PI/57 + .157, label:'Ø 200', sub:'80 mm',
           setA:['V3.6','V3.12','V4P.2','V33','V44'], setB:['V3.6','V4P.2','V33S','V44S','V55S']},
-  '100': {R:50,  space:62, bore:11, tk:1, shaftR:11, threadR:11, yMin:-110, aside:120, nutR:17, washerR:14.5, label:'Ø 100', sub:'ISO 40 · 62 mm',
-          setA:['POLISH','SPACER','F100','C100'], setB:['POLISH','F100','C100']}
+  '100': {R:50,  space:62, bore:11, tk:1, shaftR:11, threadR:11, yMin:-110, aside:120, nutR:17, washerR:14.5, stag:Math.PI/36 + .157, label:'Ø 100', sub:'ISO 40 · 62 mm',
+          setA:['POLISH','SPACER','V33S','V3.6'], setB:['POLISH','V44S','V3.12']}
 };
 let SPACE = 80;
 const cone = () => CONE[state.cone];
@@ -667,16 +664,20 @@ function decal(w, t){
   const m = new THREE.Mesh(new THREE.PlaneGeometry(cone().R*2, cone().R*2), new THREE.MeshStandardMaterial({map: decalTex(variant), transparent:true, depthWrite:false, metalness:.2, roughness:.9, polygonOffset:true, polygonOffsetFactor:-2}));
   m.rotation.x = -PI/2; m.position.y = t + .03; m.name = 'decal'; return m;
 }
-function buildWheel100(w, t){   // ISO 40 family: solid cylinders, bore = shaft, machining only towards the edges
-  const g = new THREE.Group(), R = 50, rb = cone().bore;
+function buildWheel100(w, t){   // ISO 40 family: solid cylinders, bore = shaft, the Ø200 rim profiles kept at true depth on the Ø100 periphery
+  const g = new THREE.Group(), R = 50, rb = cone().bore, sh = p => [p[0] - 50, p[1], p[2]];
   if (w.kind === 'spacer'){ g.add(lathe([[rb,0],[rb + 6,0],[rb + 6,t],[rb,t]], M.steel)); g.userData.t = t; return g; }               // plain Ø34 ring
   if (w.kind === 'polish'){ g.add(lathe([[rb,0],[R - 1.5,0],[R,1.5],[R,t - 1.5],[R - 1.5,t],[rb,t]], M.resin)); g.userData.t = t; return g; }
-  if (w.grit === 'coarse'){   // one bronze cylinder, relieved in the middle, four radial slots
-    g.add(lathe([[rb,0],[R - 1.5,0],[R,1.5],[R,5.5],[R - 1.4,7.5],[R - 1.4,t - 7.5],[R,t - 5.5],[R,t - 1.5],[R - 1.5,t],[rb,t]], M.bond));
-    for (let i = 0; i < 4; i++){ const a = i*PI/2, b = new THREE.Mesh(new THREE.BoxGeometry(9, t + .2, 2), M.darkFlat); b.position.set(Math.cos(a)*(R - 4.4), t/2, Math.sin(a)*(R - 4.4)); b.rotation.y = -a; g.add(b); }
-  } else {                    // fine: bronze core with a ring of sintered teeth
-    g.add(lathe([[rb,0],[R - 5.3,0],[R - 5.3,t],[rb,t]], M.bond));
-    g.add(teeth([[R - 5.5,0],[R,0],[R,t],[R - 5.5,t]], 36, 4.2, M.sinter));
+  if (w.kind === 'cont') g.add(lathe(rimPts(w, rb + 50).map(sh), M.bond));                       // one bronze body with the groove
+  else {
+    g.add(lathe([[rb,0],[43.3,0],[43.3,t],[rb,t]], M.bond));                                      // bronze core
+    const pts = rimPts(w, 93).map(sh);
+    if (w.kind === 'settori') g.add(teeth(pts, 36, 4.2, M.sinter));
+    else {                                                                                       // slotted rim, ten segments
+      const d = 1.5/50, step = PI*2/10, cap = new THREE.ShapeGeometry(shapeOf(pts));
+      for (let k = 0; k < 10; k++){ const p0 = k*step + d, len = step - 2*d; g.add(lathe(pts, M.plated, 22, p0, len));
+        [p0, p0 + len].forEach(ph => { const mm = new THREE.Mesh(cap, capMat(M.plated)); mm.rotation.y = ph - PI/2; g.add(mm); }); }
+    }
   }
   g.add(decal(w, t)); g.userData.t = t;
   return g;
@@ -1279,7 +1280,8 @@ function frame(now){
         if (o.y > o.base - 3){ spin.remove(o.g); disposeTree(o.g); W.delete(uid); } continue; }
       if (!o.entering || clear) o.y += (o.base - o.y) * (1 - Math.pow(.0008, dt));
       if (o.entering){ const sc = o.g.scale.x + (1 - o.g.scale.x) * (1 - Math.pow(.0005, dt)); o.g.scale.setScalar(sc > .995 ? 1 : sc); }   // materialises on its way down
-      o.g.position.y = o.y + ex*(o.kb + 1)*GAP; }
+      o.g.position.y = o.y + ex*(o.kb + 1)*GAP;
+      o.g.rotation.y += (o.kb * cone().stag - o.g.rotation.y) * (1 - Math.pow(.002, dt)); }   // staggered like a brick wall: teeth, holes and slots never line up
     const prevW = washerY, hover = nutX > 2 ? (SHOW.on ? 50 : 34) : 0;
     washerY += (H + hover - washerY) * (1 - Math.pow(hover ? .002 : .00002, dt));
     if (!hover && washerY > H + .05) nutSpin -= (prevW - washerY) * .9;                // screwing down
