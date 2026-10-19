@@ -59,6 +59,7 @@ button:focus-visible{outline:2px solid var(--blue-hi);outline-offset:2px}
 .lang .pill[aria-expanded="true"]{background:var(--fg);color:var(--ink)}
 .menu{position:absolute;right:0;top:52px;min-width:190px;border-radius:20px;padding:6px;display:flex;flex-direction:column;gap:2px;z-index:20;animation:swap .25s cubic-bezier(.2,.7,.2,1)}
 .menu[hidden]{display:none!important}
+.menu hr{border:0;border-top:1px solid var(--line);margin:4px 8px}
 .menu button{all:unset;display:flex;align-items:center;justify-content:space-between;gap:16px;height:44px;padding:0 14px;border-radius:14px;font-size:15px;cursor:pointer;touch-action:manipulation}
 .menu button small{font:500 11px/1 var(--f-mono);letter-spacing:.1em;color:var(--mute)}
 .menu button[aria-checked="true"]{background:rgba(58,104,198,.3)}
@@ -109,6 +110,15 @@ h1{font-family:var(--f-display);font-variation-settings:"wdth" 108;font-weight:7
 .actions{display:flex;flex-wrap:nowrap;gap:6px}
 .actions .btn{padding:0 8px;font-size:12.5px;height:40px;flex:1 1 0;min-width:0;justify-content:center;gap:6px;white-space:nowrap}
 .actions .btn svg{flex:none;width:16px;height:16px}
+.hdr{display:flex;align-items:center;gap:6px;margin-top:10px}
+.hdr .meta{margin:0;flex:1 1 auto;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:11px}
+.hdr button{all:unset;box-sizing:border-box;width:40px;height:40px;border-radius:12px;display:grid;place-items:center;color:#c2cbdb;cursor:pointer;touch-action:manipulation;position:relative}
+.hdr button svg{width:19px;height:19px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.hdr button:disabled{opacity:.25;cursor:default}
+.hdr button:not(:disabled):active{background:rgba(143,176,238,.15)}
+.pre{position:relative}
+.pre .menu{left:auto;right:0;top:46px;min-width:190px}
+.pre .menu button{white-space:nowrap;justify-content:flex-start}
 .btn{all:unset;height:44px;padding:0 16px;border-radius:22px;display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:600;cursor:pointer;touch-action:manipulation;transition:background .2s}
 .btn svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .btn.primary{background:var(--blue);border:1px solid var(--blue-hi)}
@@ -128,11 +138,10 @@ dl.specs dd{font-size:15px;font-weight:500;font-variant-numeric:tabular-nums}
 @keyframes swap{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
 
 /* tool rail */
-.tools{position:absolute;right:24px;top:50%;transform:translateY(-58%);display:flex;flex-direction:column;gap:12px;z-index:4;transition:transform .45s cubic-bezier(.2,.7,.2,1),opacity .3s}
-#app:not(.open-r) .tools{transform:translate(calc(100% + 40px),-58%);opacity:0;pointer-events:none}
-.tool{all:unset;box-sizing:border-box;width:76px;height:76px;border-radius:22px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;cursor:pointer;
-  font:500 11px/1 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:#c2cbdb;transition:background .25s,border-color .25s,transform .15s,opacity .25s;touch-action:manipulation}
-.tool svg{width:28px;height:28px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.tools{display:flex;gap:8px;pointer-events:auto}
+.tool{all:unset;box-sizing:border-box;width:56px;height:56px;border-radius:18px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;
+  font:500 9px/1 var(--f-mono);letter-spacing:.04em;text-transform:uppercase;color:#c2cbdb;transition:background .25s,border-color .25s,transform .15s,opacity .25s;touch-action:manipulation}
+.tool svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
 .tool:active{transform:scale(.95)}
 .tool[aria-pressed="true"]{background:var(--blue);border-color:var(--blue-hi);color:#fff;box-shadow:0 10px 30px -10px rgba(58,104,198,.9)}
 .tool[aria-disabled="true"]{opacity:.28;pointer-events:none}
@@ -147,7 +156,7 @@ dl.specs dd{font-size:15px;font-weight:500;font-variant-numeric:tabular-nums}
 .lab .tag em{font:500 11px/1 var(--f-mono);font-style:normal;color:var(--mute);margin-left:8px;letter-spacing:.04em}
 
 /* catalogue strip */
-.strip{position:absolute;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 80px);transform:translateX(-50%);display:flex;gap:6px;z-index:5;transition:transform .45s cubic-bezier(.2,.7,.2,1),opacity .3s}
+.strip{position:absolute;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 14px);transform:translateX(-50%);display:flex;gap:6px;z-index:5;transition:transform .45s cubic-bezier(.2,.7,.2,1),opacity .3s}
 #app:not(.open-b) .strip{transform:translate(-50%,calc(100% + 100px));opacity:0;pointer-events:none}
 .strip{
   padding:7px;border-radius:24px;max-width:calc(100% - 32px);overflow-x:auto;scrollbar-width:none}
@@ -163,19 +172,14 @@ dl.specs dd{font-size:15px;font-weight:500;font-variant-numeric:tabular-nums}
 .tab{position:absolute;top:50%;transform:translateY(-50%);width:34px;height:72px;display:grid;place-items:center;z-index:7;cursor:pointer;color:#c2cbdb;transition:left .45s cubic-bezier(.2,.7,.2,1),right .45s cubic-bezier(.2,.7,.2,1);touch-action:manipulation;border:1px solid var(--line);padding:0}
 .tab svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:transform .3s}
 .tab-l{left:0;border-radius:0 16px 16px 0;border-left:0}
-.tab-r{right:0;border-radius:16px 0 0 16px;border-right:0}
 #app.open-l .tab-l{left:calc(24px + var(--pw) + 8px);border-radius:16px;border-left:1px solid var(--line)}
 #app.open-l .tab-l svg{transform:rotate(180deg)}
-#app.open-r .tab-r{right:calc(24px + 76px + 12px);border-radius:16px;border-right:1px solid var(--line)}
-#app.open-r .tab-r svg{transform:rotate(180deg)}
-.dock{position:absolute;left:24px;right:24px;bottom:calc(env(safe-area-inset-bottom,0px) + 18px);display:flex;justify-content:space-between;align-items:center;z-index:6;pointer-events:none}
-.dock button{all:unset;pointer-events:auto;box-sizing:border-box;height:50px;padding:0 18px 0 12px;border-radius:25px;display:inline-flex;align-items:center;gap:10px;cursor:pointer;touch-action:manipulation;font-size:14px;font-weight:600;color:var(--fg);transition:background .25s,border-color .25s}
-.dock button img{width:38px;height:30px;object-fit:contain;filter:drop-shadow(0 4px 6px rgba(0,0,0,.5))}
-.dock button svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:transform .3s}
-.dock button[aria-pressed="true"]{background:rgba(58,104,198,.3);border-color:var(--blue-hi)}
-#app.open-b .dock .d-r svg{transform:rotate(180deg)}
-#app.show .tab,#app.show .dock{opacity:0;pointer-events:none;transition:opacity .6s}
-.tab,.dock{transition:opacity .6s}
+#app.show .tab,#app.show .handle{opacity:0;pointer-events:none;transition:opacity .6s}
+.tab,.handle{transition:opacity .6s}
+.handle{position:absolute;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 10px);transform:translateX(-50%);height:30px;padding:0 18px;border-radius:15px;display:flex;align-items:center;gap:8px;z-index:7;cursor:pointer;color:#c2cbdb;font:500 11px/1 var(--f-mono);letter-spacing:.1em;text-transform:uppercase;touch-action:manipulation;transition:bottom .45s cubic-bezier(.2,.7,.2,1),opacity .6s}
+.handle svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:transform .3s}
+#app.open-b .handle{bottom:calc(env(safe-area-inset-bottom,0px) + 128px)}
+#app.open-b .handle svg{transform:rotate(180deg)}
 .sect{position:absolute;left:62%;top:calc(env(safe-area-inset-top,0px) + 30px);transform:translateX(-50%);font:500 11px/1 var(--f-mono);letter-spacing:.14em;text-transform:uppercase;
   color:var(--blue-hi);display:flex;align-items:center;gap:10px;opacity:0;transition:opacity .4s;z-index:3;pointer-events:none}
 .sect i{width:22px;height:12px;background:linear-gradient(90deg,#8d9098 50%,#2a2d33 50%);border:1px solid var(--blue-hi)}
@@ -237,9 +241,7 @@ dl.specs dd{font-size:15px;font-weight:500;font-variant-numeric:tabular-nums}
   .panel{left:10px;right:10px;width:auto;top:calc(env(safe-area-inset-top,0px) + 66px);bottom:auto;max-height:46%;gap:8px}
   #app.open-l .tab-l{left:auto;right:10px;top:calc(env(safe-area-inset-top,0px) + 70px);transform:none;width:44px;height:44px;border-radius:14px}
   .tab-l{top:calc(env(safe-area-inset-top,0px) + 70px);transform:none}
-  #app.open-r .tab-r{right:calc(8px + 60px + 8px)}
-  .dock{left:10px;right:10px;bottom:calc(env(safe-area-inset-bottom,0px) + 10px)}
-  .dock button{height:46px;font-size:13px}
+
   .panel h1{font-size:22px;margin-top:4px}
   .meta{margin-top:4px;font-size:11px}
   .desc,dl.specs{display:none}
@@ -248,12 +250,13 @@ dl.specs dd{font-size:15px;font-weight:500;font-variant-numeric:tabular-nums}
   .row .nm b{font-size:14px}
   .actions .btn{height:38px;padding:0 12px;font-size:13px}
   .presets{display:none}
-  .tools{right:8px;top:auto;bottom:calc(env(safe-area-inset-bottom,0px) + 70px);transform:none;gap:6px}
-  #app:not(.open-r) .tools{transform:translateX(calc(100% + 40px))}
-  .tab-r{top:auto;bottom:calc(env(safe-area-inset-bottom,0px) + 70px);transform:none;height:60px}
+  .tools{gap:5px}
+  .tool{width:46px;height:46px;border-radius:14px;font-size:8px}
+  .tool svg{width:19px;height:19px}
   .tool{width:54px;height:54px;border-radius:16px;font-size:10px;gap:4px}
   .tool svg{width:20px;height:20px}
-  .strip{left:10px;right:10px;transform:none;max-width:none;bottom:calc(env(safe-area-inset-bottom,0px) + 66px);padding:5px;gap:4px}
+  .strip{left:10px;right:10px;transform:none;max-width:none;bottom:calc(env(safe-area-inset-bottom,0px) + 12px);padding:5px;gap:4px}
+  #app.open-b .handle{bottom:calc(env(safe-area-inset-bottom,0px) + 106px)}
   #app:not(.open-b) .strip{transform:translateY(calc(100% + 100px))}
   .card{width:86px;padding:4px 2px 7px}
   .card img{width:62px;height:46px}
@@ -272,9 +275,7 @@ dl.specs dd{font-size:15px;font-weight:500;font-variant-numeric:tabular-nums}
   .menu{right:-50px}
 }
 @media (max-width:420px){ .grid{grid-template-columns:repeat(2,minmax(0,1fr))} .sheet-card h2{font-size:22px} }
-@media (min-aspect-ratio:1/1) and (max-height:620px){ .panel{top:calc(env(safe-area-inset-top,0px) + 80px)} .panel h1{font-size:24px} .row{height:40px;flex:0 0 40px} .tool{width:60px;height:60px} .desc{display:none} }
-#app.open-b .tools{transform:translateY(-72%)}
-@media (min-aspect-ratio:1/1) and (max-height:780px){ .tools{gap:8px;top:52%} #app.open-b .tools{transform:translateY(-78%)} .tool{width:62px;height:62px;border-radius:18px;font-size:10px;gap:5px} .tool svg{width:22px;height:22px} #app.open-r .tab-r{right:calc(24px + 62px + 12px)} }
+@media (min-aspect-ratio:1/1) and (max-height:620px){ .panel{top:calc(env(safe-area-inset-top,0px) + 80px)} .panel h1{font-size:24px} .row{height:40px;flex:0 0 40px} .desc{display:none} }
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 
@@ -284,6 +285,12 @@ dl.specs dd{font-size:15px;font-weight:500;font-variant-numeric:tabular-nums}
   <header class="top">
     <div class="logo"><svg class="lockup" viewBox="0 0 632.93 173.43" fill="currentColor" role="img" aria-label="Diamant · Around your Edges since 1975"><g> <path d="M132.52,136.21l4.45,20.01h-3.54l-.78-4.23h-4.48l-.78,4.23h-3.54l4.45-20.01h4.2ZM132.07,148.68l-1.63-9h-.05l-1.63,9h3.3Z"/> <path d="M144.47,141.14v2.02h.05c.33-.73.73-1.31,1.2-1.75.47-.44,1.05-.66,1.72-.66.09,0,.19,0,.29.01.1.01.2.02.3.04v3.7c-.17-.02-.34-.03-.51-.04-.17,0-.33-.01-.51-.01-.28,0-.57.05-.85.14s-.54.25-.78.46c-.24.22-.42.5-.57.84-.14.35-.21.77-.21,1.28v9.05h-3.25v-15.08h3.11Z"/> <path d="M152.34,145.26c.17-.99.46-1.82.85-2.48.39-.66.91-1.17,1.54-1.51.64-.35,1.42-.52,2.35-.52.97-.02,1.78.14,2.43.46.64.33,1.15.83,1.53,1.5s.64,1.5.8,2.5.24,2.15.24,3.48-.09,2.43-.26,3.42-.46,1.82-.85,2.48c-.39.66-.91,1.15-1.54,1.47-.64.32-1.42.48-2.35.48-.97.02-1.78-.13-2.43-.43-.65-.31-1.16-.79-1.53-1.46-.38-.66-.64-1.49-.8-2.5-.16-1-.24-2.15-.24-3.46s.09-2.43.26-3.42ZM155.38,150.81c.03.65.11,1.22.22,1.68s.29.83.53,1.09c.24.26.55.39.94.39.66,0,1.12-.41,1.37-1.23.25-.82.38-2.18.38-4.06s-.13-3.24-.38-4.06c-.25-.82-.71-1.23-1.37-1.23-.39,0-.71.13-.94.39-.24.26-.41.63-.53,1.09-.12.47-.19,1.03-.22,1.68-.03.65-.05,1.36-.05,2.13s.02,1.48.05,2.13Z"/> <path d="M173.58,154.45c-.35.75-.79,1.28-1.34,1.6-.55.32-1.18.48-1.89.48-1.04,0-1.84-.32-2.39-.97-.56-.64-.84-1.72-.84-3.24v-11.18h3.25v10.4c0,.78.11,1.33.33,1.64.22.31.57.46,1.06.46,1.15,0,1.72-.83,1.72-2.5v-10.01h3.25v15.08h-3.11v-1.77h-.05Z"/> <path d="M185.31,141.14v1.77h.05c.35-.75.79-1.29,1.34-1.64.55-.35,1.18-.52,1.89-.52,1.04,0,1.83.34,2.39,1.01.56.67.84,1.77.84,3.28v11.18h-3.25v-10.4c0-.78-.11-1.33-.33-1.64-.22-.31-.57-.46-1.06-.46-1.15,0-1.72.83-1.72,2.49v10.01h-3.25v-15.08h3.11Z"/> <path d="M203.74,154.62c-.36.71-.77,1.2-1.21,1.49s-1,.42-1.66.42c-1.34,0-2.32-.61-2.95-1.82-.63-1.21-.94-3.22-.94-6.03s.31-4.83.94-6.07c.63-1.24,1.61-1.86,2.95-1.86.61,0,1.14.15,1.57.45.43.3.82.75,1.17,1.35h.05v-6.33h3.25v20.01h-3.11v-1.6h-.05ZM200.55,152.39c.21.83.67,1.25,1.38,1.25s1.19-.42,1.4-1.25c.21-.83.32-2.07.32-3.71s-.11-2.88-.32-3.72c-.21-.83-.68-1.25-1.4-1.25s-1.17.42-1.38,1.25c-.21.83-.32,2.07-.32,3.72s.11,2.88.32,3.71Z"/> <path d="M225.47,143.94h.05l2.36-7.74h3.68l-4.36,12.14v7.88h-3.39v-7.88l-4.36-12.14h3.82l2.21,7.74Z"/> <path d="M234.08,145.26c.17-.99.46-1.82.85-2.48.39-.66.91-1.17,1.54-1.51.64-.35,1.42-.52,2.35-.52.97-.02,1.78.14,2.43.46.64.33,1.15.83,1.53,1.5s.64,1.5.8,2.5.24,2.15.24,3.48-.09,2.43-.26,3.42-.46,1.82-.85,2.48c-.39.66-.91,1.15-1.54,1.47-.64.32-1.42.48-2.35.48-.97.02-1.78-.13-2.43-.43-.65-.31-1.16-.79-1.53-1.46-.38-.66-.64-1.49-.8-2.5-.16-1-.24-2.15-.24-3.46s.09-2.43.26-3.42ZM237.12,150.81c.03.65.11,1.22.22,1.68s.29.83.53,1.09c.24.26.55.39.94.39.66,0,1.12-.41,1.37-1.23.25-.82.38-2.18.38-4.06s-.13-3.24-.38-4.06c-.25-.82-.71-1.23-1.37-1.23-.39,0-.71.13-.94.39-.24.26-.41.63-.53,1.09-.12.47-.19,1.03-.22,1.68-.03.65-.05,1.36-.05,2.13s.02,1.48.05,2.13Z"/> <path d="M255.31,154.45c-.35.75-.79,1.28-1.34,1.6-.55.32-1.18.48-1.89.48-1.04,0-1.84-.32-2.39-.97-.56-.64-.84-1.72-.84-3.24v-11.18h3.25v10.4c0,.78.11,1.33.33,1.64.22.31.57.46,1.06.46,1.15,0,1.72-.83,1.72-2.5v-10.01h3.25v15.08h-3.11v-1.77h-.05Z"/> <path d="M267.05,141.14v2.02h.05c.33-.73.73-1.31,1.2-1.75.47-.44,1.05-.66,1.72-.66.09,0,.19,0,.29.01.1.01.2.02.3.04v3.7c-.17-.02-.34-.03-.51-.04-.17,0-.33-.01-.51-.01-.28,0-.57.05-.85.14s-.54.25-.78.46c-.24.22-.42.5-.57.84-.14.35-.21.77-.21,1.28v9.05h-3.25v-15.08h3.11Z"/> <path d="M293.54,139.52h-6.01v4.71h5.66v3.31h-5.66v5.38h6.25v3.31h-9.64v-20.01h9.4v3.31Z"/> <path d="M305.13,154.62c-.36.71-.77,1.2-1.21,1.49s-1,.42-1.66.42c-1.34,0-2.32-.61-2.95-1.82-.63-1.21-.94-3.22-.94-6.03s.31-4.83.94-6.07c.63-1.24,1.61-1.86,2.95-1.86.61,0,1.14.15,1.57.45.43.3.82.75,1.17,1.35h.05v-6.33h3.25v20.01h-3.11v-1.6h-.05ZM301.94,152.39c.21.83.67,1.25,1.38,1.25s1.19-.42,1.4-1.25c.21-.83.32-2.07.32-3.71s-.11-2.88-.32-3.72c-.21-.83-.68-1.25-1.4-1.25s-1.17.42-1.38,1.25c-.21.83-.32,2.07-.32,3.72s.11,2.88.32,3.71Z"/> <path d="M323.26,155.46c0,1.94-.4,3.4-1.21,4.37-.81.97-2.17,1.46-4.07,1.46-1.38,0-2.45-.35-3.19-1.05-.75-.7-1.12-1.7-1.12-2.98h3.11c0,.49.17.87.5,1.15.16.13.33.23.51.31.18.07.37.11.58.11.66,0,1.12-.25,1.39-.76.27-.5.4-1.13.4-1.88v-1.99h-.05c-.33.56-.74,1.01-1.21,1.35-.48.34-.98.5-1.5.5-1.29,0-2.26-.58-2.91-1.75-.65-1.17-.98-3.13-.98-5.87,0-.88.04-1.78.13-2.69.09-.92.27-1.74.54-2.48.27-.74.68-1.34,1.2-1.81.53-.47,1.23-.7,2.11-.7.46,0,.93.15,1.41.45s.89.84,1.2,1.62h.05v-1.68h3.11v14.32ZM316.81,150.64c.04.47.12.88.24,1.25.12.36.28.65.5.87.21.22.49.32.84.32s.63-.11.86-.32c.23-.21.41-.51.54-.88.13-.37.23-.83.28-1.36.06-.53.08-1.12.08-1.75,0-1.83-.12-3.13-.37-3.9-.24-.77-.69-1.15-1.33-1.15-.36,0-.65.09-.87.28-.22.19-.39.49-.52.91s-.21.98-.25,1.68-.06,1.56-.06,2.56c0,.52.02,1.02.06,1.49Z"/> <path d="M331.63,150.47c0,.45.03.88.08,1.3.05.42.14.8.27,1.12s.29.59.5.78.46.29.75.29c.55,0,.95-.23,1.2-.7s.42-1.18.52-2.13h2.92c-.06,1.76-.46,3.09-1.18,4.01-.72.92-1.86,1.37-3.42,1.37-1.18,0-2.1-.23-2.76-.7-.66-.47-1.15-1.08-1.46-1.85s-.51-1.63-.58-2.58c-.07-.95-.11-1.91-.11-2.86,0-1.01.06-1.98.18-2.92.12-.93.35-1.77.71-2.49.35-.73.86-1.31,1.52-1.74s1.54-.65,2.64-.65c.94,0,1.72.18,2.32.55.6.36,1.08.88,1.43,1.54.35.66.58,1.47.71,2.41.13.94.19,2,.19,3.15v.87h-6.43v1.2ZM334.86,145.44c-.05-.44-.13-.81-.25-1.12-.12-.31-.28-.54-.49-.7-.21-.16-.48-.24-.81-.24s-.6.09-.81.27c-.21.18-.38.41-.51.7s-.22.61-.27.97c-.06.36-.08.71-.08,1.07v.59h3.32c-.02-.58-.05-1.09-.09-1.53Z"/> <path d="M345.44,151.79c0,.65.15,1.18.44,1.58s.71.6,1.26.6c.5,0,.9-.15,1.2-.45.3-.3.45-.75.45-1.34,0-.49-.12-.86-.35-1.11-.24-.25-.51-.45-.83-.6l-2.29-.98c-.9-.37-1.57-.9-2.03-1.58-.46-.68-.68-1.56-.68-2.62,0-.62.09-1.2.26-1.75s.45-1.03.83-1.44.86-.74,1.45-.98c.59-.24,1.3-.36,2.13-.36,1.48,0,2.57.37,3.28,1.12.71.75,1.06,1.8,1.06,3.17v.62h-2.92c0-.79-.11-1.36-.32-1.72-.21-.36-.59-.55-1.12-.55-.41,0-.77.14-1.07.41-.31.27-.46.68-.46,1.22,0,.37.1.71.29,1.01s.57.55,1.12.76l1.96.78c1.02.41,1.75.95,2.17,1.61.42.66.64,1.56.64,2.7,0,.8-.12,1.5-.35,2.09s-.56,1.08-.98,1.47c-.42.39-.91.67-1.49.84-.57.17-1.21.25-1.9.25-.91,0-1.67-.1-2.27-.31s-1.08-.51-1.44-.92c-.35-.41-.6-.91-.74-1.5-.14-.59-.21-1.25-.21-1.98v-.53h2.92v.51Z"/> <path d="M372.35,144.13c-.5-.42-1.11-.63-1.81-.63-.3,0-.61.03-.92.08-.31.06-.59.15-.84.29-.24.14-.44.33-.6.56-.16.23-.24.54-.24.91,0,.34.09.63.27.87.18.24.42.47.73.67.31.21.65.4,1.04.57.38.18.77.36,1.17.55.41.21.8.43,1.19.67.38.24.73.52,1.02.83s.54.67.73,1.09c.19.42.28.91.28,1.47,0,.8-.15,1.49-.45,2.06s-.68,1.03-1.15,1.39c-.47.36-1,.61-1.59.77-.59.16-1.18.24-1.78.24-.71,0-1.36-.08-1.96-.24-.6-.16-1.11-.42-1.54-.8-.43-.37-.77-.87-1.03-1.5-.25-.63-.38-1.41-.38-2.34h1.98c-.03.52.04.97.2,1.33s.39.65.68.87.63.37,1.01.46c.38.09.79.14,1.21.14.33,0,.66-.04.99-.11s.63-.2.9-.38c.27-.18.48-.41.65-.69s.25-.63.25-1.04c0-.35-.09-.66-.28-.91-.19-.25-.43-.48-.73-.69-.3-.21-.64-.4-1.02-.57-.39-.18-.77-.37-1.17-.57-.41-.19-.81-.39-1.19-.62-.39-.23-.73-.49-1.04-.8-.31-.31-.55-.67-.73-1.08-.18-.41-.27-.89-.27-1.43,0-.67.13-1.27.39-1.79.26-.52.6-.96,1.03-1.3.42-.35.91-.61,1.45-.8.54-.19,1.1-.28,1.66-.28s1.12.08,1.67.24c.55.16,1.04.42,1.47.78.43.36.78.84,1.05,1.43.27.59.4,1.3.4,2.14h-2c.03-.82-.2-1.44-.71-1.86Z"/> <path d="M383.76,141.73l-2.54,14.49h-1.98l2.52-14.49h2ZM382.2,139.12l.52-2.92h2.03l-.52,2.92h-2.03Z"/> <path d="M392.24,141.73l-.38,2.19h.05c.5-.84,1.14-1.47,1.91-1.89.77-.42,1.58-.63,2.43-.63,1.15,0,2,.3,2.56.9.56.6.84,1.54.84,2.83,0,.32-.03.73-.09,1.23s-.15,1.04-.26,1.6l-1.48,8.27h-2l1.56-8.47c.02-.15.04-.32.07-.52s.06-.4.09-.62c.03-.21.06-.42.08-.62.02-.2.04-.36.04-.49,0-.69-.2-1.2-.61-1.53-.41-.33-.91-.49-1.51-.49-.55,0-1.1.16-1.64.48-.54.32-1,.72-1.38,1.21-.36.37-.64.83-.85,1.36-.2.53-.37,1.09-.5,1.67l-1.41,8.02h-1.98l2.55-14.49h1.93Z"/> <path d="M413.38,144.24c-.46-.5-1.08-.74-1.89-.74s-1.45.21-2.04.62c-.59.41-1.08.94-1.49,1.6-.4.65-.7,1.39-.91,2.2-.2.81-.31,1.61-.31,2.4,0,.56.05,1.09.15,1.6.1.5.27.94.51,1.32.24.37.55.67.93.9.39.23.86.34,1.43.34.86,0,1.6-.27,2.21-.81.61-.54,1.06-1.26,1.34-2.16h2c-.36,1.64-1.02,2.9-1.98,3.76-.96.86-2.15,1.29-3.58,1.29-1.67,0-2.92-.54-3.76-1.63-.84-1.08-1.26-2.62-1.26-4.6,0-1.16.15-2.27.44-3.34.29-1.07.72-2.01,1.3-2.84.57-.83,1.28-1.49,2.12-1.99.84-.49,1.8-.74,2.89-.74,1.38,0,2.48.4,3.29,1.19s1.24,2.04,1.28,3.74h-2c0-.9-.23-1.59-.68-2.09Z"/> <path d="M422.46,150.95c0,.56.09,1.06.26,1.5.17.44.41.8.71,1.09.3.29.64.51,1.01.67.38.16.77.24,1.18.24.9,0,1.63-.24,2.21-.71.58-.48,1.01-1.16,1.3-2.06h2c-.16.8-.41,1.51-.75,2.12-.35.61-.76,1.11-1.25,1.51s-1.03.71-1.63.91c-.6.21-1.23.31-1.88.31-1.01,0-1.84-.18-2.51-.55-.67-.36-1.2-.83-1.59-1.4s-.67-1.2-.83-1.88-.24-1.34-.24-1.98c0-1.38.17-2.65.51-3.8.34-1.15.79-2.14,1.37-2.96.57-.82,1.24-1.46,2-1.91.76-.45,1.56-.67,2.39-.67,1.79,0,3.1.56,3.93,1.68.82,1.12,1.24,2.7,1.24,4.74,0,.37-.02.73-.07,1.07-.05.34-.09.61-.12.81h-9.17c-.05.41-.07.83-.07,1.26ZM429.8,146.09c-.09-.5-.24-.93-.47-1.32-.23-.38-.53-.69-.91-.92-.38-.23-.84-.35-1.39-.35-.58,0-1.1.11-1.57.32-.46.21-.87.51-1.21.88-.35.37-.64.81-.87,1.3-.24.5-.42,1.02-.57,1.58h7.07c.03-.5,0-1-.08-1.5Z"/> <path d="M440.7,156.22l2.71-15.11c-.75.21-1.47.35-2.14.43-.68.08-1.4.13-2.17.13l.33-1.91c.52,0,1.04-.07,1.57-.21s1.03-.35,1.52-.65c.49-.29.93-.65,1.33-1.08.4-.43.73-.92.98-1.49h1.56l-3.56,19.87h-2.12Z"/> <path d="M455.37,153.68c.38.51,1,.77,1.85.77.8,0,1.48-.22,2.03-.66.55-.44,1.02-.99,1.4-1.67.39-.67.7-1.41.95-2.21.25-.8.47-1.57.66-2.3l-.05-.06c-.39.69-.93,1.19-1.6,1.5-.68.31-1.37.46-2.07.46s-1.32-.15-1.9-.46c-.57-.31-1.07-.72-1.49-1.25s-.74-1.14-.97-1.85c-.23-.71-.34-1.47-.34-2.27,0-1.01.14-1.96.41-2.84s.67-1.67,1.18-2.34,1.12-1.2,1.84-1.58c.71-.38,1.51-.57,2.39-.57s1.64.16,2.29.48c.64.32,1.18.77,1.6,1.36.42.59.74,1.29.94,2.12.2.82.31,1.73.31,2.72,0,1.31-.12,2.68-.37,4.11-.24,1.43-.59,2.74-1.02,3.94-.32.86-.66,1.63-1.02,2.3-.37.67-.8,1.24-1.28,1.71-.49.47-1.05.83-1.67,1.08-.63.25-1.36.38-2.19.38-.69,0-1.32-.1-1.9-.29-.57-.2-1.06-.5-1.46-.92-.4-.42-.71-.95-.92-1.58-.21-.63-.31-1.38-.29-2.24h2.12c0,.95.19,1.69.58,2.2ZM460.62,147.03c.45-.26.84-.62,1.14-1.07.31-.45.54-.97.7-1.57.16-.6.24-1.22.24-1.88,0-1.23-.27-2.22-.8-2.96-.53-.74-1.34-1.11-2.43-1.11-.58,0-1.09.15-1.52.46-.43.31-.79.71-1.08,1.21-.29.5-.51,1.05-.66,1.65-.15.61-.22,1.21-.22,1.81,0,1.14.26,2.07.78,2.78.52.71,1.28,1.07,2.29,1.07.6,0,1.12-.13,1.58-.39Z"/> <path d="M479.52,142.39c-.88,1.41-1.7,2.9-2.45,4.46-.75,1.56-1.43,3.14-2.03,4.75-.6,1.61-1.09,3.15-1.48,4.62h-2.29c.86-3.27,2.04-6.36,3.54-9.26s3.25-5.63,5.28-8.17h-8.7l.4-2.1h10.77l-.28,1.99c-.96,1.07-1.88,2.3-2.76,3.71Z"/> <path d="M490.5,138.79l-1.32,5.38.05.06c.41-.37.87-.65,1.39-.83.52-.18,1.04-.27,1.55-.27.75,0,1.42.15,2,.46.58.31,1.07.73,1.47,1.26.4.53.7,1.17.91,1.91s.31,1.53.31,2.37c0,1.07-.15,2.08-.45,3.04-.3.96-.78,1.8-1.44,2.51-.66.67-1.34,1.15-2.05,1.43s-1.49.42-2.36.42c-1.52,0-2.74-.49-3.65-1.46-.91-.97-1.37-2.36-1.37-4.18h2.12c0,2.37,1.01,3.56,3.02,3.56.66,0,1.24-.14,1.74-.41s.92-.65,1.26-1.12c.34-.48.6-1.03.78-1.67.18-.63.27-1.31.27-2.02,0-1.29-.28-2.28-.85-2.97s-1.39-1.04-2.47-1.04c-.6,0-1.17.17-1.72.52-.55.35-.97.82-1.25,1.41h-1.79l2.59-10.48h8.46l-.35,2.1h-6.86Z"/> </g> <g> <path d="M124.06,12.14h20.42v101.26h-20.42V12.14Z"/> <path d="M215.24,12.14l26.8,101.26h-21.27l-4.68-21.41h-26.94l-4.68,21.41h-21.27l26.8-101.26h25.24ZM212.55,75.25l-9.78-45.52h-.28l-9.79,45.52h19.85Z"/> <path d="M290.55,12.14l14.47,71.47h.28l14.61-71.47h30.21v101.26h-18.72V32.56h-.28l-18.01,80.84h-15.88l-18.01-80.84h-.28v80.84h-18.72V12.14h30.35Z"/> <path d="M420.31,12.14l26.8,101.26h-21.27l-4.68-21.41h-26.94l-4.68,21.41h-21.27l26.8-101.26h25.24ZM417.61,75.25l-9.78-45.52h-.28l-9.79,45.52h19.85Z"/> <path d="M513.05,81.49h.28V12.14h18.72v101.26h-23.26l-24.96-70.91h-.28v70.91h-18.72V12.14h23.54l24.68,69.35Z"/> <path d="M616.15,28.87h-22.12v84.52h-20.42V28.87h-22.12V12.14h64.67v16.73Z"/> <g> <rect x="16.78" y="12.14" width="18.3" height="18.3"/> <rect x="39.95" y="12.14" width="36.61" height="18.3"/> <rect x="16.78" y="35.31" width="18.3" height="54.91"/> <rect x="81.43" y="35.31" width="18.3" height="54.91"/> <rect x="39.95" y="35.31" width="36.88" height="54.91"/> <polygon points="81.43 12.14 81.43 30.44 99.73 30.44 81.43 12.14"/> <rect x="16.78" y="95.09" width="18.3" height="18.3"/> <rect x="39.95" y="95.09" width="36.61" height="18.3"/> <polygon points="81.43 113.4 99.73 95.09 81.43 95.09 81.43 113.4"/> </g> </g></svg></div>
     <div class="topr">
+      <nav class="tools" aria-label="Strumenti">
+        <button class="tool glass" id="t-explode" aria-pressed="false"><svg viewBox="0 0 28 28"><rect x="6" y="11" width="16" height="6" rx="1.5"/><path d="M8 7h12M8 21h12M14 3v1.5M14 23.5V25M11.5 4.5 14 2l2.5 2.5M11.5 23.5 14 26l2.5-2.5"/></svg><span data-t="explode"></span></button>
+        <button class="tool glass" id="t-section" aria-pressed="false"><svg viewBox="0 0 28 28"><circle cx="14" cy="14" r="10"/><path d="M14 4v20"/><path d="M14 8l5-3M14 13l8.5-5M14 18l9.5-5.5M14 23l7-4" stroke-width="1.1"/></svg><span data-t="section"></span></button>
+        <button class="tool glass" id="t-spin" aria-pressed="false"><svg viewBox="0 0 28 28"><path d="M22.5 9.5A10 10 0 1 0 24 15"/><path d="M23.5 4.5v5.5H18"/><circle cx="14" cy="14" r="2.2"/></svg><span data-t="spin"></span></button>
+        <button class="tool glass" id="t-show" aria-pressed="false"><svg viewBox="0 0 28 28"><path d="M6 5.5v17l14-8.5z"/></svg><span data-t="show"></span></button>
+      </nav>
       <div class="lang">
         <button class="pill glass" id="l-btn" aria-haspopup="menu" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3.3 3 14.7 0 18M12 3c-3 3.3-3 14.7 0 18"/></svg><span id="l-cur">IT</span></button>
         <div class="menu glass" id="l-menu" role="menu" hidden></div>
@@ -296,15 +303,15 @@ dl.specs dd{font-size:15px;font-weight:500;font-variant-numeric:tabular-nums}
     <div>
       <div class="eyebrow" data-t="stackEy"></div>
       <h1 data-t="stackTitle"></h1>
-      <div class="meta" id="s-meta"></div>
+      <div class="hdr">
+        <div class="meta" id="s-meta"></div>
+        <button class="glass" id="b-shuffle" data-tt="shuffle"><svg viewBox="0 0 24 24"><path d="M3 7h3.5c2 0 3.2 1 4.2 2.6l2.6 4.8c1 1.6 2.2 2.6 4.2 2.6H21M3 17h3.5c1.4 0 2.4-.5 3.2-1.3M14.3 8.3c.8-.8 1.8-1.3 3.2-1.3H21M18 4l3 3-3 3M18 14l3 3-3 3"/></svg></button>
+        <button class="glass" id="b-clear" data-tt="clear"><svg viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg></button>
+        <div class="pre"><button class="glass" id="b-pre" data-tt="presets" aria-haspopup="menu" aria-expanded="false"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="4" rx="1.5"/><rect x="4" y="12" width="16" height="4" rx="1.5"/><path d="M8 19h8"/></svg></button>
+          <div class="menu glass" id="pre-menu" role="menu" hidden><button data-preset="tagli" data-t="pTagli"></button><button data-preset="settori" data-t="pSettori"></button></div></div>
+      </div>
     </div>
     <ul class="list" id="list"></ul>
-    <div class="actions">
-      <button class="btn primary" id="b-shuffle"><svg viewBox="0 0 24 24"><path d="M3 7h3.5c2 0 3.2 1 4.2 2.6l2.6 4.8c1 1.6 2.2 2.6 4.2 2.6H21M3 17h3.5c1.4 0 2.4-.5 3.2-1.3M14.3 8.3c.8-.8 1.8-1.3 3.2-1.3H21M18 4l3 3-3 3M18 14l3 3-3 3"/></svg><span data-t="shuffle"></span></button>
-      <button class="btn ghost glass" id="b-add"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg><span data-t="add"></span></button>
-      <button class="btn ghost glass" id="b-clear"><svg viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg><span data-t="clear"></span></button>
-    </div>
-    <div class="presets"><span data-t="presets"></span><button class="chip glass" data-preset="tagli" data-t="pTagli"></button><button class="chip glass" data-preset="settori" data-t="pSettori"></button></div>
   </section>
 
   <!-- single wheel -->
@@ -317,42 +324,11 @@ dl.specs dd{font-size:15px;font-weight:500;font-variant-numeric:tabular-nums}
     <div class="actions"><button class="btn primary" id="b-addthis"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg><span data-t="addThis"></span></button></div>
   </section>
 
-  <nav class="tools" aria-label="Strumenti">
-    <button class="tool glass" id="t-explode" aria-pressed="false">
-      <svg viewBox="0 0 28 28"><rect x="6" y="11" width="16" height="6" rx="1.5"/><path d="M8 7h12M8 21h12M14 3v1.5M14 23.5V25M11.5 4.5 14 2l2.5 2.5M11.5 23.5 14 26l2.5-2.5"/></svg>
-      <span data-t="explode"></span>
-    </button>
-    <button class="tool glass" id="t-section" aria-pressed="false">
-      <svg viewBox="0 0 28 28"><circle cx="14" cy="14" r="10"/><path d="M14 4v20"/><path d="M14 8l5-3M14 13l8.5-5M14 18l9.5-5.5M14 23l7-4" stroke-width="1.1"/></svg>
-      <span data-t="section"></span>
-    </button>
-    <button class="tool glass" id="t-spin" aria-pressed="false">
-      <svg viewBox="0 0 28 28"><path d="M22.5 9.5A10 10 0 1 0 24 15"/><path d="M23.5 4.5v5.5H18"/><circle cx="14" cy="14" r="2.2"/></svg>
-      <span data-t="spin"></span>
-    </button>
-    <button class="tool glass" id="t-show" aria-pressed="false">
-      <svg viewBox="0 0 28 28"><path d="M6 5.5v17l14-8.5z"/></svg>
-      <span data-t="show"></span>
-    </button>
-    <button class="tool glass" id="t-reset" aria-pressed="false">
-      <svg viewBox="0 0 28 28"><path d="M4 9V4h5M24 9V4h-5M4 19v5h5M24 19v5h-5"/><circle cx="14" cy="14" r="4"/></svg>
-      <span data-t="reset"></span>
-    </button>
-    <button class="tool glass" id="fs">
-      <svg viewBox="0 0 28 28"><path d="M5 10V5h5M23 10V5h-5M5 18v5h5M23 18v5h-5"/></svg>
-      <span data-t="fsBtn"></span>
-    </button>
-  </nav>
-
   <div id="labels"></div>
   <div class="sect" id="sect"><i></i><span data-t="sectionOn"></span></div>
   <nav class="strip glass" id="strip" aria-label="Catalogo"></nav>
   <button class="tab tab-l glass" id="tab-l" aria-label="Set"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button>
-  <button class="tab tab-r glass" id="tab-r" aria-label="Strumenti"><svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg></button>
-  <div class="dock">
-    <button class="glass d-l" id="d-l" aria-pressed="true"><img id="d-l-img" alt="" draggable="false"><span data-t="hero"></span></button>
-    <button class="glass d-r" id="d-r" aria-pressed="false"><span data-t="wheelsBtn"></span><svg viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></svg></button>
-  </div>
+  <button class="handle glass" id="handle"><svg viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></svg><span data-t="wheelsBtn"></span></button>
 
   <div class="hint glass" id="hint">
     <svg viewBox="0 0 24 24"><path d="M9 11V5.5a1.5 1.5 0 0 1 3 0V11m0-1.5a1.5 1.5 0 0 1 3 0V11m0-.5a1.5 1.5 0 0 1 3 0V15a6 6 0 0 1-6 6h-1a6 6 0 0 1-5-2.7L3.3 15a1.5 1.5 0 0 1 2.4-1.8L9 16"/></svg>
@@ -540,7 +516,8 @@ const glow = new THREE.PointLight(0x4f7fe0, 0, 12, 1.6); scene.add(glow);   // t
 
 const camera = new THREE.PerspectiveCamera(30, 1, .05, 100);
 const controls = new OrbitControls(camera, canvas);
-controls.enableDamping = true; controls.dampingFactor = .07; controls.enablePan = false;
+controls.enableDamping = true; controls.dampingFactor = .07; controls.enablePan = true; controls.screenSpacePanning = true; controls.panSpeed = .9;
+controls.touches = {ONE: THREE.TOUCH.ROTATE, TWO: THREE.TOUCH.DOLLY_PAN};
 controls.rotateSpeed = .75; controls.zoomSpeed = .9; controls.autoRotateSpeed = .55;
 controls.minPolarAngle = .2; controls.maxPolarAngle = Math.PI - .2;
 
@@ -773,7 +750,6 @@ function enterMode(mode, instant){
   $('t-explode').setAttribute('aria-disabled', mode !== 'stack');
   $('p-stack').hidden = mode !== 'stack'; $('p-single').hidden = mode !== 'single';
   document.querySelectorAll('.card').forEach(c => c.setAttribute('aria-pressed', mode === 'stack' ? c.dataset.k === 'stack' : c.dataset.k === state.single));
-  $('d-l').setAttribute('aria-pressed', mode === 'stack');
   renderSingle(); buildLabels();
 }
 function syncStack(instant){
@@ -805,7 +781,7 @@ const ICON = {
 };
 function renderStack(){
   const U = T(), st = state.stack, list = $('list');
-  const H = stackH(); $('s-meta').innerHTML = `<b>${U.wheels(st.length)}</b> · <b class="${H > SPACE ? 'over' : ''}">${H} / ${SPACE} mm</b>` + (H > SPACE ? ` · ${U.over}` : '');
+  const H = stackH(); $('s-meta').innerHTML = `<b>${U.wheels(st.length)}</b> · <b class="${H > SPACE ? 'over' : ''}">${H}/${SPACE} mm</b>` + (H > SPACE ? ` · ${U.over}` : '');
   if (!st.length){ list.innerHTML = `<li class="empty" id="empty">${U.empty}</li>`; }
   else list.innerHTML = st.map((s, i) => {
     const w = WHEELS[s.type];
@@ -816,7 +792,7 @@ function renderStack(){
       <button class="lk" aria-pressed="${s.locked}" aria-label="${s.locked ? U.unlock : U.lock}">${s.locked ? ICON.lock : ICON.open}</button>
       <button class="del" aria-label="${U.del}">${ICON.x}</button></li>`;
   }).join('');
-  $('b-add').disabled = H >= SPACE || st.length >= MAX_WHEELS; $('b-shuffle').disabled = st.length < 2; $('b-clear').disabled = !st.length;
+  $('b-shuffle').disabled = st.length < 2; $('b-clear').disabled = !st.length;
 }
 function renderSingle(){
   const U = T(), w = WHEELS[state.single], el = $('p-single');
@@ -832,9 +808,11 @@ function renderUI(){
   const U = T();
   document.querySelectorAll('[data-t]').forEach(el => { const v = U[el.dataset.t]; if (typeof v === 'string') el.textContent = v; });
   $('l-cur').textContent = state.lang.toUpperCase(); renderLangMenu();
+  document.querySelectorAll('[data-tt]').forEach(el => el.setAttribute('aria-label', U[el.dataset.tt] || ''));
   document.documentElement.lang = state.lang;
   document.querySelectorAll('.card').forEach(c => {
-    { c.querySelector('b').textContent = code(c.dataset.k); c.querySelector('small').textContent = `${WHEELS[c.dataset.k].t} mm`; }
+    if (c.dataset.k === 'stack'){ c.querySelector('b').textContent = U.hero; c.querySelector('small').textContent = U.heroSub; }
+    else { c.querySelector('b').textContent = code(c.dataset.k); c.querySelector('small').textContent = `${WHEELS[c.dataset.k].t} mm`; }
   });
   renderStack(); renderSingle(); buildLabels();
   if (!$('sheet').hidden) openSheet(sheetCtx);
@@ -878,8 +856,7 @@ list.addEventListener('pointerup', endDrag); list.addEventListener('pointercance
 
 $('b-shuffle').onclick = shuffle;
 $('b-clear').onclick = () => { state.stack = []; state.sel = null; syncStack(); };
-$('b-add').onclick = () => { if (stackH() >= SPACE || state.stack.length >= MAX_WHEELS) toast(T().full); else openSheet({mode:'add'}); };
-document.querySelectorAll('[data-preset]').forEach(b => b.onclick = () => {
+document.querySelectorAll('[data-preset]').forEach(b => b.onclick = () => { setPre(false);
   state.stack = PRESETS[b.dataset.preset].map(t => mk(t)); state.sel = null; syncStack();
 });
 $('b-addthis').onclick = () => {
@@ -914,18 +891,16 @@ $('sheet').addEventListener('click', e => { if (e.target.id === 'sheet') closeSh
 
 /* collapsible panels */
 const app = $('app');
-function setOpen(side, on){ app.classList.toggle('open-' + side, on); $(side === 'l' ? 'tab-l' : side === 'r' ? 'tab-r' : 'd-r').setAttribute('aria-expanded', on); layoutTargets(); try { localStorage.setItem('diamant-open-' + side, on ? 1 : 0); } catch(e){} }
+function setOpen(side, on){ app.classList.toggle('open-' + side, on); $(side === 'l' ? 'tab-l' : 'handle').setAttribute('aria-expanded', on); layoutTargets(); try { localStorage.setItem('diamant-open-' + side, on ? 1 : 0); } catch(e){} }
 const isOpen = side => app.classList.contains('open-' + side);
 $('tab-l').onclick = () => setOpen('l', !isOpen('l'));
-$('tab-r').onclick = () => setOpen('r', !isOpen('r'));
-$('d-r').onclick = () => setOpen('b', !isOpen('b'));
-$('d-l').onclick = () => { closeSheet(); if (state.mode !== 'stack'){ enterMode('stack', true); flyHome(); } else setOpen('l', !isOpen('l')); };
-try { ['l','r','b'].forEach(side => { if (localStorage.getItem('diamant-open-' + side) === '1') app.classList.add('open-' + side); }); } catch(e){}
+$('handle').onclick = () => setOpen('b', !isOpen('b'));
+try { ['l','b'].forEach(side => { if (localStorage.getItem('diamant-open-' + side) === '1') app.classList.add('open-' + side); }); } catch(e){}
 
 /* tools */
 const VIEW_DIR = new THREE.Vector3(.62, .42, .66).normalize();
 let camFly = null;
-function flyTo(dir, dur = 1.1){ const d = dir.clone().normalize(); camFly = {from: camera.position.clone(), dir: d, to: d.clone(), t:0, dur}; }
+function flyTo(dir, dur = 1.1){ const d = dir.clone().normalize(); camFly = {from: camera.position.clone(), dir: d, to: d.clone(), t:0, dur, tFrom: controls.target.clone()}; }
 function flyHome(){ flyTo(VIEW_DIR); }
 function setTool(name, on){
   if (state[name] === on) return;
@@ -938,18 +913,21 @@ $('t-explode').onclick = () => setTool('explode', !state.explode);
 $('t-section').onclick = () => setTool('section', !state.section);
 $('t-spin').onclick = () => setTool('spin', !state.spin);
 $('t-show').onclick = e => { e.stopPropagation(); startShow(false); };
-$('t-reset').onclick = () => { setTool('explode', false); setTool('section', false); setTool('spin', false); flyHome(); };
-function renderLangMenu(){ $('l-menu').innerHTML = LANGS.map(l => `<button role="menuitemradio" aria-checked="${l === state.lang}" data-l="${l}">${UI[l].name}<small>${l.toUpperCase()}</small></button>`).join(''); }
+function resetView(){ setTool('explode', false); setTool('section', false); setTool('spin', false); flyHome(); };
+function renderLangMenu(){ $('l-menu').innerHTML = LANGS.map(l => `<button role="menuitemradio" aria-checked="${l === state.lang}" data-l="${l}">${UI[l].name}<small>${l.toUpperCase()}</small></button>`).join('') + `<hr><button data-act="reset">${T().reset}</button>` + (fsAvailable ? `<button data-act="fs">${T().fsBtn}</button>` : ''); }
 function setMenu(open){ $('l-menu').hidden = !open; $('l-btn').setAttribute('aria-expanded', open); }
 $('l-btn').onclick = e => { e.stopPropagation(); setMenu($('l-menu').hidden); };
-$('l-menu').addEventListener('click', e => { const b = e.target.closest('[data-l]'); if (!b) return; state.lang = b.dataset.l; try { localStorage.setItem('diamant-lang', state.lang); } catch(x){} setMenu(false); renderUI(); });
-addEventListener('pointerdown', e => { if (!e.target.closest('.lang')) setMenu(false); }, {capture:true});
+$('l-menu').addEventListener('click', e => { const a = e.target.closest('[data-act]'); if (a){ setMenu(false); if (a.dataset.act === 'fs') toggleFs(); else resetView(); return; }
+  const b = e.target.closest('[data-l]'); if (!b) return; state.lang = b.dataset.l; try { localStorage.setItem('diamant-lang', state.lang); } catch(x){} setMenu(false); renderUI(); });
+addEventListener('pointerdown', e => { if (!e.target.closest('.lang')) setMenu(false); if (!e.target.closest('.pre')) setPre(false); }, {capture:true});
+function setPre(open){ $('pre-menu').hidden = !open; $('b-pre').setAttribute('aria-expanded', open); }
+$('b-pre').onclick = e => { e.stopPropagation(); setPre($('pre-menu').hidden); };
 try { const l = localStorage.getItem('diamant-lang'); if (l && UI[l]) state.lang = l; } catch(e){}
-const fsBtn = $('fs'), de = document.documentElement;
-if (!(de.requestFullscreen || de.webkitRequestFullscreen) || navigator.standalone || matchMedia('(display-mode: fullscreen), (display-mode: standalone)').matches) fsBtn.hidden = true;
+const de = document.documentElement;
+const fsAvailable = !!(de.requestFullscreen || de.webkitRequestFullscreen) && !navigator.standalone && !matchMedia('(display-mode: fullscreen), (display-mode: standalone)').matches;
 const fsSync = () => $('app').classList.toggle('fs', !!(document.fullscreenElement || document.webkitFullscreenElement));
 document.addEventListener('fullscreenchange', fsSync); document.addEventListener('webkitfullscreenchange', fsSync);
-fsBtn.onclick = () => { try {
+function toggleFs(){ try {
   if (document.fullscreenElement || document.webkitFullscreenElement) (document.exitFullscreen || document.webkitExitFullscreen).call(document);
   else { const r = (de.requestFullscreen || de.webkitRequestFullscreen).call(de); if (r && r.catch) r.catch(() => {}); }
 } catch(e){} };
@@ -1017,9 +995,11 @@ const endStage = e => {
   const dx = e.clientX - down.x, dy = e.clientY - down.y, quick = performance.now() - down.t < 450; down = null;
   if (dx*dx + dy*dy > 64 || !quick || state.mode !== 'stack') return;
   const uid = wheelAt(e.clientX, e.clientY);
+  const nowT = performance.now(); if (nowT - lastTap < 320){ lastTap = 0; resetView(); return; } lastTap = nowT;
   if (!uid){ if (state.sel){ state.sel = null; renderStack(); } return; }
   select(uid);
 };
+let lastTap = 0;
 canvas.addEventListener('pointerup', endStage); canvas.addEventListener('pointercancel', endStage);
 
 /* ---- drag a wheel from the catalogue strip onto the arbor ---- */
@@ -1095,16 +1075,16 @@ const wide = () => innerWidth / innerHeight > 1 && innerWidth > 760;
 /* layout: where the composition sits and how big it is depends on which panels are open; it eases there every frame */
 const lay = {x:0, y:0, z:1, tx:0, ty:0, tz:1}; window.__lay = lay;
 function layoutTargets(){
-  const w = innerWidth, h = innerHeight, L = app.classList.contains('open-l'), R = app.classList.contains('open-r'), B = app.classList.contains('open-b');
+  const w = innerWidth, h = innerHeight, L = app.classList.contains('open-l'), B = app.classList.contains('open-b');
   if (SHOW.on){ lay.tx = wide() ? -w*.13 : 0; lay.ty = wide() ? h*.03 : -h*.1; lay.tz = 1; return; }
-  if (wide()){ lay.tx = (L ? -w*.16 : 0) + (R ? w*.045 : 0); lay.ty = h*.02 + (B ? h*.075 : 0); lay.tz = 1 + (L ? .22 : 0) + (B ? .14 : 0) + (R ? .05 : 0); }
+  if (wide()){ lay.tx = L ? -w*.16 : 0; lay.ty = h*.04 + (B ? h*.07 : 0); lay.tz = 1 + (L ? .22 : 0) + (B ? .14 : 0); }
   else { lay.tx = 0; lay.ty = -h*.08 + (L ? h*.14 : 0) + (B ? -h*.02 : 0); lay.tz = 1 + (L ? .3 : 0) + (B ? .18 : 0); }
 }
 function applyLayout(dt){
   const k = 1 - Math.pow(.004, dt), w = innerWidth, h = innerHeight;
   const nx = lay.x + (lay.tx - lay.x)*k, ny = lay.y + (lay.ty - lay.y)*k, nz = lay.z + (lay.tz - lay.z)*k;
   if (Math.abs(nx - lay.x) > .01 || Math.abs(ny - lay.y) > .01){ lay.x = nx; lay.y = ny; camera.setViewOffset(w, h, lay.x, lay.y, w, h); camera.updateProjectionMatrix(); }
-  if (Math.abs(nz - lay.z) > 1e-4){ if (!SHOW.on && !camFly) camera.position.multiplyScalar(nz / lay.z); lay.z = nz; }
+  if (Math.abs(nz - lay.z) > 1e-4){ if (!SHOW.on && !camFly) camera.position.sub(controls.target).multiplyScalar(nz / lay.z).add(controls.target); lay.z = nz; }
 }
 function resize(){
   const w = innerWidth, h = innerHeight;
@@ -1126,23 +1106,25 @@ const SHOW_SET_A = ['V3.6','V3.12','V4P.2','V33','V44'], SHOW_SET_B = ['V3.6','V
 function setStack(types, instant){ state.stack = types.map(t => mk(t)); state.sel = null; syncStack(instant); }
 function caption(i){ const c = $('cap'); if (i < 0){ c.classList.remove('on'); return; } const [e, t] = T().caps[i]; $('cap-e').textContent = e; $('cap-t').textContent = t; c.classList.remove('on'); void c.offsetWidth; c.classList.add('on'); }
 
-/* --- poses: where each wheel wants to be, relative to its place on the arbor --- */
+/* --- poses: where each wheel wants to be, relative to its place on the arbor.
+   Every move goes through the HUB (over the axis, above everything) in two legs: up/out, then to the spot.
+   Wheels move one at a time, so nothing ever crosses anything. Formations keep Ø200 pieces ≥ 212 mm apart. --- */
 const ease3 = t => t < 0 ? 0 : t > 1 ? 1 : t*t*(3 - 2*t);
 const wheelsTopDown = () => state.stack.map(x => W.get(x.uid)).filter(Boolean);
-function pose(o, p, delay = 0){ o.pose = p; o.poseAt = SHOW.t + delay; }
-function poseAll(fn, stagger = .3, fromBottom = false){ const ws = wheelsTopDown(); (fromBottom ? [...ws].reverse() : ws).forEach((o, i) => pose(o, fn(i, ws.length, o), i*stagger)); }
+const HUB_Y = 290, LEG = 1.1;                                   // mm above the stack base; seconds per leg
 const HOME = {x:0, y:0, z:0, rx:0, ry:0, rz:0, spin:0};
-const helix   = (i, n) => ({x:128, y:60 + i*30, z:0, rx:.45, ry:i*1.05, rz:0, spin:.6, orbit:.5});          // a rising spiral, wheels tilted toward the axis
-const carousel= (i, n) => ({x:150, y:70, z:0, rx:PI/2, ry:i*(PI*2/n), rz:0, spin:0, orbit:-.4, face:true}); // standing wheels on a ring
-const column  = (i, n) => ({x:0, y:40 + (n - 1 - i)*52, z:0, rx:0, ry:0, rz:0, spin:1.4});                 // exploded, each wheel spinning on its axis
-const gallery = (i, n) => ({x:(i - (n - 1)/2)*118, y:70, z:0, rx:PI/2, ry:0, rz:0, spin:0, screen:true});    // a row facing the viewer
-function nutPose(p){ SHOW.nut = p; }   // {y, r, spin} or null
+function pose(o, p, delay = 0){ o.next = p; o.nextAt = SHOW.t + delay; }
+function poseAll(fn, stagger = .9, fromBottom = false){ const ws = wheelsTopDown(); (fromBottom ? [...ws].reverse() : ws).forEach((o, i) => pose(o, fn(i, ws.length, o), i*stagger)); }
+const helix  = (i, n) => ({x:225, y:70 + i*34, z:0, rx:.4, ry:i*1.05, rz:0, spin:.5, orbit:.35});            // rising spiral, Ø200 wheels 60° apart on r225 → chords ≈ 225 mm
+const column = (i, n) => ({x:0, y:36 + (n - 1 - i)*46, z:0, rx:0, ry:0, rz:0, spin:1.2});                  // exploded on the axis, each spinning
+const gallery= (i, n) => ({x:(i - (n - 1)/2)*215, y:90, z:0, rx:PI/2, ry:0, rz:0, spin:0, screen:true});    // a row facing the viewer, 215 mm pitch
+function nutPose(p){ SHOW.nut = p; }
 
 /* --- camera keyframes: [t, theta turns, phi (rad), distance ×, look-at y (mm)] --- */
 const CAM = [
-  [0,   0,   1.32, 1.35, 10], [5,  .25, 1.05, 1.0, 20], [12, .9,  .62, 1.1, 60], [19, 1.5, 1.1, 1.0, 70],
-  [26, 2.1,  .95, 1.05, 60], [33, 2.7, 1.3, .9, 15], [38, 3.2, 1.0, 1.0, 20], [46, 3.9, .75, 1.1, 70],
-  [53, 4.6,  1.2, 1.0, 60], [60, 5.2, .95, .95, 20], [66, 5.7, 1.25, 1.1, 15], [72, 6.0, 1.32, 1.35, 10]
+  [0,   0,   1.32, 1.35, 10], [5,  .25, 1.05, 1.1, 20], [13, .9,  .7,  1.55, 100], [22, 1.5, 1.05, 1.2, 110],
+  [31, 2.1,  1.3,  1.0, 20], [36, 2.6, 1.0, 1.05, 20], [45, 3.2,  1.2, 1.7, 90],  [53, 3.8, .75, 1.6, 100],
+  [60, 4.4,  1.1,  1.05, 20], [68, 5.0, 1.25, 1.0, 20], [76, 5.5, .95, 1.2, 100], [80, 5.8, 1.32, 1.35, 10]
 ];
 function camAt(t){
   let k = 0; while (k < CAM.length - 2 && t >= CAM[k + 1][0]) k++;
@@ -1152,30 +1134,31 @@ function camAt(t){
 
 /* --- the script: [time, action] --- */
 const EV = [];
-const SHOW_LEN = 72;
+const SHOW_LEN = 80;
 EV.push([0,  () => { setStack(SHOW_SET_A, true); poseAll(() => HOME, 0); nutPose(null); caption(0); glowTo(1.2); }]);
-EV.push([5,  () => { nutPose({y:150, r:0, spin:3}); poseAll(helix, .32); caption(-1); }]);          // the set unwinds into a spiral
-EV.push([9,  () => caption(1)]);
-EV.push([13, () => { poseAll(carousel, .25); caption(-1); }]);                                       // then stands up in a ring
-EV.push([17, () => caption(2)]);
-EV.push([20, () => { poseAll(column, .22); caption(-1); }]);                                          // exploded column, every wheel spinning
-EV.push([24, () => caption(3)]);
-EV.push([27, () => { poseAll(() => HOME, .28, true); caption(-1); }]);                                 // reassembles from the bottom up
-EV.push([30, () => nutPose({y:0, r:0, spin:0})]);                                                     // the nut screws back on
-EV.push([32, () => { setTool('spin', true); glowTo(2.6); }]);
-EV.push([36, () => { setTool('spin', false); glowTo(1.2); }]);
-EV.push([37, () => { nutPose({y:150, r:0, spin:3}); poseAll(gallery, .2); }]);                        // the wheels line up for the viewer…
-EV.push([41, () => { wheelsTopDown().forEach((o, i) => { setTimeout(() => { o.vanish = true; }, i*120); }); }]);
-EV.push([42, () => { state.stack = []; syncStack(true); setStack(SHOW_SET_B, true); poseAll(gallery, 0); wheelsTopDown().forEach(o => { o.g.scale.setScalar(.01); o.grow = true; }); caption(4); }]); // …and the segmented set takes their place
-EV.push([46, () => { poseAll(helix, .3); caption(-1); }]);
-EV.push([50, () => caption(5)]);
-EV.push([53, () => { poseAll(() => HOME, .28, true); caption(-1); }]);
-EV.push([56, () => nutPose({y:0, r:0, spin:0})]);
-EV.push([58, () => { setTool('spin', true); glowTo(2.6); caption(3); }]);
-EV.push([63, () => { setTool('spin', false); glowTo(1.2); caption(-1); }]);
-EV.push([65, () => { nutPose({y:150, r:0, spin:3}); poseAll(column, .2); }]);
-EV.push([68, () => { caption(0); wheelsTopDown().forEach((o, i) => setTimeout(() => { o.vanish = true; }, i*140)); }]);
-EV.push([70, () => { state.stack = []; syncStack(true); }]);
+EV.push([4,  () => { nutPose({y:HUB_Y + 90, spin:3}); caption(-1); }]);          // nut + washer park high above the hub
+EV.push([5.5,() => poseAll(helix, .9)]);                                         // top wheel first, one at a time, into the spiral
+EV.push([10, () => caption(1)]);
+EV.push([14, () => { poseAll(column, .9); caption(-1); }]);                         // back over the axis, spread out and spinning
+EV.push([19, () => caption(2)]);
+EV.push([23, () => { poseAll(() => HOME, .9, true); caption(-1); }]);              // reassembles from the bottom up
+EV.push([29.5,() => nutPose({y:0, spin:0})]);                                      // the nut screws back on
+EV.push([31, () => { setTool('spin', true); glowTo(2.6); caption(3); }]);
+EV.push([35, () => { setTool('spin', false); glowTo(1.2); caption(-1); }]);
+EV.push([36, () => { nutPose({y:HUB_Y + 90, spin:3}); }]);
+EV.push([37, () => poseAll(gallery, .8)]);                                         // the wheels line up for the viewer…
+EV.push([43.5,() => { wheelsTopDown().forEach((o, i) => setTimeout(() => { o.vanish = true; }, i*140)); }]);
+EV.push([45, () => { state.stack = []; syncStack(true); setStack(SHOW_SET_B, true); poseAll(gallery, 0); wheelsTopDown().forEach(o => { o.g.scale.setScalar(.01); o.grow = true; }); caption(4); }]); // …and the segmented set takes their place
+EV.push([49, () => { poseAll(helix, .9); caption(-1); }]);
+EV.push([54, () => caption(5)]);
+EV.push([58, () => { poseAll(() => HOME, .9, true); caption(-1); }]);
+EV.push([64.5,() => nutPose({y:0, spin:0})]);
+EV.push([66, () => { setTool('spin', true); glowTo(2.6); caption(3); }]);
+EV.push([70, () => { setTool('spin', false); glowTo(1.2); caption(-1); }]);
+EV.push([71, () => { nutPose({y:HUB_Y + 90, spin:3}); }]);
+EV.push([72, () => poseAll(column, .8)]);
+EV.push([76, () => { caption(0); wheelsTopDown().forEach((o, i) => setTimeout(() => { o.vanish = true; }, i*140)); }]);
+EV.push([78, () => { state.stack = []; syncStack(true); }]);
 
 let glowTarget = 0;
 window.__show = SHOW;   // handy for the preview pane
@@ -1215,32 +1198,59 @@ function tickShow(dt){
   glow.intensity += (glowTarget - glow.intensity) * (1 - Math.pow(.1, dt));
   glow.position.set(Math.cos(SHOW.t*.9)*2.2, .9 + .5*Math.sin(SHOW.t*.6), Math.sin(SHOW.t*.9)*2.2);
 }
-/* per-frame pose easing for wheels (and the nut) while the show runs */
+/* per-frame placement of wheels (and the nut) while the show runs: two-leg tweens through the hub + a separation guard */
 function applyPoses(dt){
   const n = state.stack.length;
+  const lerpP = (A, B, u) => ({x:A.x + (B.x - A.x)*u, y:A.y + (B.y - A.y)*u, z:A.z + (B.z - A.z)*u, rx:A.rx + (B.rx - A.rx)*u, ry:A.ry + (B.ry - A.ry)*u, rz:A.rz + (B.rz - A.rz)*u});
+  const place = (p, o) => { const ang = (p.ry || 0) + (p.a || 0); return {x:p.x*Math.cos(ang), y:p.y, z:p.x*Math.sin(ang), rx:p.rx, ry:p.face ? ang : 0, rz:p.rz}; };
   for (const o of W.values()){
     if (o.vanish) continue;
     if (o.grow){ const sc = o.g.scale.x + (1 - o.g.scale.x) * (1 - Math.pow(.002, dt)); o.g.scale.setScalar(sc); if (sc > .995){ o.g.scale.setScalar(1); o.grow = false; } }
-    const p = (SHOW.on && o.pose && SHOW.t >= o.poseAt) ? o.pose : HOME;
     o.cur = o.cur || {x:0, y:0, z:0, rx:0, ry:0, rz:0, a:0, sp:0};
-    const c = o.cur, k = 1 - Math.pow(.0015, dt);
-    if (p.orbit) c.a += dt * p.orbit;                                   // the whole formation turns
-    const ang = (p.ry || 0) + c.a, tx = p.x * Math.cos(ang), tz = p.x * Math.sin(ang);
-    c.x += (tx - c.x) * k; c.z += (tz - c.z) * k; c.y += (p.y - c.y) * k;
-    c.rx += (p.rx - c.rx) * k; c.rz += (p.rz - c.rz) * k;
-    c.sp += ((p.spin || 0) - c.sp) * k; c.ry += c.sp * dt;
-    let ry = p.face ? ang : (p.screen ? Math.atan2(camera.position.x, camera.position.z) - spin.rotation.y : 0);
+    const c = o.cur;
+    if (SHOW.on){
+      // a new destination becomes active at its scheduled time: capture where we are, route via the hub
+      if (o.next && SHOW.t >= o.nextAt){
+        const tgt = o.next; o.next = null; o.pose = tgt; o.t0 = SHOW.t;
+        o.from = {x:c.x, y:c.y, z:c.z, rx:c.rx, ry:c.ry, rz:c.rz};
+        const hubY = Math.max(HUB_Y - o.y, c.y, tgt.y) ; o.hub = {x:0, y: (tgt === HOME || (o.from.x === 0 && o.from.z === 0 && tgt.x === 0)) ? Math.max(HUB_Y - o.y, c.y) : HUB_Y - o.y, z:0, rx:0, ry:c.ry, rz:0};
+        const d = place(Object.assign({}, tgt, {a:c.a}), o); o.to = {x:d.x, y:d.y, z:d.z, rx:d.rx, ry:d.ry, rz:d.rz};
+        o.oneLeg = (o.from.x === 0 && o.from.z === 0 && d.x === 0 && d.z === 0);   // axis to axis: a single straight leg
+      }
+      if (o.pose && o.t0 != null){
+        const el = SHOW.t - o.t0, p = o.pose;
+        if (p.orbit) c.a += dt * p.orbit;
+        let q;
+        if (o.oneLeg) q = lerpP(o.from, o.to, ease3(el / (LEG*1.4)));
+        else if (el < LEG) q = lerpP(o.from, o.hub, ease3(el / LEG));
+        else q = lerpP(o.hub, o.to, ease3((el - LEG) / LEG));
+        if (el >= (o.oneLeg ? LEG*1.4 : 2*LEG) && p !== HOME){ const d = place(Object.assign({}, p, {a:c.a}), o); q = {x:d.x, y:d.y, z:d.z, rx:d.rx, ry:d.ry, rz:d.rz}; }  // formation keeps turning
+        c.x = q.x; c.y = q.y; c.z = q.z; c.rx = q.rx; c.ry = q.ry; c.rz = q.rz;
+        c.sp += ((p.spin || 0) - c.sp) * (1 - Math.pow(.01, dt)); c.own = (c.own || 0) + c.sp * dt;
+        if (p === HOME && el >= 2*LEG){ c.a = 0; }
+      }
+    } else { const k = 1 - Math.pow(.0015, dt); c.x *= 1 - k; c.y *= 1 - k; c.z *= 1 - k; c.rx *= 1 - k; c.rz *= 1 - k; c.sp = 0; o.pose = null; o.next = null; o.t0 = null; }
+    const scr = (SHOW.on && o.pose && o.pose.screen) ? Math.atan2(camera.position.x, camera.position.z) - spin.rotation.y : 0;
     o.g.position.x = c.x + (o.outX ? right.x * o.outX : 0); o.g.position.z = c.z + (o.outX ? right.z * o.outX : 0);
     o.g.position.y = o.y + ex*(o.kb + 1)*GAP + c.y;
-    if (p === HOME && Math.abs(c.rx) < .002 && Math.abs(c.sp) < .002) o.g.rotation.set(0, c.ry, 0); else o.g.rotation.set(c.rx, ry + c.ry, c.rz);
-    if (!SHOW.on) o.pose = null;
+    o.g.rotation.set(c.rx, (c.ry || 0) + (c.own || 0) + scr, c.rz);
+  }
+  // separation guard: two wheels closer than 212 mm (centre to centre, Ø200) are nudged apart, never through each other
+  if (SHOW.on){
+    const ws = [...W.values()].filter(o => !o.vanish && o.cur);
+    for (let i = 0; i < ws.length; i++) for (let j = i + 1; j < ws.length; j++){
+      const A = ws[i].g.position, B = ws[j].g.position; const dx = B.x - A.x, dy = B.y - A.y, dz = B.z - A.z;
+      const flatA = Math.abs(ws[i].cur.rx) < .3, flatB = Math.abs(ws[j].cur.rx) < .3;
+      if (flatA && flatB && Math.abs(dy) > 22) continue;                      // stacked flat wheels may sit over each other
+      const d = Math.hypot(dx, dy, dz); if (d < 212 && d > .01){ const push = (212 - d) / 2, ux = dx/d, uy = dy/d, uz = dz/d; A.x -= ux*push; A.y -= uy*push*.3; A.z -= uz*push; B.x += ux*push; B.y += uy*push*.3; B.z += uz*push; }
+    }
   }
   // nut + washer: in the show they fly straight up and twirl instead of retreating
   if (SHOW.on && SHOW.nut){
     const t = SHOW.nut; SHOW.nutCur = SHOW.nutCur || {y:0, sp:0};
     const k = 1 - Math.pow(.002, dt); SHOW.nutCur.y += (t.y - SHOW.nutCur.y) * k; SHOW.nutCur.sp += (t.spin - SHOW.nutCur.sp) * k;
     nut.rotation.y += SHOW.nutCur.sp * dt; washer.rotation.y += SHOW.nutCur.sp * .6 * dt;
-    const H = n ? stackH() + .1*(n - 1) : SPACE;
+    const H = n ? stackH() + .1*(n - 1) : SPACE;   // parks straight above the hub, clear of every path
     washer.position.set(0, H + SHOW.nutCur.y, 0); nut.position.set(0, H + SHOW.nutCur.y, 0);
     return true;
   }
@@ -1315,7 +1325,7 @@ function frame(now){
   if (camFly && !SHOW.on){
     camFly.to.copy(camFly.dir).multiplyScalar(fitDist());
     camFly.t += dt / camFly.dur; const t = ease(Math.min(1, camFly.t));
-    camera.position.lerpVectors(camFly.from, camFly.to, t);
+    camera.position.lerpVectors(camFly.from, camFly.to, t); controls.target.copy(camFly.tFrom).multiplyScalar(1 - t);
     if (camFly.t >= 1) camFly = null;
   }
   applyLayout(dt);
@@ -1338,8 +1348,7 @@ function frame(now){
 /* ================================================================== boot */
 try { await Promise.race([Promise.all([document.fonts.load('600 20px Archivo'), document.fonts.load('700 20px Archivo')]), new Promise(r => setTimeout(r, 2500))]); } catch(e){}
 thumbs = makeThumbs();
-$('d-l-img').src = thumbs.stack;
-$('strip').innerHTML = ORDER.map(k => `<button class="card" data-k="${k}"><img src="${thumbs[k]}" alt="" draggable="false"><b></b><small></small></button>`).join('');
+$('strip').innerHTML = `<button class="card hero" data-k="stack"><img src="${thumbs.stack}" alt="" draggable="false"><b></b><small></small></button>` + ORDER.map(k => `<button class="card" data-k="${k}"><img src="${thumbs[k]}" alt="" draggable="false"><b></b><small></small></button>`).join('');
 /* catalogue cards: one tap drops the wheel onto the arbor, a double tap opens its sheet, a drag carries it to the arbor */
 let tapT = 0, tapK = null;
 function addFromCatalogue(k){
