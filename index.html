@@ -278,6 +278,7 @@ dl.specs dd{font-size:15px;font-weight:500;font-variant-numeric:tabular-nums}
 @media (max-width:420px){ .grid{grid-template-columns:repeat(2,minmax(0,1fr))} .sheet-card h2{font-size:22px} }
 @media (min-aspect-ratio:1/1) and (max-height:620px){ .panel{top:calc(env(safe-area-inset-top,0px) + 80px)} .panel h1{font-size:24px} .row{height:40px;flex:0 0 40px} .desc{display:none} }
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.card[hidden],[data-preset][hidden]{display:none !important}
 </style>
 
 <div id="app">
@@ -309,7 +310,7 @@ dl.specs dd{font-size:15px;font-weight:500;font-variant-numeric:tabular-nums}
         <button class="glass" id="b-shuffle" data-tt="shuffle"><svg viewBox="0 0 24 24"><path d="M3 7h3.5c2 0 3.2 1 4.2 2.6l2.6 4.8c1 1.6 2.2 2.6 4.2 2.6H21M3 17h3.5c1.4 0 2.4-.5 3.2-1.3M14.3 8.3c.8-.8 1.8-1.3 3.2-1.3H21M18 4l3 3-3 3M18 14l3 3-3 3"/></svg></button>
         <button class="glass" id="b-clear" data-tt="clear"><svg viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg></button>
         <div class="pre"><button class="glass" id="b-pre" data-tt="presets" aria-haspopup="menu" aria-expanded="false"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="4" rx="1.5"/><rect x="4" y="12" width="16" height="4" rx="1.5"/><path d="M8 19h8"/></svg></button>
-          <div class="menu glass" id="pre-menu" role="menu" hidden><button data-preset="tagli" data-t="pTagli"></button><button data-preset="settori" data-t="pSettori"></button></div></div>
+          <div class="menu glass" id="pre-menu" role="menu" hidden><button data-preset="tagli" data-t="pTagli"></button><button data-preset="settori" data-t="pSettori"></button><button data-preset="iso">Set ISO 40</button></div></div>
       </div>
     </div>
     <ul class="list" id="list"></ul>
@@ -377,18 +378,21 @@ const WHEELS = {
   'V33S':  {t:12, kind:'settori', prof:'pencil', L:1, code:'V33', title:'Mola V33 a settori'},
   'V44S':  {t:14, kind:'settori', prof:'pencil', L:1, code:'V44', title:'Mola V44 a settori'},
   'V55S':  {t:14, kind:'settori', prof:'pencil', L:.5, code:'V55', title:'Mola V55 a settori'},
-  'V66S':  {t:18, kind:'settori', prof:'pencil', L:.5, code:'V66', title:'Mola V66 a settori'}
+  'V66S':  {t:18, kind:'settori', prof:'pencil', L:.5, code:'V66', title:'Mola V66 a settori'},
+  'SPACER':{t:10, kind:'spacer', name:'Spacer',     title:'Spacer 10 mm',     only:'100'},
+  'POLISH':{t:20, kind:'polish', name:'Polishing',  title:'Mola polishing',   only:'100'}
 };
-const ORDER = ['V3.6','V3.12','V4P.2','V33','V44','V55','V66','V33S','V44S','V55S','V66S'];
+const ORDER = ['V3.6','V3.12','V4P.2','V33','V44','V55','V66','V33S','V44S','V55S','V66S','SPACER','POLISH'];
+const orderFor = c => ORDER.filter(k => !WHEELS[k].only || WHEELS[k].only === c);
 // dall'alto (dado) verso il basso (flangia), come nelle tavole d'assieme
-const PRESETS = { tagli:['V3.6','V3.12','V4P.2','V33','V44','V55'], settori:['V3.6','V3.12','V4P.2','V33S','V44S','V55S'] };
+const PRESETS = { tagli:['V3.6','V3.12','V4P.2','V33','V44','V55'], settori:['V3.6','V3.12','V4P.2','V33S','V44S','V55S'], iso:['POLISH','SPACER','V33','V66S'] };   // iso = the set in the photo: coarse, fine, spacer, polishing (top of the list = nut side)
 const MAX_WHEELS = 8;
 // the two arbors: Ø200 wheels on the flanged cone, Ø100 wheels on the ISO 40 taper
 const CONE = {
   '200': {R:100, space:80, bore:17.5, tk:1, shaftR:17.4, threadR:17.4, yMin:-67,  aside:185, nutR:37, washerR:47.5, label:'Ø 200', sub:'80 mm',
           setA:['V3.6','V3.12','V4P.2','V33','V44'], setB:['V3.6','V4P.2','V33S','V44S','V55S']},
-  '100': {R:50,  space:62, bore:17.5, tk:2, shaftR:17.4, threadR:8, yMin:-110, aside:120, nutR:14, washerR:16, label:'Ø 100', sub:'ISO 40 · 62 mm',
-          setA:['V3.6','V33'], setB:['V3.6','V44S']}
+  '100': {R:50,  space:62, bore:17.5, tk:1, shaftR:17.4, threadR:8, yMin:-110, aside:120, nutR:14, washerR:16, label:'Ø 100', sub:'ISO 40 · 62 mm',
+          setA:['POLISH','SPACER','V33','V66S'], setB:['POLISH','SPACER','V4P.2','V44S']}
 };
 let SPACE = 80;
 const cone = () => CONE[state.cone];
@@ -405,7 +409,7 @@ const UI = {
       wheels:n=>`${n} ${n===1?'mola':'mole'}`,move:'Sposta',lock:'Blocca posizione',unlock:'Sblocca posizione',
       over:'oltre lo spazio',full:'Spazio sul cono esaurito · max 80 mm',shuffled:'Ordine mescolato · le mole bloccate restano ferme',nothing:'Sblocca almeno due mole per mescolarle',
       added:c=>`${c} aggiunta in cima al set`,
-      kind:{cont:'Mola continua',tagli:'Mola a tagli',settori:'Mola a settori'},
+      kind:{cont:'Mola continua',tagli:'Mola a tagli',settori:'Mola a settori',spacer:'Distanziale',polish:'Mola polishing (altro fornitore)'},
       sp:{d:'Diametro',t:'Spessore',b:'Foro',rim:'Corona',prof:'Profilo',fix:'Fissaggio'},
       gola:d=>`Gola a V 90°, prof. ${d} mm`,fix:'6 fori Ø 6,5',
       parts:{nut:'Dado di serraggio',washer:'Rondella',base:'Cono'}, hero:'Cono', heroSub:'assieme'},
@@ -416,7 +420,7 @@ const UI = {
       wheels:n=>`${n} ${n===1?'wheel':'wheels'}`,move:'Move',lock:'Lock position',unlock:'Unlock position',
       over:'over the limit',full:'No room left on the arbor · 80 mm max',shuffled:'Order shuffled · locked wheels stay put',nothing:'Unlock at least two wheels to shuffle',
       added:c=>`${c} added on top of the stack`,
-      kind:{cont:'Continuous wheel',tagli:'Slotted wheel',settori:'Segmented wheel'},
+      kind:{cont:'Continuous wheel',tagli:'Slotted wheel',settori:'Segmented wheel',spacer:'Spacer',polish:'Polishing wheel (third party)'},
       sp:{d:'Diameter',t:'Thickness',b:'Bore',rim:'Rim',prof:'Profile',fix:'Fixing'},
       gola:d=>`90° V-groove, ${d} mm deep`,fix:'6 holes Ø 6.5',
       parts:{nut:'Clamping nut',washer:'Washer',base:'arbor'}, hero:'arbor', heroSub:'assembly'},
@@ -427,7 +431,7 @@ const UI = {
       wheels:n=>`${n} ${n===1?'Scheibe':'Scheiben'}`,move:'Verschieben',lock:'Position sperren',unlock:'Position freigeben',
       over:'über dem Limit',full:'Kein Platz mehr auf dem Dorn · max. 80 mm',shuffled:'Reihenfolge gemischt · gesperrte Scheiben bleiben',nothing:'Mindestens zwei Scheiben zum Mischen freigeben',
       added:c=>`${c} oben auf das Paket gelegt`,
-      kind:{cont:'Durchgehende Scheibe',tagli:'Geschlitzte Scheibe',settori:'Segmentscheibe'},
+      kind:{cont:'Durchgehende Scheibe',tagli:'Geschlitzte Scheibe',settori:'Segmentscheibe',spacer:'Distanzring',polish:'Polierscheibe (Fremdfabrikat)'},
       sp:{d:'Durchmesser',t:'Dicke',b:'Bohrung',rim:'Kranz',prof:'Profil',fix:'Befestigung'},
       gola:d=>`90°-V-Nut, ${d} mm tief`,fix:'6 Bohrungen Ø 6,5',
       parts:{nut:'Spannmutter',washer:'Scheibe',base:'Dorn'}, hero:'Dorn', heroSub:'Baugruppe'},
@@ -438,7 +442,7 @@ const UI = {
       wheels:n=>`${n} ${n===1?'muela':'muelas'}`,move:'Mover',lock:'Bloquear posición',unlock:'Desbloquear posición',
       over:'fuera del límite',full:'No queda espacio en el cono · máx. 80 mm',shuffled:'Orden mezclado · las muelas bloqueadas no se mueven',nothing:'Desbloquea al menos dos muelas para mezclar',
       added:c=>`${c} añadida encima del paquete`,
-      kind:{cont:'Muela continua',tagli:'Muela ranurada',settori:'Muela de segmentos'},
+      kind:{cont:'Muela continua',tagli:'Muela ranurada',settori:'Muela de segmentos',spacer:'Separador',polish:'Muela de pulido (otro proveedor)'},
       sp:{d:'Diámetro',t:'Espesor',b:'Agujero',rim:'Corona',prof:'Perfil',fix:'Fijación'},
       gola:d=>`Garganta en V 90°, prof. ${d} mm`,fix:'6 agujeros Ø 6,5',
       parts:{nut:'Tuerca de apriete',washer:'Arandela',base:'Cono'}, hero:'Cono', heroSub:'conjunto'},
@@ -449,7 +453,7 @@ const UI = {
       wheels:n=>`${n} ${n===1?'meule':'meules'}`,move:'Déplacer',lock:'Verrouiller la position',unlock:'Déverrouiller la position',
       over:'au-delà de la limite',full:'Plus de place sur le cône · 80 mm max',shuffled:'Ordre mélangé · les meules verrouillées restent en place',nothing:'Déverrouillez au moins deux meules pour mélanger',
       added:c=>`${c} ajoutée en haut du jeu`,
-      kind:{cont:'Meule continue',tagli:'Meule à fentes',settori:'Meule à segments'},
+      kind:{cont:'Meule continue',tagli:'Meule à fentes',settori:'Meule à segments',spacer:'Entretoise',polish:'Meule de polissage (autre fournisseur)'},
       sp:{d:'Diamètre',t:'Épaisseur',b:'Alésage',rim:'Couronne',prof:'Profil',fix:'Fixation'},
       gola:d=>`Gorge en V 90°, prof. ${d} mm`,fix:'6 trous Ø 6,5',
       parts:{nut:'Écrou de serrage',washer:'Rondelle',base:'Cône'}, hero:'Cône', heroSub:'ensemble'},
@@ -460,7 +464,7 @@ const UI = {
       wheels:n=>`${n} ${n===1?'mó':'mós'}`,move:'Mover',lock:'Bloquear posição',unlock:'Desbloquear posição',
       over:'acima do limite',full:'Sem espaço no cone · máx. 80 mm',shuffled:'Ordem baralhada · as mós bloqueadas ficam no lugar',nothing:'Desbloqueie pelo menos duas mós para baralhar',
       added:c=>`${c} adicionada no topo do conjunto`,
-      kind:{cont:'Mó contínua',tagli:'Mó ranhurada',settori:'Mó de segmentos'},
+      kind:{cont:'Mó contínua',tagli:'Mó ranhurada',settori:'Mó de segmentos',spacer:'Espaçador',polish:'Mó de polimento (outro fornecedor)'},
       sp:{d:'Diâmetro',t:'Espessura',b:'Furo',rim:'Coroa',prof:'Perfil',fix:'Fixação'},
       gola:d=>`Garganta em V 90°, prof. ${d} mm`,fix:'6 furos Ø 6,5',
       parts:{nut:'Porca de aperto',washer:'Anilha',base:'Cone'}, hero:'Cone', heroSub:'conjunto'},
@@ -471,7 +475,7 @@ const UI = {
       wheels:n=>`${n} ${n===1?'круг':(n<5?'круга':'кругов')}`,move:'Переместить',lock:'Закрепить позицию',unlock:'Открепить позицию',
       over:'сверх лимита',full:'На оправке нет места · макс. 80 мм',shuffled:'Порядок перемешан · закреплённые круги на месте',nothing:'Открепите хотя бы два круга, чтобы перемешать',
       added:c=>`${c} добавлен сверху набора`,
-      kind:{cont:'Сплошной круг',tagli:'Круг с прорезями',settori:'Сегментный круг'},
+      kind:{cont:'Сплошной круг',tagli:'Круг с прорезями',settori:'Сегментный круг',spacer:'Проставка',polish:'Полировальный круг (сторонний)'},
       sp:{d:'Диаметр',t:'Толщина',b:'Посадочное отверстие',rim:'Алмазный слой',prof:'Профиль',fix:'Крепление'},
       gola:d=>`V-канавка 90°, глубина ${d} мм`,fix:'6 отверстий Ø 6,5',
       parts:{nut:'Зажимная гайка',washer:'Шайба',base:'Оправка'}, hero:'Оправка', heroSub:'сборка'},
@@ -482,7 +486,7 @@ const UI = {
       wheels:n=>`${n} taş`,move:'Taşı',lock:'Konumu kilitle',unlock:'Kilidi aç',
       over:'sınırın üzerinde',full:'Milde yer kalmadı · en fazla 80 mm',shuffled:'Sıra karıştırıldı · kilitli taşlar yerinde',nothing:'Karıştırmak için en az iki taşın kilidini açın',
       added:c=>`${c} setin üstüne eklendi`,
-      kind:{cont:'Sürekli taş',tagli:'Yarıklı taş',settori:'Segmentli taş'},
+      kind:{cont:'Sürekli taş',tagli:'Yarıklı taş',settori:'Segmentli taş',spacer:'Ara halka',polish:'Polisaj taşı (başka tedarikçi)'},
       sp:{d:'Çap',t:'Kalınlık',b:'Delik',rim:'Taç',prof:'Profil',fix:'Bağlantı'},
       gola:d=>`90° V kanal, ${d} mm derinlik`,fix:'6 delik Ø 6,5',
       parts:{nut:'Sıkma somunu',washer:'Rondela',base:'mili'}, hero:'mili', heroSub:'montaj'},
@@ -493,7 +497,7 @@ const UI = {
       wheels:n=>`${n} 片磨轮`,move:'移动',lock:'锁定位置',unlock:'解除锁定',
       over:'超出空间',full:'主轴空间已满 · 最多 80 mm',shuffled:'顺序已打乱 · 锁定的磨轮保持不动',nothing:'至少解锁两片磨轮才能打乱',
       added:c=>`${c} 已加到最上方`,
-      kind:{cont:'连续式磨轮',tagli:'开槽磨轮',settori:'节块磨轮'},
+      kind:{cont:'连续式磨轮',tagli:'开槽磨轮',settori:'节块磨轮',spacer:'隔环',polish:'抛光轮（第三方）'},
       sp:{d:'直径',t:'厚度',b:'内孔',rim:'工作层',prof:'轮廓',fix:'固定'},
       gola:d=>`90° V 形槽，深 ${d} mm`,fix:'6 孔 Ø 6.5',
       parts:{nut:'锁紧螺母',washer:'垫圈',base:'主轴'}, hero:'主轴', heroSub:'总成'},
@@ -504,13 +508,13 @@ const UI = {
       wheels:n=>`ホイール ${n} 枚`,move:'移動',lock:'位置を固定',unlock:'固定を解除',
       over:'上限超過',full:'アーバーに空きがありません · 最大 80 mm',shuffled:'順番をシャッフル · 固定したホイールはそのまま',nothing:'シャッフルするには 2 枚以上の固定を解除してください',
       added:c=>`${c} を最上段に追加しました`,
-      kind:{cont:'連続ホイール',tagli:'スリット付きホイール',settori:'セグメントホイール'},
+      kind:{cont:'連続ホイール',tagli:'スリット付きホイール',settori:'セグメントホイール',spacer:'スペーサー',polish:'ポリッシングホイール（他社製）'},
       sp:{d:'直径',t:'厚さ',b:'穴径',rim:'ダイヤ層',prof:'プロファイル',fix:'固定'},
       gola:d=>`90° V 溝、深さ ${d} mm`,fix:'穴 6 個 Ø 6.5',
       parts:{nut:'締付ナット',washer:'ワッシャー',base:'アーバー'}, hero:'アーバー', heroSub:'一式'}
 };
 const LANGS = ['it','en','de','fr','es','pt','ru','tr','zh','ja'];
-const code = type => WHEELS[type].code ? WHEELS[type].code + UI[state.lang].seg : type;
+const code = type => WHEELS[type].code ? WHEELS[type].code + UI[state.lang].seg : (WHEELS[type].name || type);
 
 /* ================================================================== renderer */
 const canvas = document.getElementById('c');
@@ -570,6 +574,7 @@ const M = {
   sinter: patch(new THREE.MeshStandardMaterial({color:0x5d5c59, metalness:.35, roughness:.82, roughnessMap:tex(gCoarse,.09,.09), bumpMap:tex(gCoarse,.09,.09), bumpScale:1.4})),
   bronze: patch(new THREE.MeshStandardMaterial({color:0xc89d5f, metalness:.85, roughness:.34, bumpMap:tex(gTurn,1,1), bumpScale:.4})),
   brass:  patch(new THREE.MeshStandardMaterial({color:0xd9b866, metalness:1, roughness:.24})),
+  resin:  patch(new THREE.MeshStandardMaterial({color:0x6a1e2b, metalness:0, roughness:.88, roughnessMap:tex(gCoarse,8,8), bumpMap:tex(gCoarse,8,8), bumpScale:.6})),
   darkFlat: new THREE.MeshStandardMaterial({color:0x15181d, metalness:.4, roughness:.8, side:THREE.DoubleSide, polygonOffset:true, polygonOffsetFactor:-2})
 };
 const capCache = new Map();
@@ -661,6 +666,8 @@ function decal(w, t){
 function buildWheel(type){
   const w = WHEELS[type], t = tOf(type), g = new THREE.Group(), R = cone().R, rb = cone().bore, m = radMap;
   const mp = pts => pts.map(p => [m(p[0]), p[1], p[2]]);
+  if (w.kind === 'spacer'){ g.add(lathe([[rb,0],[rb + 5.5,0],[rb + 5.5,t],[rb,t]], M.steel)); g.userData.t = t; return g; }               // plain Ø46 ring
+  if (w.kind === 'polish'){ g.add(lathe([[rb,0],[R - 2,0],[R,2],[R,t - 2],[R - 2,t],[rb,t]], M.resin)); g.userData.t = t; return g; }   // bordeaux resin, placeholder
   g.add(decal(w, t));
   if (w.kind === 'settori'){
     const holes = []; for (let i = 0; i < 6; i++) holes.push([i/6*PI*2, m(62), 3.25 * (R/100)]);
@@ -728,12 +735,13 @@ const mk = (type, locked = false) => ({uid: uidSeq++, type, locked});
 const state = {lang:'it', mode:'stack', single:'V33', stack:[], sel:null, explode:false, section:false, spin:false, cone:'200'};
 try { const c = localStorage.getItem('diamant-cone'); if (CONE[c]) state.cone = c; } catch(e){}
 SPACE = CONE[state.cone].space;
+const stackKey = () => state.cone === '100' ? 'diamant-stack-100' : 'diamant-stack-v2';
 function loadStack(){
-  try { const s = JSON.parse(localStorage.getItem('diamant-stack-v2'));
-    if (Array.isArray(s) && s.length <= MAX_WHEELS && s.every(x => WHEELS[x.type])) return s.map(x => mk(x.type, !!x.locked)); } catch(e){}
-  return [];
+  try { const s = JSON.parse(localStorage.getItem(stackKey()));
+    if (Array.isArray(s) && s.length <= MAX_WHEELS && s.every(x => WHEELS[x.type] && (!WHEELS[x.type].only || WHEELS[x.type].only === state.cone))) return s.map(x => mk(x.type, !!x.locked)); } catch(e){}
+  return state.cone === '100' ? PRESETS.iso.map(t => mk(t)) : [];
 }
-function saveStack(){ try { localStorage.setItem('diamant-stack-v2', JSON.stringify(state.stack.map(({type, locked}) => ({type, locked})))); } catch(e){} }
+function saveStack(){ try { localStorage.setItem(stackKey(), JSON.stringify(state.stack.map(({type, locked}) => ({type, locked})))); } catch(e){} }
 state.stack = loadStack();
 const stackH = () => state.stack.reduce((a, s) => a + tOf(s.type), 0);
 
@@ -823,7 +831,7 @@ function renderStack(){
     const w = WHEELS[s.type];
     return `<li class="row glass${s.locked ? ' locked' : ''}${state.sel === s.uid ? ' sel' : ''}${drag && drag.uid === s.uid ? ' drag' : ''}" data-uid="${s.uid}">
       <span class="grip" aria-label="${U.move}"><span class="num">${String(i+1).padStart(2,'0')}</span>${ICON.grip}</span>
-      <img src="${thumbs[s.type] || ''}" alt="">
+      <img src="${thumbs[state.cone][s.type] || ''}" alt="">
       <span class="nm"><b>${code(s.type)}</b><small>${tOf(s.type)} mm</small></span>
       <button class="lk" aria-pressed="${s.locked}" aria-label="${s.locked ? U.unlock : U.lock}">${s.locked ? ICON.lock : ICON.open}</button>
       <button class="del" aria-label="${U.del}">${ICON.x}</button></li>`;
@@ -832,9 +840,10 @@ function renderStack(){
 }
 function renderSingle(){
   const U = T(), w = WHEELS[state.single], el = $('p-single');
-  $('w-kind').textContent = U.kind[w.kind]; $('w-name').textContent = state.lang === 'it' ? w.title : 'D200 ' + code(state.single);
+  $('w-kind').textContent = U.kind[w.kind]; $('w-name').textContent = w.only ? w.title : (state.lang === 'it' ? w.title : 'D200 ' + code(state.single));
   const rows = [[U.sp.d,`Ø ${cone().R*2} mm`],[U.sp.t,`${tOf(state.single)} mm`],[U.sp.b,'Ø 35 mm']];
-  if (w.prof === 'v') rows.push([U.sp.prof, U.gola(w.d)]); else rows.push([U.sp.prof, w.code || state.single]);
+  if (w.kind === 'spacer') rows[0][1] = 'Ø 46 mm';
+  if (w.prof === 'v') rows.push([U.sp.prof, U.gola(w.d)]); else if (w.prof) rows.push([U.sp.prof, w.code || state.single]);
   if (w.kind === 'settori') rows.push([U.sp.fix, U.fix]);
   $('w-specs').innerHTML = rows.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('');
   $('b-addthis').disabled = !fits(tOf(state.single));
@@ -892,7 +901,7 @@ list.addEventListener('pointerup', endDrag); list.addEventListener('pointercance
 
 $('b-shuffle').onclick = shuffle;
 $('b-clear').onclick = () => { state.stack = []; state.sel = null; syncStack(); };
-document.querySelectorAll('[data-preset]').forEach(b => b.onclick = () => { setPre(false);
+document.querySelectorAll('[data-preset]').forEach(b => b.onclick = () => { setPre(false); if ((b.dataset.preset === 'iso') !== (state.cone === '100')) return;
   state.stack = PRESETS[b.dataset.preset].map(t => mk(t)); state.sel = null; syncStack();
 });
 $('b-addthis').onclick = () => {
@@ -909,7 +918,7 @@ function openSheet(ctx){
   $('sh-ey').textContent = ctx.mode === 'add' ? U.addEy : U.pickPos(pos);
   $('sh-title').textContent = U.pickTitle;
   const room = cur ? 1e9 : SPACE - stackH();
-  $('sh-grid').innerHTML = ORDER.map(k => `<button class="opt" data-k="${k}" aria-current="${cur && cur.type === k}" ${tOf(k) > room ? 'aria-disabled="true"' : ''}><img src="${thumbs[k]}" alt=""><b>${code(k)}</b><small>${tOf(k)} mm</small></button>`).join('');
+  $('sh-grid').innerHTML = orderFor(state.cone).map(k => `<button class="opt" data-k="${k}" aria-current="${cur && cur.type === k}" ${tOf(k) > room ? 'aria-disabled="true"' : ''}><img src="${thumbs[state.cone][k]}" alt=""><b>${code(k)}</b><small>${tOf(k)} mm</small></button>`).join('');
   $('sh-remove').hidden = !cur; $('sheet').hidden = false;
 }
 function closeSheet(){ $('sheet').hidden = true; sheetCtx = null; }
@@ -1055,7 +1064,7 @@ addEventListener('pointermove', e => {
     pick.on = true; cardBlock = true; try { pick.el.setPointerCapture(e.pointerId); } catch(x){}
     if (state.mode !== 'stack'){ enterMode('stack', true); flyHome(); }
     setTool('explode', false); setTool('section', false);
-    ghost.querySelector('img').src = thumbs[pick.k]; ghost.hidden = false; $('app').classList.add('dropping');
+    ghost.querySelector('img').src = thumbs[state.cone][pick.k]; ghost.hidden = false; $('app').classList.add('dropping');
     $('hint').classList.add('off');
   }
   ghost.style.transform = `translate(${e.clientX}px, ${e.clientY}px) translate(-50%,-60%) scale(1.15)`;
@@ -1097,8 +1106,9 @@ function makeThumbs(){
   const pr = renderer.getPixelRatio(); renderer.setPixelRatio(1); renderer.setSize(Wd, Hd, false); shadow.visible = false;
   const shot = (obj, r, dir) => { spin.add(obj); cam.position.copy(dir).normalize().multiplyScalar(r / Math.sin(13*PI/180)); cam.lookAt(0,0,0);
     renderer.render(scene, cam); const u = canvas.toDataURL('image/png'); spin.remove(obj); disposeTree(obj); return u; };
-  ORDER.forEach(k => { const g = buildWheel(k); g.position.y = -tOf(k)/2; out[k] = shot(g, 1.0, new THREE.Vector3(.25, .62, 1)); });
   const keep = state.cone;
+  for (const c of ['200','100']){ state.cone = c; SPACE = CONE[c].space; out[c] = {};
+    orderFor(c).forEach(k => { const g = buildWheel(k); g.position.y = -tOf(k)/2; out[c][k] = shot(g, c === '100' ? .62 : 1.0, new THREE.Vector3(.25, .62, 1)); }); }
   for (const c of ['200','100']){
     state.cone = c; SPACE = CONE[c].space;
     const tmp = new THREE.Group(); tmp.add(c === '100' ? buildBase100() : buildBase()); let y = 0;
@@ -1302,7 +1312,8 @@ function frame(now){
 /* ================================================================== boot */
 try { await Promise.race([Promise.all([document.fonts.load('600 20px Archivo'), document.fonts.load('700 20px Archivo')]), new Promise(r => setTimeout(r, 2500))]); } catch(e){}
 thumbs = makeThumbs();
-$('strip').innerHTML = ['200','100'].map(c => `<button class="card hero" data-k="stack${c}"><img src="${thumbs['stack' + c]}" alt="" draggable="false"><b></b><small></small></button>`).join('') + ORDER.map(k => `<button class="card" data-k="${k}"><img src="${thumbs[k]}" alt="" draggable="false"><b></b><small></small></button>`).join('');
+$('strip').innerHTML = ['200','100'].map(c => `<button class="card hero" data-k="stack${c}"><img src="${thumbs['stack' + c]}" alt="" draggable="false"><b></b><small></small></button>`).join('') + ORDER.map(k => `<button class="card" data-k="${k}"><img src="${thumbs[state.cone][k] || ''}" alt="" draggable="false"><b></b><small></small></button>`).join('');
+refreshCatalogue();
 /* catalogue cards: one tap drops the wheel onto the arbor, a double tap opens its sheet, a drag carries it to the arbor */
 let tapT = 0, tapK = null;
 function addFromCatalogue(k){
@@ -1311,11 +1322,16 @@ function addFromCatalogue(k){
   setTool('explode', false); setTool('section', false);
   const it = mk(k); state.stack.unshift(it); state.sel = it.uid; syncStack(false); toast(T().added(code(k)));
 }
-function switchCone(c){   // the other arbor: rebuild everything at the new size, keep the chosen wheels
-  state.cone = c; SPACE = CONE[c].space; try { localStorage.setItem('diamant-cone', c); } catch(e){}
+function switchCone(c){   // the other arbor: each arbor keeps its own set; the catalogue shows its own wheels
   if (SHOW.on) stopShow();
+  saveStack(); state.cone = c; SPACE = CONE[c].space; try { localStorage.setItem('diamant-cone', c); } catch(e){}
+  state.stack = loadStack(); state.sel = null;
   setTool('explode', false); setTool('section', false);
-  enterMode('stack', true); renderUI(); flyHome(); toast(`${T().hero} ${CONE[c].label} · ${CONE[c].sub}`);
+  refreshCatalogue(); enterMode('stack', true); renderUI(); flyHome(); toast(`${T().hero} ${CONE[c].label} · ${CONE[c].sub}`);
+}
+function refreshCatalogue(){   // thumbnails and visibility follow the active arbor
+  document.querySelectorAll('.card:not(.hero)').forEach(c => { const k = c.dataset.k, w = WHEELS[k]; c.hidden = !!w.only && w.only !== state.cone; c.querySelector('img').src = thumbs[state.cone][k] || ''; });
+  document.querySelectorAll('[data-preset]').forEach(b => b.hidden = (b.dataset.preset === 'iso') !== (state.cone === '100'));
 }
 function openSingle(k){ state.single = k; setTool('explode', false); enterMode('single'); if (!isOpen('l')) setOpen('l', true); flyHome(); }
 document.querySelectorAll('.card').forEach(c => c.onclick = () => {
