@@ -1101,160 +1101,68 @@ function fitDist(){
 /* idle / attract */
 let idle = 0;
 /* ---- SHOW: a one-minute choreography that loops; any touch leaves it ---- */
-const SHOW = {on:false, t:0, i:0, theta:0, saved:null, cam:null};
+const SHOW = {on:false, t:0, i:0, theta:0, saved:null};
 const SHOW_SET_A = ['V3.6','V3.12','V4P.2','V33','V44'], SHOW_SET_B = ['V3.6','V4P.2','V33S','V44S','V55S'];
 function setStack(types, instant){ state.stack = types.map(t => mk(t)); state.sel = null; syncStack(instant); }
+function dropIn(type){ state.stack.unshift(mk(type)); state.sel = null; syncStack(false); }   // lands on top of what is there
+function liftOff(){ if (state.stack.length){ state.stack.shift(); state.sel = null; syncStack(false); } } // the top one leaves
 function caption(i){ const c = $('cap'); if (i < 0){ c.classList.remove('on'); return; } const [e, t] = T().caps[i]; $('cap-e').textContent = e; $('cap-t').textContent = t; c.classList.remove('on'); void c.offsetWidth; c.classList.add('on'); }
 
-/* --- poses: where each wheel wants to be, relative to its place on the arbor.
-   Every move goes through the HUB (over the axis, above everything) in two legs: up/out, then to the spot.
-   Wheels move one at a time, so nothing ever crosses anything. Formations keep Ø200 pieces ≥ 212 mm apart. --- */
-const ease3 = t => t < 0 ? 0 : t > 1 ? 1 : t*t*(3 - 2*t);
-const wheelsTopDown = () => state.stack.map(x => W.get(x.uid)).filter(Boolean);
-const HUB_Y = 290, LEG = 1.1;                                   // mm above the stack base; seconds per leg
-const HOME = {x:0, y:0, z:0, rx:0, ry:0, rz:0, spin:0};
-function pose(o, p, delay = 0){ o.next = p; o.nextAt = SHOW.t + delay; }
-function poseAll(fn, stagger = .9, fromBottom = false){ const ws = wheelsTopDown(); (fromBottom ? [...ws].reverse() : ws).forEach((o, i) => pose(o, fn(i, ws.length, o), i*stagger)); }
-const helix  = (i, n) => ({x:225, y:70 + i*34, z:0, rx:.4, ry:i*1.05, rz:0, spin:.5, orbit:.35});            // rising spiral, Ø200 wheels 60° apart on r225 → chords ≈ 225 mm
-const column = (i, n) => ({x:0, y:36 + (n - 1 - i)*46, z:0, rx:0, ry:0, rz:0, spin:1.2});                  // exploded on the axis, each spinning
-const gallery= (i, n) => ({x:(i - (n - 1)/2)*215, y:90, z:0, rx:PI/2, ry:0, rz:0, spin:0, screen:true});    // a row facing the viewer, 215 mm pitch
-function nutPose(p){ SHOW.nut = p; }
-
-/* --- camera keyframes: [t, theta turns, phi (rad), distance ×, look-at y (mm)] --- */
-const CAM = [
-  [0,   0,   1.32, 1.35, 10], [5,  .25, 1.05, 1.1, 20], [13, .9,  .7,  1.55, 100], [22, 1.5, 1.05, 1.2, 110],
-  [31, 2.1,  1.3,  1.0, 20], [36, 2.6, 1.0, 1.05, 20], [45, 3.2,  1.2, 1.7, 90],  [53, 3.8, .75, 1.6, 100],
-  [60, 4.4,  1.1,  1.05, 20], [68, 5.0, 1.25, 1.0, 20], [76, 5.5, .95, 1.2, 100], [80, 5.8, 1.32, 1.35, 10]
-];
-function camAt(t){
-  let k = 0; while (k < CAM.length - 2 && t >= CAM[k + 1][0]) k++;
-  const A = CAM[k], B = CAM[k + 1], u = ease3((t - A[0]) / (B[0] - A[0]));
-  return [A[1] + (B[1] - A[1])*u, A[2] + (B[2] - A[2])*u, A[3] + (B[3] - A[3])*u, A[4] + (B[4] - A[4])*u];
+/* the script: composition (one wheel at a time, straight down the axis), a pause to admire, decomposition (one at a time, straight up) — twice, with the two reference sets */
+const EV = [], STEP = 1.5;
+let tt = 0;
+function chapter(set, capIn, capOut){
+  EV.push([tt, () => { nutAside = true; caption(capIn); glowTo(1.2); }]);
+  [...set].reverse().forEach((k, i) => EV.push([tt + 1.2 + i*STEP, () => dropIn(k)]));          // bottom wheel first
+  tt += 1.2 + set.length*STEP + 1.4;
+  EV.push([tt, () => { nutAside = false; caption(-1); }]);                                       // the nut comes back and screws down
+  EV.push([tt + 3, () => { setTool('spin', true); glowTo(2.4); caption(3); }]);
+  EV.push([tt + 8, () => { setTool('spin', false); glowTo(1.2); caption(-1); }]);
+  tt += 10;
+  EV.push([tt, () => { nutAside = true; caption(capOut); }]);
+  set.forEach((k, i) => EV.push([tt + 1.2 + i*STEP, liftOff]));                                 // top wheel first
+  tt += 1.2 + set.length*STEP + 1.2;
+  EV.push([tt, () => { nutAside = false; caption(-1); }]);
+  tt += 1.5;
 }
-
-/* --- the script: [time, action] --- */
-const EV = [];
-const SHOW_LEN = 80;
-EV.push([0,  () => { setStack(SHOW_SET_A, true); poseAll(() => HOME, 0); nutPose(null); caption(0); glowTo(1.2); }]);
-EV.push([4,  () => { nutPose({y:HUB_Y + 90, spin:3}); caption(-1); }]);          // nut + washer park high above the hub
-EV.push([5.5,() => poseAll(helix, .9)]);                                         // top wheel first, one at a time, into the spiral
-EV.push([10, () => caption(1)]);
-EV.push([14, () => { poseAll(column, .9); caption(-1); }]);                         // back over the axis, spread out and spinning
-EV.push([19, () => caption(2)]);
-EV.push([23, () => { poseAll(() => HOME, .9, true); caption(-1); }]);              // reassembles from the bottom up
-EV.push([29.5,() => nutPose({y:0, spin:0})]);                                      // the nut screws back on
-EV.push([31, () => { setTool('spin', true); glowTo(2.6); caption(3); }]);
-EV.push([35, () => { setTool('spin', false); glowTo(1.2); caption(-1); }]);
-EV.push([36, () => { nutPose({y:HUB_Y + 90, spin:3}); }]);
-EV.push([37, () => poseAll(gallery, .8)]);                                         // the wheels line up for the viewer…
-EV.push([43.5,() => { wheelsTopDown().forEach((o, i) => setTimeout(() => { o.vanish = true; }, i*140)); }]);
-EV.push([45, () => { state.stack = []; syncStack(true); setStack(SHOW_SET_B, true); poseAll(gallery, 0); wheelsTopDown().forEach(o => { o.g.scale.setScalar(.01); o.grow = true; }); caption(4); }]); // …and the segmented set takes their place
-EV.push([49, () => { poseAll(helix, .9); caption(-1); }]);
-EV.push([54, () => caption(5)]);
-EV.push([58, () => { poseAll(() => HOME, .9, true); caption(-1); }]);
-EV.push([64.5,() => nutPose({y:0, spin:0})]);
-EV.push([66, () => { setTool('spin', true); glowTo(2.6); caption(3); }]);
-EV.push([70, () => { setTool('spin', false); glowTo(1.2); caption(-1); }]);
-EV.push([71, () => { nutPose({y:HUB_Y + 90, spin:3}); }]);
-EV.push([72, () => poseAll(column, .8)]);
-EV.push([76, () => { caption(0); wheelsTopDown().forEach((o, i) => setTimeout(() => { o.vanish = true; }, i*140)); }]);
-EV.push([78, () => { state.stack = []; syncStack(true); }]);
+chapter(SHOW_SET_A, 1, 0);
+chapter(SHOW_SET_B, 4, 5);
+const SHOW_LEN = tt + 1;
 
 let glowTarget = 0;
-window.__show = SHOW;   // handy for the preview pane
+window.__show = SHOW;
 function glowTo(v){ glowTarget = v; }
 function startShow(auto){
   if (SHOW.on) return;
-  SHOW.on = true; SHOW.auto = auto; SHOW.t = 0; SHOW.i = 0; SHOW.nut = null;
+  SHOW.on = true; SHOW.auto = auto; SHOW.t = 0; SHOW.i = 0;
   SHOW.saved = state.stack.map(({type, locked}) => ({type, locked}));
   closeSheet(); setMenu(false); if (state.mode !== 'stack') enterMode('stack', true);
   setTool('explode', false); setTool('section', false); setTool('spin', false); camFly = null;
-  for (const [uid, o] of W){ spin.remove(o.g); disposeTree(o.g); W.delete(uid); }
+  for (const [uid, o] of W){ spin.remove(o.g); disposeTree(o.g); W.delete(uid); } state.stack = []; syncStack(true);
   const sp = new THREE.Spherical().setFromVector3(camera.position); SHOW.theta = sp.theta;
+  controls.target.set(0, 0, 0);
   controls.enabled = false; $('app').classList.add('show'); $('t-show').setAttribute('aria-pressed', true);
   $('attract-t').textContent = T().compose; $('attract').classList.add('on'); resize();
 }
 function stopShow(){
   if (!SHOW.on) return;
-  SHOW.on = false; caption(-1); nutAside = false; SHOW.nut = null; glowTarget = 0; glow.intensity = 0;
+  SHOW.on = false; caption(-1); nutAside = false; glowTarget = 0; glow.intensity = 0;
   $('attract').classList.remove('on'); $('app').classList.remove('show'); $('t-show').setAttribute('aria-pressed', false);
   setTool('explode', false); setTool('section', false); setTool('spin', false);
   state.stack = SHOW.saved.map(x => mk(x.type, x.locked)); state.sel = null;
   for (const [uid, o] of W){ spin.remove(o.g); disposeTree(o.g); W.delete(uid); }
-  nut.rotation.set(0, 0, 0); washer.rotation.set(0, 0, 0); spin.rotation.y = 0;
   syncStack(true); controls.enabled = true; resize(); flyHome();
 }
 function tickShow(dt){
   SHOW.t += dt;
-  if (SHOW.t >= SHOW_LEN){ SHOW.t = 0; SHOW.i = 0; for (const [uid, o] of W){ spin.remove(o.g); disposeTree(o.g); W.delete(uid); } state.stack = []; }
+  if (SHOW.t >= SHOW_LEN){ SHOW.t = 0; SHOW.i = 0; for (const [uid, o] of W){ spin.remove(o.g); disposeTree(o.g); W.delete(uid); } state.stack = []; syncStack(true); }
   while (SHOW.i < EV.length && SHOW.t >= EV[SHOW.i][0]){ EV[SHOW.i][1](); SHOW.i++; }
-  // camera on rails
-  const [turns, phi, dm, ly] = camAt(SHOW.t);
-  const dist = fitDist() * dm * (wide() ? 1.0 : 1.12);
-  camera.position.setFromSphericalCoords(dist, phi, SHOW.theta + turns * PI * 2 * .35);
-  camera.position.y += (ly - viewC) * MM * .35;
-  camera.lookAt(0, (ly - viewC) * MM * .35, 0);
-  // the accent light circles the set
+  // camera: one slow orbit, breathing gently; framing follows the stack (fitDist) with room for wheels in flight
+  SHOW.theta += dt * (.16 + .05*Math.sin(SHOW.t*.11));
+  const phi = 1.02 + .14*Math.sin(SHOW.t*.23), dist = fitDist() * (wide() ? 1.12 : 1.2) * (1 + .04*Math.sin(SHOW.t*.17));
+  camera.position.setFromSphericalCoords(dist, phi, SHOW.theta); camera.lookAt(0, 0, 0);
   glow.intensity += (glowTarget - glow.intensity) * (1 - Math.pow(.1, dt));
-  glow.position.set(Math.cos(SHOW.t*.9)*2.2, .9 + .5*Math.sin(SHOW.t*.6), Math.sin(SHOW.t*.9)*2.2);
-}
-/* per-frame placement of wheels (and the nut) while the show runs: two-leg tweens through the hub + a separation guard */
-function applyPoses(dt){
-  const n = state.stack.length;
-  const lerpP = (A, B, u) => ({x:A.x + (B.x - A.x)*u, y:A.y + (B.y - A.y)*u, z:A.z + (B.z - A.z)*u, rx:A.rx + (B.rx - A.rx)*u, ry:A.ry + (B.ry - A.ry)*u, rz:A.rz + (B.rz - A.rz)*u});
-  const place = (p, o) => { const ang = (p.ry || 0) + (p.a || 0); return {x:p.x*Math.cos(ang), y:p.y, z:p.x*Math.sin(ang), rx:p.rx, ry:p.face ? ang : 0, rz:p.rz}; };
-  for (const o of W.values()){
-    if (o.vanish) continue;
-    if (o.grow){ const sc = o.g.scale.x + (1 - o.g.scale.x) * (1 - Math.pow(.002, dt)); o.g.scale.setScalar(sc); if (sc > .995){ o.g.scale.setScalar(1); o.grow = false; } }
-    o.cur = o.cur || {x:0, y:0, z:0, rx:0, ry:0, rz:0, a:0, sp:0};
-    const c = o.cur;
-    if (SHOW.on){
-      // a new destination becomes active at its scheduled time: capture where we are, route via the hub
-      if (o.next && SHOW.t >= o.nextAt){
-        const tgt = o.next; o.next = null; o.pose = tgt; o.t0 = SHOW.t;
-        o.from = {x:c.x, y:c.y, z:c.z, rx:c.rx, ry:c.ry, rz:c.rz};
-        const hubY = Math.max(HUB_Y - o.y, c.y, tgt.y) ; o.hub = {x:0, y: (tgt === HOME || (o.from.x === 0 && o.from.z === 0 && tgt.x === 0)) ? Math.max(HUB_Y - o.y, c.y) : HUB_Y - o.y, z:0, rx:0, ry:c.ry, rz:0};
-        const d = place(Object.assign({}, tgt, {a:c.a}), o); o.to = {x:d.x, y:d.y, z:d.z, rx:d.rx, ry:d.ry, rz:d.rz};
-        o.oneLeg = (o.from.x === 0 && o.from.z === 0 && d.x === 0 && d.z === 0);   // axis to axis: a single straight leg
-      }
-      if (o.pose && o.t0 != null){
-        const el = SHOW.t - o.t0, p = o.pose;
-        if (p.orbit) c.a += dt * p.orbit;
-        let q;
-        if (o.oneLeg) q = lerpP(o.from, o.to, ease3(el / (LEG*1.4)));
-        else if (el < LEG) q = lerpP(o.from, o.hub, ease3(el / LEG));
-        else q = lerpP(o.hub, o.to, ease3((el - LEG) / LEG));
-        if (el >= (o.oneLeg ? LEG*1.4 : 2*LEG) && p !== HOME){ const d = place(Object.assign({}, p, {a:c.a}), o); q = {x:d.x, y:d.y, z:d.z, rx:d.rx, ry:d.ry, rz:d.rz}; }  // formation keeps turning
-        c.x = q.x; c.y = q.y; c.z = q.z; c.rx = q.rx; c.ry = q.ry; c.rz = q.rz;
-        c.sp += ((p.spin || 0) - c.sp) * (1 - Math.pow(.01, dt)); c.own = (c.own || 0) + c.sp * dt;
-        if (p === HOME && el >= 2*LEG){ c.a = 0; }
-      }
-    } else { const k = 1 - Math.pow(.0015, dt); c.x *= 1 - k; c.y *= 1 - k; c.z *= 1 - k; c.rx *= 1 - k; c.rz *= 1 - k; c.sp = 0; o.pose = null; o.next = null; o.t0 = null; }
-    const scr = (SHOW.on && o.pose && o.pose.screen) ? Math.atan2(camera.position.x, camera.position.z) - spin.rotation.y : 0;
-    o.g.position.x = c.x + (o.outX ? right.x * o.outX : 0); o.g.position.z = c.z + (o.outX ? right.z * o.outX : 0);
-    o.g.position.y = o.y + ex*(o.kb + 1)*GAP + c.y;
-    o.g.rotation.set(c.rx, (c.ry || 0) + (c.own || 0) + scr, c.rz);
-  }
-  // separation guard: two wheels closer than 212 mm (centre to centre, Ø200) are nudged apart, never through each other
-  if (SHOW.on){
-    const ws = [...W.values()].filter(o => !o.vanish && o.cur);
-    for (let i = 0; i < ws.length; i++) for (let j = i + 1; j < ws.length; j++){
-      const A = ws[i].g.position, B = ws[j].g.position; const dx = B.x - A.x, dy = B.y - A.y, dz = B.z - A.z;
-      const flatA = Math.abs(ws[i].cur.rx) < .3, flatB = Math.abs(ws[j].cur.rx) < .3;
-      if (flatA && flatB && Math.abs(dy) > 22) continue;                      // stacked flat wheels may sit over each other
-      const d = Math.hypot(dx, dy, dz); if (d < 212 && d > .01){ const push = (212 - d) / 2, ux = dx/d, uy = dy/d, uz = dz/d; A.x -= ux*push; A.y -= uy*push*.3; A.z -= uz*push; B.x += ux*push; B.y += uy*push*.3; B.z += uz*push; }
-    }
-  }
-  // nut + washer: in the show they fly straight up and twirl instead of retreating
-  if (SHOW.on && SHOW.nut){
-    const t = SHOW.nut; SHOW.nutCur = SHOW.nutCur || {y:0, sp:0};
-    const k = 1 - Math.pow(.002, dt); SHOW.nutCur.y += (t.y - SHOW.nutCur.y) * k; SHOW.nutCur.sp += (t.spin - SHOW.nutCur.sp) * k;
-    nut.rotation.y += SHOW.nutCur.sp * dt; washer.rotation.y += SHOW.nutCur.sp * .6 * dt;
-    const H = n ? stackH() + .1*(n - 1) : SPACE;   // parks straight above the hub, clear of every path
-    washer.position.set(0, H + SHOW.nutCur.y, 0); nut.position.set(0, H + SHOW.nutCur.y, 0);
-    return true;
-  }
-  return false;
+  glow.position.set(Math.cos(SHOW.t*.7)*2.2, .9 + .5*Math.sin(SHOW.t*.5), Math.sin(SHOW.t*.7)*2.2);
 }
 function wake(){ idle = 0; if (SHOW.on) stopShow(); }
 addEventListener('pointerdown', e => { if (e.target.closest && e.target.closest('#t-show')) { idle = 0; return; } wake(); }, {capture:true}); addEventListener('wheel', wake, {passive:true});
@@ -1290,25 +1198,24 @@ function frame(now){
     // only wheels coming onto or leaving the arbor need the nut out of the way; a reorder just slides them
     let inFlight = false; for (const o of W.values()){ if (o.entering && Math.abs(o.y - o.base) < 1.5) o.entering = false; if ((o.leaving && !o.vanish) || o.entering) inFlight = true; }
     // nut + washer retreat toward the back of the stage (smoothly) while a wheel comes or goes, then snap back over the shaft and screw down
-    const aside = !SHOW.on && (nutAside || inFlight);
+    const aside = nutAside || inFlight;
     nutX += ((aside ? 185 : 0) - nutX) * (1 - Math.pow(aside ? .03 : .0002, dt));
-    const clear = SHOW.on || nutX > 150;
+    const clear = nutX > 150;
     for (const [uid, o] of W){
       if (o.vanish){ const sc = o.g.scale.x * Math.pow(.0005, dt); o.g.scale.setScalar(sc); o.g.position.y += 40*dt; if (sc < .03){ spin.remove(o.g); disposeTree(o.g); W.delete(uid); } continue; }
       if (!drag3d || drag3d.uid !== uid){ if (o.outX){ o.outX *= Math.pow(.001, dt); if (Math.abs(o.outX) < .2) o.outX = 0; o.g.position.x = right.x * o.outX; o.g.position.z = right.z * o.outX; } }
       if (o.leaving){ if (clear || o.y > H + 30){ o.y += (o.base - o.y) * (1 - Math.pow(.003, dt)) + 60*dt; } o.g.position.y = o.y; if (o.y > o.base - 12){ spin.remove(o.g); disposeTree(o.g); W.delete(uid); } continue; }
       if (!o.entering || clear) o.y += (o.base - o.y) * (1 - Math.pow(.0008, dt));
       o.g.position.y = o.y + ex*(o.kb + 1)*GAP; }
-    const posed = applyPoses(dt);
     const prevW = washerY, hover = nutX > 2 ? 34 : 0;
     washerY += (H + hover - washerY) * (1 - Math.pow(hover ? .002 : .00002, dt));
     if (!hover && washerY > H + .05) nutSpin -= (prevW - washerY) * .9;                // screwing down
     nut.rotation.y = nutSpin;
     // the shaft always ends flush with the nut
     if (Math.abs(H - shaftH) > .25){ const h = shaftH + (H - shaftH) * (1 - Math.pow(.0008, dt)); spin.remove(shaft); disposeTree(shaft); shaft = buildShaft(h); spin.add(shaft); shaftH = h; }
-    if (!posed){ washer.position.set(back.x*nutX, washerY + ex*(n + 1)*GAP, back.z*nutX); nut.position.set(back.x*nutX, washerY + ex*(n + 2.3)*GAP, back.z*nutX); }
+    washer.position.set(back.x*nutX, washerY + ex*(n + 1)*GAP, back.z*nutX); nut.position.set(back.x*nutX, washerY + ex*(n + 2.3)*GAP, back.z*nutX);
     yMin = -67; yMax = Math.max(H, shaftH) + 17 + ex*(n + 2.3)*GAP + hover;
-    for (const o of W.values()){ if (!o.leaving && o.y > o.base + 1.5) yMax = Math.max(yMax, o.y + WHEELS[o.type].t); if (SHOW.on && o.cur) yMax = Math.max(yMax, o.y + o.cur.y + 30); }   // keep flying wheels in frame
+    for (const o of W.values()) if (!o.leaving && o.y > o.base + 1.5) yMax = Math.max(yMax, o.y + WHEELS[o.type].t);   // keep a wheel in flight in frame
     const so = state.sel && W.get(state.sel);
     if (pick && pick.on && dropSlot >= 0){ let hy = 0; for (let i = n - 1; i >= dropSlot; i--) hy += WHEELS[state.stack[i].type].t; halo.visible = true; halo.position.y = hy; halo.material.opacity = .9; }
     else { halo.visible = !!so; if (so){ halo.position.y = so.g.position.y + WHEELS[so.type].t/2; halo.material.opacity = .55 + .35*Math.sin(now/260); } }
