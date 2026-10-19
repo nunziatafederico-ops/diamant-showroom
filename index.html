@@ -215,14 +215,15 @@ dl.specs dd{font-size:15px;font-weight:500;font-variant-numeric:tabular-nums}
 .hint svg{width:22px;height:22px;stroke:var(--blue-hi);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;animation:sway 2.2s ease-in-out infinite}
 @keyframes sway{0%,100%{transform:translateX(-5px)}50%{transform:translateX(5px)}}
 .hint.off{opacity:0}
-.cap{position:absolute;left:28px;top:48%;transform:translate(0,calc(-50% + 14px));text-align:left;z-index:8;pointer-events:none;opacity:0;transition:opacity .9s,transform .9s;max-width:min(40vw,620px)}
-.cap.on{opacity:1;transform:translate(0,-50%);animation:capIn 1.1s cubic-bezier(.2,.7,.2,1)}
+.capwrap{position:absolute;left:28px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;align-items:flex-start;gap:28px;z-index:8;max-width:min(40vw,620px);pointer-events:none}
+.cap{position:relative;text-align:left;pointer-events:none;opacity:0;transition:opacity .9s,transform .9s;transform:translateY(14px);min-height:1.2em}
+.cap.on{opacity:1;transform:none;animation:capIn 1.1s cubic-bezier(.2,.7,.2,1)}
 @keyframes capIn{from{filter:blur(14px);letter-spacing:.04em;opacity:0}to{filter:blur(0);letter-spacing:-.02em;opacity:1}}
 .cap em{display:block;font:500 13px/1.4 var(--f-mono);font-style:normal;letter-spacing:.22em;text-transform:uppercase;color:var(--blue-hi);margin-bottom:10px}
 .cap b{display:block;font-family:var(--f-display);font-variation-settings:"wdth" 112;font-weight:700;font-size:clamp(34px,5vw,70px);line-height:1;letter-spacing:-.02em;text-wrap:balance;text-shadow:0 10px 40px rgba(0,0,0,.6)}
 #app.show .panel,#app.show .strip,#app.show .tools,#app.show .hint,#app.show #labels,#app.show .sect{opacity:0;pointer-events:none;transition:opacity .6s}
 .panel,.strip,.tools{transition:opacity .6s}
-.attract{position:absolute;inset:0;z-index:9;display:flex;align-items:flex-end;justify-content:flex-start;padding:0 0 calc(env(safe-area-inset-bottom,0px) + 84px) 28px;opacity:0;pointer-events:none;transition:opacity .8s}
+.attract{position:relative;opacity:0;pointer-events:none;transition:opacity .8s}
 .attract.on{opacity:1;pointer-events:auto}
 .attract div{font-family:var(--f-display);font-variation-settings:"wdth" 125;font-weight:600;font-size:15px;letter-spacing:.24em;text-transform:uppercase;
   padding:18px 30px;border-radius:40px;background:rgba(58,104,198,.92);animation:pulse 2.4s infinite}
@@ -262,9 +263,8 @@ dl.specs dd{font-size:15px;font-weight:500;font-variant-numeric:tabular-nums}
   .card img{width:62px;height:46px}
   .card.hero{width:92px}
   .hint,.sect,.toast{left:50%}
-  .attract{justify-content:center;padding-left:0;padding-bottom:calc(env(safe-area-inset-bottom,0px) + 150px)}
-  .cap{left:50%;top:calc(env(safe-area-inset-top,0px) + 16%);max-width:90vw;text-align:center;transform:translate(-50%,14px)}
-  .cap.on{transform:translate(-50%,0)}
+  .capwrap{left:50%;right:auto;top:calc(env(safe-area-inset-top,0px) + 12%);transform:translateX(-50%);align-items:center;max-width:90vw;gap:18px}
+  .cap{text-align:center}
   .cap b{font-size:clamp(30px,9vw,54px)}
   .hint{bottom:calc(env(safe-area-inset-bottom,0px) + 118px);font-size:12.5px}
   .toast{bottom:calc(env(safe-area-inset-bottom,0px) + 118px)}
@@ -344,8 +344,10 @@ dl.specs dd{font-size:15px;font-weight:500;font-variant-numeric:tabular-nums}
     </div>
   </div>
 
-  <div class="cap" id="cap"><em id="cap-e"></em><b id="cap-t"></b></div>
-  <div class="attract" id="attract"><div id="attract-t"></div></div>
+  <div class="capwrap" id="capwrap">
+    <div class="cap" id="cap"><em id="cap-e"></em><b id="cap-t"></b></div>
+    <div class="attract" id="attract"><div id="attract-t"></div></div>
+  </div>
   <div class="loading" id="loading"><svg viewBox="12 8 92 110" fill="currentColor" aria-hidden="true"><g> <rect x="16.78" y="12.14" width="18.3" height="18.3"/> <rect x="39.95" y="12.14" width="36.61" height="18.3"/> <rect x="16.78" y="35.31" width="18.3" height="54.91"/> <rect x="81.43" y="35.31" width="18.3" height="54.91"/> <rect x="39.95" y="35.31" width="36.88" height="54.91"/> <polygon points="81.43 12.14 81.43 30.44 99.73 30.44 81.43 12.14"/> <rect x="16.78" y="95.09" width="18.3" height="18.3"/> <rect x="39.95" y="95.09" width="36.61" height="18.3"/> <polygon points="81.43 113.4 99.73 95.09 81.43 95.09 81.43 113.4"/> </g></svg><p>Caricamento modelli 3D</p></div>
 </div>
 
@@ -500,7 +502,7 @@ const code = type => WHEELS[type].code ? WHEELS[type].code + UI[state.lang].seg 
 /* ================================================================== renderer */
 const canvas = document.getElementById('c');
 const renderer = new THREE.WebGLRenderer({canvas, antialias:true, alpha:true, powerPreference:'high-performance'});
-renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+let pxRatio = Math.min(devicePixelRatio, 1.5); renderer.setPixelRatio(pxRatio);   // adaptive: drops toward 1 when frames get slow
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure = 1.08;
 renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -562,7 +564,7 @@ function capMat(m){ if (!capCache.has(m)) capCache.set(m, new THREE.MeshStandard
 
 /* ================================================================== geometry helpers (mm, axis = Y) */
 const V2 = THREE.Vector2, PI = Math.PI;
-function lathe(pts, mat, seg = 180, phi0 = 0, phiLen = PI*2){
+function lathe(pts, mat, seg = 128, phi0 = 0, phiLen = PI*2){
   // closed polygon [r, y]; corners doubled so edges stay crisp
   let a = 0; for (let i = 0; i < pts.length; i++){ const p = pts[i], q = pts[(i+1)%pts.length]; a += p[0]*q[1] - q[0]*p[1]; }
   if (a < 0) pts = pts.slice().reverse();
@@ -677,11 +679,14 @@ function buildBase(){
 }
 function buildShaft(H){
   const g = new THREE.Group();
-  g.add(lathe([[0,-24],[17.4,-24],[17.4,H+3],[0,H+3]], M.steelM, 96));
-  g.add(lathe(thread(H+3, H+17, 0, 16.4, 17.4, 2), M.steel, 96));
-  const hole = new THREE.Mesh(new THREE.CircleGeometry(2.4, 24), M.darkFlat); hole.rotation.x = -PI/2; hole.position.y = H + 17.03; g.add(hole);
+  const body = lathe([[0,0],[17.4,0],[17.4,1],[0,1]], M.steelM, 96); body.name = 'body'; body.position.y = -24; g.add(body);   // unit height, scaled to length
+  const top = new THREE.Group(); top.name = 'top';
+  top.add(lathe(thread(0, 14, 0, 16.4, 17.4, 2), M.steel, 96));
+  const hole = new THREE.Mesh(new THREE.CircleGeometry(2.4, 24), M.darkFlat); hole.rotation.x = -PI/2; hole.position.y = 14.03; top.add(hole);
+  g.add(top); setShaftH(g, H);
   return g;
 }
+function setShaftH(g, H){ g.getObjectByName('body').scale.y = H + 27; g.getObjectByName('top').position.y = H + 3; }
 function buildWasher(){ return lathe([[17.9,0],[47.5,0],[47.5,2.5],[44,6],[18.4,6],[17.9,5.5]], M.steel); }
 function buildNut(){
   const hex = new THREE.Shape();
@@ -760,7 +765,7 @@ function syncStack(instant){
   for (let i = n - 1; i >= 0; i--){
     const s = state.stack[i]; let o = W.get(s.uid);
     if (o && o.type !== s.type){ spin.remove(o.g); disposeTree(o.g); W.delete(s.uid); o = null; }
-    if (!o){ const g = buildWheel(s.type); spin.add(g); o = {g, type:s.type, y: instant ? y : y + 75, entering: !instant}; g.position.y = o.y; W.set(s.uid, o); }
+    if (!o){ const g = buildWheel(s.type); spin.add(g); o = {g, type:s.type, y: instant ? y : y + 75, entering: !instant}; g.position.y = o.y; if (!instant) g.scale.setScalar(.001); W.set(s.uid, o); }
     o.base = y; o.kb = n - 1 - i; y += WHEELS[s.type].t + .1;
     const d = o.g.getObjectByName('decal'); if (d) d.visible = i === 0;   // only the top face is visible in the stack
   }
@@ -1175,10 +1180,15 @@ keepAwake();
 /* ================================================================== loop */
 const ease = t => t < .5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3)/2;
 const tmp = new THREE.Vector3(), right = new THREE.Vector3(), back = new THREE.Vector3(), nrm = new THREE.Vector3(), qInv = new THREE.Quaternion(), qTmp = new THREE.Quaternion();
-let ex = 0, sec = 0, spinV = 0, nutAside = false, nutX = 0, nutSpin = 0, last = performance.now();
+let ex = 0, sec = 0, spinV = 0, nutAside = false, nutX = 0, nutSpin = 0, last = performance.now(), lastRaw = performance.now(), fpsAcc = 0, fpsN = 0;
 function frame(now){
   const dt = Math.min((now - last)/1000, .05); last = now;
   idle += dt;
+  // adaptive resolution: keep the frame time near 16 ms on tablets
+  fpsAcc += (now - lastRaw); fpsN++; lastRaw = now;
+  if (fpsN >= 45){ const avg = fpsAcc / fpsN; fpsAcc = 0; fpsN = 0;
+    if (avg > 24 && pxRatio > 1){ pxRatio = Math.max(1, pxRatio - .25); renderer.setPixelRatio(pxRatio); resize(); }
+    else if (avg < 15 && pxRatio < Math.min(devicePixelRatio, 1.5)){ pxRatio = Math.min(Math.min(devicePixelRatio, 1.5), pxRatio + .25); renderer.setPixelRatio(pxRatio); resize(); } }
   if (!SHOW.on && idle > 60) startShow(true);
   if (SHOW.on) tickShow(dt);
   controls.autoRotate = !SHOW.on && idle > 5 && !state.section && !camFly && !drag && !drag3d && !pick;
@@ -1199,21 +1209,25 @@ function frame(now){
     let inFlight = false; for (const o of W.values()){ if (o.entering && Math.abs(o.y - o.base) < 1.5) o.entering = false; if ((o.leaving && !o.vanish) || o.entering) inFlight = true; }
     // nut + washer retreat toward the back of the stage (smoothly) while a wheel comes or goes, then snap back over the shaft and screw down
     const aside = nutAside || inFlight;
-    nutX += ((aside ? 185 : 0) - nutX) * (1 - Math.pow(aside ? .03 : .0002, dt));
+    nutX += ((aside ? (SHOW.on ? 215 : 185) : 0) - nutX) * (1 - Math.pow(aside ? .03 : .0002, dt));
     const clear = nutX > 150;
     for (const [uid, o] of W){
       if (o.vanish){ const sc = o.g.scale.x * Math.pow(.0005, dt); o.g.scale.setScalar(sc); o.g.position.y += 40*dt; if (sc < .03){ spin.remove(o.g); disposeTree(o.g); W.delete(uid); } continue; }
       if (!drag3d || drag3d.uid !== uid){ if (o.outX){ o.outX *= Math.pow(.001, dt); if (Math.abs(o.outX) < .2) o.outX = 0; o.g.position.x = right.x * o.outX; o.g.position.z = right.z * o.outX; } }
-      if (o.leaving){ if (clear || o.y > H + 30){ o.y += (o.base - o.y) * (1 - Math.pow(.003, dt)) + 60*dt; } o.g.position.y = o.y; if (o.y > o.base - 12){ spin.remove(o.g); disposeTree(o.g); W.delete(uid); } continue; }
+      if (o.leaving){ if (clear || o.y > H + 30){ o.y += (o.base - o.y) * (1 - Math.pow(.003, dt)) + 60*dt; } o.g.position.y = o.y;
+        const left = o.base - o.y; if (left < 45) o.g.scale.setScalar(Math.max(.001, left / 45));                         // fades out as it goes
+        if (o.y > o.base - 3){ spin.remove(o.g); disposeTree(o.g); W.delete(uid); } continue; }
       if (!o.entering || clear) o.y += (o.base - o.y) * (1 - Math.pow(.0008, dt));
+      if (o.entering){ const sc = o.g.scale.x + (1 - o.g.scale.x) * (1 - Math.pow(.0005, dt)); o.g.scale.setScalar(sc > .995 ? 1 : sc); }   // materialises on its way down
       o.g.position.y = o.y + ex*(o.kb + 1)*GAP; }
-    const prevW = washerY, hover = nutX > 2 ? 34 : 0;
+    const prevW = washerY, hover = nutX > 2 ? (SHOW.on ? 50 : 34) : 0;
     washerY += (H + hover - washerY) * (1 - Math.pow(hover ? .002 : .00002, dt));
     if (!hover && washerY > H + .05) nutSpin -= (prevW - washerY) * .9;                // screwing down
     nut.rotation.y = nutSpin;
     // the shaft always ends flush with the nut
-    if (Math.abs(H - shaftH) > .25){ const h = shaftH + (H - shaftH) * (1 - Math.pow(.0008, dt)); spin.remove(shaft); disposeTree(shaft); shaft = buildShaft(h); spin.add(shaft); shaftH = h; }
-    washer.position.set(back.x*nutX, washerY + ex*(n + 1)*GAP, back.z*nutX); nut.position.set(back.x*nutX, washerY + ex*(n + 2.3)*GAP, back.z*nutX);
+    if (Math.abs(H - shaftH) > .05){ shaftH += (H - shaftH) * (1 - Math.pow(.0008, dt)); setShaftH(shaft, shaftH); }
+    const px = SHOW.on ? (back.x*.7 + right.x*.7) : back.x, pz = SHOW.on ? (back.z*.7 + right.z*.7) : back.z;
+    washer.position.set(px*nutX, washerY + ex*(n + 1)*GAP, pz*nutX); nut.position.set(px*nutX, washerY + ex*(n + 2.3)*GAP, pz*nutX);
     yMin = -67; yMax = Math.max(H, shaftH) + 17 + ex*(n + 2.3)*GAP + hover;
     for (const o of W.values()) if (!o.leaving && o.y > o.base + 1.5) yMax = Math.max(yMax, o.y + WHEELS[o.type].t);   // keep a wheel in flight in frame
     const so = state.sel && W.get(state.sel);
