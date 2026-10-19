@@ -404,9 +404,9 @@ const PRESETS = { tagli:['V3.6','V3.12','V4P.2','V33','V44','V55'], settori:['V3
 const MAX_WHEELS = 8;
 // the two arbors: Ø200 wheels on the flanged cone, Ø100 wheels on the ISO 40 taper
 const CONE = {
-  '200': {R:100, space:80, bore:17.5, tk:1, shaftR:17.4, threadR:17.4, yMin:-67,  aside:185, nutR:37, washerR:47.5, stag:Math.PI/57 + .314, label:'Ø 200', sub:'80 mm',
+  '200': {R:100, space:80, bore:17.5, tk:1, shaftR:17.25, threadR:17.25, yMin:-67,  aside:185, nutR:37, washerR:47.5, stag:Math.PI/57 + .314, label:'Ø 200', sub:'80 mm',
           setA:['V3.6','V3.12','V4P.2','V33','V44'], setB:['V3.6','V4P.2','V33S','V44S','V55S']},
-  '100': {R:50,  space:62, bore:11, tk:1, shaftR:11, threadR:11, yMin:-110, aside:120, nutR:17, washerR:14.5, stag:Math.PI/36 + .314, label:'Ø 100', sub:'ISO 40 · 62 mm',
+  '100': {R:50,  space:62, bore:11, tk:1, shaftR:10.8, threadR:10.8, yMin:-110, aside:120, nutR:17, washerR:14.5, stag:Math.PI/36 + .314, label:'Ø 100', sub:'ISO 40 · 62 mm',
           setA:['POLISH','SPACER','V33S','V3.6'], setB:['POLISH','V44S','V3.12']}
 };
 let SPACE = 80;
@@ -603,7 +603,7 @@ const rimL = new THREE.DirectionalLight(0x7fa3ff, 2.2); rimL.position.set(4, 1.5
 const fill = new THREE.DirectionalLight(0xbfd2ff, .6); fill.position.set(2, -3, 3); scene.add(fill);
 const glow = new THREE.PointLight(0x4f7fe0, 0, 12, 1.6); scene.add(glow);   // the show's roaming accent light
 
-const camera = new THREE.PerspectiveCamera(30, 1, .05, 100);
+const camera = new THREE.PerspectiveCamera(30, 1, .25, 60);   // tight near/far: depth precision matters for the section cut (coincident faces flickered)
 const controls = new OrbitControls(camera, canvas);
 controls.enableDamping = true; controls.dampingFactor = .07; controls.enablePan = true; controls.screenSpacePanning = true; controls.panSpeed = .9;
 controls.touches = {ONE: THREE.TOUCH.ROTATE, TWO: THREE.TOUCH.DOLLY_PAN};
@@ -628,17 +628,12 @@ const gFine = grain(256, 170, 600), gCoarse = grain(256, 230, 1200), gBrush = st
 
 const sectionPlane = new THREE.Plane(new THREE.Vector3(0,0,-1), 50);
 renderer.clippingPlanes = [sectionPlane];
-const DRAW = {value: 0};   // 1 = technical-drawing style for the section (shared uniform)
+const DRAW = {value: 0};   // 1 = line-drawing section (only the ink layer is rendered)
 function patch(m){
   m.side = THREE.DoubleSide;
   m.onBeforeCompile = s => {
-    s.uniforms.uDraw = DRAW;
-    s.vertexShader = 'varying float vHatch;\n' + s.vertexShader.replace('#include <worldpos_vertex>', '#include <worldpos_vertex>\n vHatch = modelMatrix[3].y;');
-    s.fragmentShader = 'uniform float uDraw; varying float vHatch;\n' + s.fragmentShader.replace('#include <dithering_fragment>', `#include <dithering_fragment>
-      if(uDraw > .5){
-        if(!gl_FrontFacing){ float a = fract(sin(floor(vHatch*400.0 + .5)*12.9898)*43758.5453); float d = a < .5 ? gl_FragCoord.x + gl_FragCoord.y : gl_FragCoord.x - gl_FragCoord.y; float h = fract(d / (11.0 + 6.0*fract(a*7.0))); gl_FragColor = vec4(mix(vec3(.96,.95,.92), vec3(.1,.11,.13), step(h, .2)), 1.); }   // hatched cut face, direction/pitch per part
-        else { float l = dot(normalize(normal), normalize(vec3(.35,.75,.6))) * .5 + .5; float lum = dot(diffuseColor.rgb, vec3(.3,.59,.11)); gl_FragColor = vec4(vec3(.62 + .3*l) * (.86 + .14*lum), 1.); }   // flat paper tone
-      } else if(!gl_FrontFacing){ gl_FragColor = vec4(diffuseColor.rgb * .62 + vec3(.03), 1.); }`);
+    s.fragmentShader = s.fragmentShader.replace('#include <dithering_fragment>', `#include <dithering_fragment>
+      if(!gl_FrontFacing){ gl_FragColor = vec4(mix(diffuseColor.rgb, vec3(.55,.56,.58), .35) * .8, 1.); }`);   // solid cut faces
   };
   return m;
 }
@@ -668,7 +663,7 @@ function lathe(pts, mat, seg = 128, phi0 = 0, phiLen = PI*2){
   const add = p => { out.push(new V2(p[0], p[1])); if (!p[2]) out.push(new V2(p[0], p[1])); };
   for (let i = 1; i < pts.length; i++) add(pts[i]);
   add(pts[0]); out.push(mid.clone());
-  return new THREE.Mesh(new THREE.LatheGeometry(out, seg, phi0, phiLen), mat);
+  const mesh = new THREE.Mesh(new THREE.LatheGeometry(out, seg, phi0, phiLen), mat); mesh.userData.prof = pts; return mesh;
 }
 function shapeOf(pts){ const s = new THREE.Shape(); pts.forEach((p, i) => i ? s.lineTo(p[0], p[1]) : s.moveTo(p[0], p[1])); return s; }
 function flatRing(shape, depth, y, mat, bevel = .5){
@@ -756,6 +751,7 @@ function buildWheel100(w, t){   // ISO 40 family: solid cylinders, bore = shaft,
         [p0, p0 + len].forEach(ph => { const mm = new THREE.Mesh(cap, capMat(M.plated)); mm.rotation.y = ph - PI/2; g.add(mm); }); }
     }
   }
+  g.userData.prof2d = (w.kind === 'spacer' || w.kind === 'polish') ? g.children[0].userData.prof : rimPts(w, rb + 50).map(sh);
   g.add(decal(w, t)); g.userData.t = t;
   return g;
 }
@@ -782,6 +778,7 @@ function buildWheel(type){
       }
     }
   }
+  g.userData.prof2d = rimPts(w, rb).map(p => [m(p[0]), p[1]]);
   g.userData.t = t;
   return g;
 }
@@ -798,17 +795,18 @@ function buildBase100(){   // ISO 40: pull stud, 7:24 taper, V-flange with groov
   g.add(lathe([[0,-108],[7.8,-108],[8.5,-107],[8.5,-101],[5,-99],[5,-93],[12.4,-93],[22.2,-25],[31.75,-25],[31.75,-18],[28,-15.5],[28,-10],[31.75,-7.5],[31.75,-6],[25,-6],[25,0],[0,0]], M.steel));   // collar Ø50, then the plain Ø22 shaft
   return g;
 }
-function buildWasher100(){ return lathe([[11.3,0],[14.5,0],[14.5,3.2],[13.7,4],[11.3,4]], M.steel); }
+function buildWasher100(){ return lathe([[11.4,0],[14.5,0],[14.5,3.2],[13.7,4],[11.4,4]], M.steel); }
 function buildNut100(){   // four-lobe clamping nut, as on the real ISO 40 arbor
   const g = new THREE.Group();
-  g.add(lathe([[11.3,4],[12.5,4],[12.5,13],[11.3,13]], M.steelM, 48));   // cross nut from the photo: four square arms, ~35 mm across
+  g.add(lathe([[11.4,4],[12.5,4],[12.5,13],[11.4,13]], M.steelM, 48));   // cross nut from the photo: four square arms, ~35 mm across
   for (let i = 0; i < 4; i++){ const a = i*PI/2; const b = new THREE.Mesh(new THREE.BoxGeometry(5.6, 9, 9), M.steelM); b.position.set(Math.cos(a)*15, 8.5, Math.sin(a)*15); b.rotation.y = -a; g.add(b); }
+  g.userData.prof2d = [[11.4,4],[17.8,4],[17.8,13],[11.4,13]];
   return g;
 }
 function buildShaft(H){
   const r = cone().shaftR, rt = cone().threadR, g = new THREE.Group();
   const body = lathe([[0,0],[r,0],[r,1],[0,1]], M.steelM, 96); body.name = 'body'; body.position.y = -24; g.add(body);   // unit height, scaled to length
-  const top = new THREE.Group(); top.name = 'top';
+  const top = new THREE.Group(); top.name = 'top'; top.userData.prof2d = rt < r ? [[0,0],[r,0],[r,2.5],[rt,3.3],[rt,14],[0,14]] : [[0,0],[rt,0],[rt,14],[0,14]];
   if (rt < r) top.add(lathe([[0,0],[r,0],[r,2.5],[rt + .8,2.5],[rt,3.3],[0,3.3]], M.steelM, 96));   // step down to the thinner thread
   top.add(lathe(thread(rt < r ? 3 : 0, 14, 0, rt - 1, rt, rt > 12 ? 2 : 1.5), M.steel, 96));
   const hole = new THREE.Mesh(new THREE.CircleGeometry(2.4, 24), M.darkFlat); hole.rotation.x = -PI/2; hole.position.y = 14.03; top.add(hole);
@@ -821,7 +819,7 @@ function buildNut(){
   const hex = new THREE.Shape();
   for (let i = 0; i < 6; i++){ const a = i/6*PI*2 + PI/6, x = Math.cos(a)*36.5, y = Math.sin(a)*36.5; i ? hex.lineTo(x, y) : hex.moveTo(x, y); }
   const hh = new THREE.Path(); hh.absarc(0, 0, 17.8, 0, PI*2, true); hex.holes.push(hh);
-  const g = new THREE.Group(); g.add(flatRing(hex, 9.4, 6.8, M.brass, .8)); return g;
+  const g = new THREE.Group(); g.add(flatRing(hex, 9.4, 6.8, M.brass, .8)); g.userData.prof2d = [[17.8,6.8],[31.6,6.8],[31.6,16.2],[17.8,16.2]]; return g;
 }
 
 /* ================================================================== state */
@@ -871,7 +869,7 @@ halo.rotation.x = PI/2;
 
 const W = new Map();           // uid -> {g, type, y, base, kb}
 let base = null, shaft = null, shaftH = -1, washer = null, nut = null, single = null;
-let washerY = 0, viewC = 0, viewR = 1.2;
+let washerY = 0, viewC = 0, viewR = 1.2, viewHH = .4;
 function disposeTree(o){ o.traverse(c => { if (c.geometry && c.geometry !== halo.geometry) c.geometry.dispose(); }); }
 function clearSpin(){ [...spin.children].forEach(c => { spin.remove(c); if (c !== halo) disposeTree(c); }); W.clear(); base = shaft = washer = nut = single = null; shaftH = -1; }
 
@@ -1040,7 +1038,7 @@ try { ['l','b'].forEach(side => { if (localStorage.getItem('diamant-open-' + sid
 /* tools */
 const VIEW_DIR = new THREE.Vector3(.62, .42, .66).normalize();
 let camFly = null;
-function flyTo(dir, dur = 1.1){ const d = dir.clone().normalize(); camFly = {from: camera.position.clone(), dir: d, to: d.clone(), t:0, dur, tFrom: controls.target.clone()}; }
+function flyTo(dir, dur = 1.1){ zoomRatio = 1; const d = dir.clone().normalize(); camFly = {from: camera.position.clone(), dir: d, to: d.clone(), t:0, dur, tFrom: controls.target.clone()}; }
 function flyHome(){ flyTo(VIEW_DIR); }
 function setTool(name, on){
   if (state[name] === on) return;
@@ -1051,11 +1049,20 @@ function setTool(name, on){
   layoutTargets();
 }
 const SECT_DIR = new THREE.Vector3(0, .06, 1).normalize();   // straight-on elevation: the cut face is parallel to the screen; pan and zoom still work, no orbit
-function setDraw(on){ DRAW.value = on ? 1 : 0; $('app').classList.toggle('draw', on); document.querySelectorAll('#sstyle button').forEach(b => b.setAttribute('aria-pressed', (b.dataset.s === 'draw') === !!state.draw)); if (on) ensureEdges(); }
+function setDraw(on){ DRAW.value = on ? 1 : 0; $('app').classList.toggle('draw', on); camera.layers.set(on ? 1 : 0); axisLine.visible = on; document.querySelectorAll('#sstyle button').forEach(b => b.setAttribute('aria-pressed', (b.dataset.s === 'draw') === !!state.draw)); if (on) ensureEdges(); }
 $('sstyle').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; state.draw = b.dataset.s === 'draw'; try { localStorage.setItem('diamant-draw', state.draw ? '1' : '0'); } catch(x){} setDraw(state.section && state.draw); });
-/* drawing style: every lathe / extrusion gets its sharp edges as ink lines (built lazily, once) */
-const inkMat = new THREE.LineBasicMaterial({color:0x14161a});
-function ensureEdges(){ spin.traverse(m => { if (m.isMesh && !m.isInstancedMesh && m.geometry && !m.userData.edged && m.name !== 'decal' && m !== halo && m !== shadow){ m.userData.edged = true; const e = new THREE.LineSegments(new THREE.EdgesGeometry(m.geometry, 24), inkMat); e.name = 'ink'; e.visible = DRAW.value > 0; m.add(e); } if (m.name === 'ink') m.visible = DRAW.value > 0; }); }
+/* drawing style = a clean 2D section: each part's (r,y) profile as white lines, mirrored left/right, nothing else rendered (layer 1) */
+const inkMat = new THREE.LineBasicMaterial({color:0xffffff, transparent:true, opacity:.92});
+const axisLine = new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0,-2.2,0), new THREE.Vector3(0,2.2,0)]), new THREE.LineDashedMaterial({color:0xffffff, transparent:true, opacity:.35, dashSize:.06, gapSize:.03}));
+axisLine.computeLineDistances(); axisLine.layers.set(1); axisLine.visible = false; spin.add(axisLine);
+function inkFor(prof){ const v = []; for (let i = 0; i < prof.length; i++){ const a = prof[i], b = prof[(i + 1) % prof.length]; if (a[0] === b[0] && a[1] === b[1]) continue; v.push(a[0], a[1], 0, b[0], b[1], 0); if (a[0] || b[0]) v.push(-a[0], a[1], 0, -b[0], b[1], 0); }
+  const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(v, 3)); const l = new THREE.LineSegments(g, inkMat); l.name = 'ink'; l.layers.set(1); return l; }
+function ensureEdges(){ spin.traverse(o => {
+  if (o.userData.inked || o.name === 'ink' || o === axisLine) return;
+  if (o.userData.prof2d){ o.userData.inked = true; o.add(inkFor(o.userData.prof2d)); o.traverse(c => { if (c !== o) c.userData.inked = true; }); }
+  else if (o.isMesh && o.userData.prof){ o.userData.inked = true; o.add(inkFor(o.userData.prof)); } }); }
+const qInk = new THREE.Quaternion();
+function faceInk(){ spin.traverse(o => { if (o.name === 'ink'){ o.parent.getWorldQuaternion(qInk).invert(); o.quaternion.copy(qInk); } }); }   // the drawing always faces the screen, whatever the part's spin
 $('t-explode').onclick = () => setTool('explode', !state.explode);
 $('t-section').onclick = () => setTool('section', !state.section);
 $('t-spin').onclick = () => setTool('spin', !state.spin);
@@ -1232,7 +1239,7 @@ function layoutTargets(){
   const w = innerWidth, h = innerHeight, L = app.classList.contains('open-l'), B = app.classList.contains('open-b');
   if (SHOW.on){ lay.tx = wide() ? -w*.13 : 0; lay.ty = wide() ? h*.03 : -h*.1; lay.tz = 1; return; }
   const E = state.explode && state.mode === 'stack';   // exploded: taller and labelled on the right, so sit it lower and nearer the centre, away from the top-right tools
-  if (wide()){ lay.tx = (L ? -w*.16 : 0) + (E ? (L ? w*.07 : w*.04) : 0); lay.ty = h*.04 + (B ? h*.07 : 0) - (E ? h*.08 : 0); lay.tz = 1 + (L ? .22 : 0) + (B ? .14 : 0) + (E ? .12 : 0); }
+  if (wide()){ lay.tx = (L ? -150 : 0) + (E ? 95 : 0); lay.ty = (B ? 70 : -10) + (state.section ? 48 : 0); lay.tz = 1; }   // centre of the free band: panel 300 px left, labels 190 px right, strip 196 px / pill 56 px bottom, bar 76 px top
   else { lay.tx = 0; lay.ty = -h*.08 + (L ? h*.14 : 0) + (B ? -h*.02 : 0); lay.tz = 1 + (L ? .3 : 0) + (B ? .18 : 0); }
 }
 function applyLayout(dt){
@@ -1247,11 +1254,22 @@ function resize(){
   layoutTargets(); camera.setViewOffset(w, h, lay.x, lay.y, w, h); camera.updateProjectionMatrix();
 }
 addEventListener('resize', resize);
+/* camera distance that fills the free stage: projected extents of the cylinder (not its bounding sphere) against the area left by the open panels */
 function fitDist(){
+  const w = innerWidth, h = innerHeight, S = SHOW.on, L = !S && app.classList.contains('open-l'), B = !S && app.classList.contains('open-b'), E = !S && state.explode && state.mode === 'stack';
+  const availH = Math.max(200, h - (S ? 40 : 76) - (B ? (wide() ? 196 : 170) : 56) - (!S && state.section ? 96 : 0)),   // section: label + style pill sit under the model availW = Math.max(200, w - (L && wide() ? 300 : 24) - (E && wide() ? 190 : 0));
   const vfov = camera.fov * PI / 180, hfov = 2*Math.atan(Math.tan(vfov/2)*camera.aspect);
-  const usable = wide() ? Math.min(vfov * .8, hfov * .62) : Math.min(vfov * .46, hfov * .84);   // panels closed: big and centred
-  return viewR / Math.sin(usable/2) * lay.tz;
+  const d = camFly ? camFly.dir : tmpDir.copy(camera.position).sub(controls.target).normalize();
+  const sph = Math.min(1, Math.abs(d.y)), cph = Math.sqrt(1 - sph*sph);
+  const R = (state.mode === 'stack' ? cone().R : cone().R) * MM, hv = R*sph + viewHH*cph, hh = R;      // half extents on screen: vertical / horizontal
+  const dv = hv / Math.tan(vfov/2) * (h / availH), dh = hh / Math.tan(hfov/2) * (w / availW);
+  return Math.max(dv, dh) * (wide() ? 1.14 : 1.22) * lay.tz;
 }
+const tmpDir = new THREE.Vector3();
+/* the view keeps the visitor's own zoom ratio but re-fits as the set grows or panels open; orbiting/zooming pauses it */
+let zoomRatio = 1, orbiting = false;
+controls.addEventListener('start', () => { orbiting = true; });
+controls.addEventListener('end', () => { orbiting = false; zoomRatio = camera.position.distanceTo(controls.target) / fitDist(); });
 
 /* idle / attract */
 let idle = 0;
@@ -1384,7 +1402,7 @@ function frame(now){
   } else { yMin = 0; yMax = tOf(state.single); if (single) single.position.y = 0; }
   const c = (yMin + yMax)/2; viewC += (c - viewC) * k;
   root.position.y = -viewC * MM;
-  viewR = Math.hypot(cone().R + (state.mode === 'stack' && state.cone === '100' ? 0 : 0), (yMax - yMin)/2) * MM;
+  viewR = Math.hypot(cone().R, (yMax - yMin)/2) * MM; viewHH = (yMax - yMin)/2 * MM;
   shadow.position.y = (yMin - viewC) * MM - .02;
   shadow.scale.setScalar(viewR * 2.6); shadow.material.opacity = 1 - sec;
 
@@ -1397,8 +1415,10 @@ function frame(now){
     camera.position.lerpVectors(camFly.from, camFly.to, t); controls.target.copy(camFly.tFrom).multiplyScalar(1 - t);
     if (camFly.t >= 1) camFly = null;
   }
-  applyLayout(dt);
-  controls.minDistance = viewR * 1.6; controls.maxDistance = viewR * 8;
+  applyLayout(dt); if (DRAW.value) faceInk();
+  if (!camFly && !SHOW.on && !orbiting && !drag3d && !pick){ const cur = camera.position.distanceTo(controls.target), want = fitDist() * zoomRatio;
+    if (Math.abs(want - cur) > cur * .002){ const nd = cur + (want - cur) * (1 - Math.pow(.02, dt)); camera.position.sub(controls.target).multiplyScalar(nd / cur).add(controls.target); } }
+  controls.minDistance = viewR * 1.2; controls.maxDistance = viewR * 8;
   if (!SHOW.on) controls.update();
   renderer.render(scene, camera);
 
