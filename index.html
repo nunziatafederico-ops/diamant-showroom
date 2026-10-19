@@ -368,31 +368,34 @@ import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
    CATALOGO — misure dai disegni Diamant (tavole del 17-19/06/2026)
    ================================================================== */
 const WHEELS = {
-  'V3.6':  {t:12, kind:'cont',    prof:'v', d:4, rim:'bronze', title:'Mola D200 V3.6'},
-  'V3.12': {t:16, kind:'cont',    prof:'v', d:6, rim:'bronze', title:'Mola D200 V3.12'},
-  'V4P.2': {t:12, kind:'tagli',   prof:'p',                    title:'Mola D200 V4P.2'},
-  'V33':   {t:12, kind:'tagli',   prof:'pencil', L:1,          title:'Mola D200 V33'},
-  'V44':   {t:14, kind:'tagli',   prof:'pencil', L:1,          title:'Mola D200 V44'},
-  'V55':   {t:14, kind:'tagli',   prof:'pencil', L:.5,         title:'Mola D200 V55'},
-  'V66':   {t:18, kind:'tagli',   prof:'pencil', L:.5,         title:'Mola D200 V66'},
-  'V33S':  {t:12, kind:'settori', prof:'pencil', L:1, code:'V33', title:'Mola V33 a settori'},
-  'V44S':  {t:14, kind:'settori', prof:'pencil', L:1, code:'V44', title:'Mola V44 a settori'},
-  'V55S':  {t:14, kind:'settori', prof:'pencil', L:.5, code:'V55', title:'Mola V55 a settori'},
-  'V66S':  {t:18, kind:'settori', prof:'pencil', L:.5, code:'V66', title:'Mola V66 a settori'},
+  'V3.6':  {t:12, kind:'cont',    prof:'v', d:4, rim:'bronze', title:'Mola D200 V3.6', only:'200'},
+  'V3.12': {t:16, kind:'cont',    prof:'v', d:6, rim:'bronze', title:'Mola D200 V3.12', only:'200'},
+  'V4P.2': {t:12, kind:'tagli',   prof:'p',                    title:'Mola D200 V4P.2', only:'200'},
+  'V33':   {t:12, kind:'tagli',   prof:'pencil', L:1,          title:'Mola D200 V33', only:'200'},
+  'V44':   {t:14, kind:'tagli',   prof:'pencil', L:1,          title:'Mola D200 V44', only:'200'},
+  'V55':   {t:14, kind:'tagli',   prof:'pencil', L:.5,         title:'Mola D200 V55', only:'200'},
+  'V66':   {t:18, kind:'tagli',   prof:'pencil', L:.5,         title:'Mola D200 V66', only:'200'},
+  'V33S':  {t:12, kind:'settori', prof:'pencil', L:1, code:'V33', title:'Mola V33 a settori', only:'200'},
+  'V44S':  {t:14, kind:'settori', prof:'pencil', L:1, code:'V44', title:'Mola V44 a settori', only:'200'},
+  'V55S':  {t:14, kind:'settori', prof:'pencil', L:.5, code:'V55', title:'Mola V55 a settori', only:'200'},
+  'V66S':  {t:18, kind:'settori', prof:'pencil', L:.5, code:'V66', title:'Mola V66 a settori', only:'200'},
+  // Ø100 family for the ISO 40 arbor (from the photos: solid cylinders, bore = shaft)
+  'C100':  {t:17, kind:'d100', grit:'coarse', name:'Grana grossa', title:'Mola Ø100 grana grossa', only:'100'},
+  'F100':  {t:15, kind:'d100', grit:'fine',   name:'Grana fine',   title:'Mola Ø100 grana fine',   only:'100'},
   'SPACER':{t:10, kind:'spacer', name:'Spacer',     title:'Spacer 10 mm',     only:'100'},
   'POLISH':{t:20, kind:'polish', name:'Polishing',  title:'Mola polishing',   only:'100'}
 };
-const ORDER = ['V3.6','V3.12','V4P.2','V33','V44','V55','V66','V33S','V44S','V55S','V66S','SPACER','POLISH'];
+const ORDER = ['V3.6','V3.12','V4P.2','V33','V44','V55','V66','V33S','V44S','V55S','V66S','C100','F100','SPACER','POLISH'];
 const orderFor = c => ORDER.filter(k => !WHEELS[k].only || WHEELS[k].only === c);
 // dall'alto (dado) verso il basso (flangia), come nelle tavole d'assieme
-const PRESETS = { tagli:['V3.6','V3.12','V4P.2','V33','V44','V55'], settori:['V3.6','V3.12','V4P.2','V33S','V44S','V55S'], iso:['POLISH','SPACER','V33','V66S'] };   // iso = the set in the photo: coarse, fine, spacer, polishing (top of the list = nut side)
+const PRESETS = { tagli:['V3.6','V3.12','V4P.2','V33','V44','V55'], settori:['V3.6','V3.12','V4P.2','V33S','V44S','V55S'], iso:['POLISH','SPACER','F100','C100'] };   // iso = the set in the photo: coarse, fine, spacer, polishing (top of the list = nut side)
 const MAX_WHEELS = 8;
 // the two arbors: Ø200 wheels on the flanged cone, Ø100 wheels on the ISO 40 taper
 const CONE = {
   '200': {R:100, space:80, bore:17.5, tk:1, shaftR:17.4, threadR:17.4, yMin:-67,  aside:185, nutR:37, washerR:47.5, label:'Ø 200', sub:'80 mm',
           setA:['V3.6','V3.12','V4P.2','V33','V44'], setB:['V3.6','V4P.2','V33S','V44S','V55S']},
-  '100': {R:50,  space:62, bore:17.5, tk:1, shaftR:17.4, threadR:8, yMin:-110, aside:120, nutR:14, washerR:16, label:'Ø 100', sub:'ISO 40 · 62 mm',
-          setA:['POLISH','SPACER','V33','V66S'], setB:['POLISH','SPACER','V4P.2','V44S']}
+  '100': {R:50,  space:62, bore:11, tk:1, shaftR:11, threadR:11, yMin:-110, aside:120, nutR:17, washerR:14.5, label:'Ø 100', sub:'ISO 40 · 62 mm',
+          setA:['POLISH','SPACER','F100','C100'], setB:['POLISH','F100','C100']}
 };
 let SPACE = 80;
 const cone = () => CONE[state.cone];
@@ -409,7 +412,7 @@ const UI = {
       wheels:n=>`${n} ${n===1?'mola':'mole'}`,move:'Sposta',lock:'Blocca posizione',unlock:'Sblocca posizione',
       over:'oltre lo spazio',full:'Spazio sul cono esaurito · max 80 mm',shuffled:'Ordine mescolato · le mole bloccate restano ferme',nothing:'Sblocca almeno due mole per mescolarle',
       added:c=>`${c} aggiunta in cima al set`,
-      kind:{cont:'Mola continua',tagli:'Mola a tagli',settori:'Mola a settori',spacer:'Distanziale',polish:'Mola polishing (altro fornitore)'},
+      kind:{cont:'Mola continua',tagli:'Mola a tagli',settori:'Mola a settori',spacer:'Distanziale',polish:'Mola polishing (altro fornitore)',d100:'Mola diamantata Ø100'},wn:{C100:'Grana grossa',F100:'Grana fine'},
       sp:{d:'Diametro',t:'Spessore',b:'Foro',rim:'Corona',prof:'Profilo',fix:'Fissaggio'},
       gola:d=>`Gola a V 90°, prof. ${d} mm`,fix:'6 fori Ø 6,5',
       parts:{nut:'Dado di serraggio',washer:'Rondella',base:'Cono'}, hero:'Cono', heroSub:'assieme'},
@@ -420,7 +423,7 @@ const UI = {
       wheels:n=>`${n} ${n===1?'wheel':'wheels'}`,move:'Move',lock:'Lock position',unlock:'Unlock position',
       over:'over the limit',full:'No room left on the arbor · 80 mm max',shuffled:'Order shuffled · locked wheels stay put',nothing:'Unlock at least two wheels to shuffle',
       added:c=>`${c} added on top of the stack`,
-      kind:{cont:'Continuous wheel',tagli:'Slotted wheel',settori:'Segmented wheel',spacer:'Spacer',polish:'Polishing wheel (third party)'},
+      kind:{cont:'Continuous wheel',tagli:'Slotted wheel',settori:'Segmented wheel',spacer:'Spacer',polish:'Polishing wheel (third party)',d100:'Ø100 diamond wheel'},wn:{C100:'Coarse grit',F100:'Fine grit'},
       sp:{d:'Diameter',t:'Thickness',b:'Bore',rim:'Rim',prof:'Profile',fix:'Fixing'},
       gola:d=>`90° V-groove, ${d} mm deep`,fix:'6 holes Ø 6.5',
       parts:{nut:'Clamping nut',washer:'Washer',base:'arbor'}, hero:'arbor', heroSub:'assembly'},
@@ -431,7 +434,7 @@ const UI = {
       wheels:n=>`${n} ${n===1?'Scheibe':'Scheiben'}`,move:'Verschieben',lock:'Position sperren',unlock:'Position freigeben',
       over:'über dem Limit',full:'Kein Platz mehr auf dem Dorn · max. 80 mm',shuffled:'Reihenfolge gemischt · gesperrte Scheiben bleiben',nothing:'Mindestens zwei Scheiben zum Mischen freigeben',
       added:c=>`${c} oben auf das Paket gelegt`,
-      kind:{cont:'Durchgehende Scheibe',tagli:'Geschlitzte Scheibe',settori:'Segmentscheibe',spacer:'Distanzring',polish:'Polierscheibe (Fremdfabrikat)'},
+      kind:{cont:'Durchgehende Scheibe',tagli:'Geschlitzte Scheibe',settori:'Segmentscheibe',spacer:'Distanzring',polish:'Polierscheibe (Fremdfabrikat)',d100:'Ø100 Diamantscheibe'},wn:{C100:'Grobkorn',F100:'Feinkorn'},
       sp:{d:'Durchmesser',t:'Dicke',b:'Bohrung',rim:'Kranz',prof:'Profil',fix:'Befestigung'},
       gola:d=>`90°-V-Nut, ${d} mm tief`,fix:'6 Bohrungen Ø 6,5',
       parts:{nut:'Spannmutter',washer:'Scheibe',base:'Dorn'}, hero:'Dorn', heroSub:'Baugruppe'},
@@ -442,7 +445,7 @@ const UI = {
       wheels:n=>`${n} ${n===1?'muela':'muelas'}`,move:'Mover',lock:'Bloquear posición',unlock:'Desbloquear posición',
       over:'fuera del límite',full:'No queda espacio en el cono · máx. 80 mm',shuffled:'Orden mezclado · las muelas bloqueadas no se mueven',nothing:'Desbloquea al menos dos muelas para mezclar',
       added:c=>`${c} añadida encima del paquete`,
-      kind:{cont:'Muela continua',tagli:'Muela ranurada',settori:'Muela de segmentos',spacer:'Separador',polish:'Muela de pulido (otro proveedor)'},
+      kind:{cont:'Muela continua',tagli:'Muela ranurada',settori:'Muela de segmentos',spacer:'Separador',polish:'Muela de pulido (otro proveedor)',d100:'Muela diamantada Ø100'},wn:{C100:'Grano grueso',F100:'Grano fino'},
       sp:{d:'Diámetro',t:'Espesor',b:'Agujero',rim:'Corona',prof:'Perfil',fix:'Fijación'},
       gola:d=>`Garganta en V 90°, prof. ${d} mm`,fix:'6 agujeros Ø 6,5',
       parts:{nut:'Tuerca de apriete',washer:'Arandela',base:'Cono'}, hero:'Cono', heroSub:'conjunto'},
@@ -453,7 +456,7 @@ const UI = {
       wheels:n=>`${n} ${n===1?'meule':'meules'}`,move:'Déplacer',lock:'Verrouiller la position',unlock:'Déverrouiller la position',
       over:'au-delà de la limite',full:'Plus de place sur le cône · 80 mm max',shuffled:'Ordre mélangé · les meules verrouillées restent en place',nothing:'Déverrouillez au moins deux meules pour mélanger',
       added:c=>`${c} ajoutée en haut du jeu`,
-      kind:{cont:'Meule continue',tagli:'Meule à fentes',settori:'Meule à segments',spacer:'Entretoise',polish:'Meule de polissage (autre fournisseur)'},
+      kind:{cont:'Meule continue',tagli:'Meule à fentes',settori:'Meule à segments',spacer:'Entretoise',polish:'Meule de polissage (autre fournisseur)',d100:'Meule diamant Ø100'},wn:{C100:'Grain gros',F100:'Grain fin'},
       sp:{d:'Diamètre',t:'Épaisseur',b:'Alésage',rim:'Couronne',prof:'Profil',fix:'Fixation'},
       gola:d=>`Gorge en V 90°, prof. ${d} mm`,fix:'6 trous Ø 6,5',
       parts:{nut:'Écrou de serrage',washer:'Rondelle',base:'Cône'}, hero:'Cône', heroSub:'ensemble'},
@@ -464,7 +467,7 @@ const UI = {
       wheels:n=>`${n} ${n===1?'mó':'mós'}`,move:'Mover',lock:'Bloquear posição',unlock:'Desbloquear posição',
       over:'acima do limite',full:'Sem espaço no cone · máx. 80 mm',shuffled:'Ordem baralhada · as mós bloqueadas ficam no lugar',nothing:'Desbloqueie pelo menos duas mós para baralhar',
       added:c=>`${c} adicionada no topo do conjunto`,
-      kind:{cont:'Mó contínua',tagli:'Mó ranhurada',settori:'Mó de segmentos',spacer:'Espaçador',polish:'Mó de polimento (outro fornecedor)'},
+      kind:{cont:'Mó contínua',tagli:'Mó ranhurada',settori:'Mó de segmentos',spacer:'Espaçador',polish:'Mó de polimento (outro fornecedor)',d100:'Mó diamantada Ø100'},wn:{C100:'Grão grosso',F100:'Grão fino'},
       sp:{d:'Diâmetro',t:'Espessura',b:'Furo',rim:'Coroa',prof:'Perfil',fix:'Fixação'},
       gola:d=>`Garganta em V 90°, prof. ${d} mm`,fix:'6 furos Ø 6,5',
       parts:{nut:'Porca de aperto',washer:'Anilha',base:'Cone'}, hero:'Cone', heroSub:'conjunto'},
@@ -475,7 +478,7 @@ const UI = {
       wheels:n=>`${n} ${n===1?'круг':(n<5?'круга':'кругов')}`,move:'Переместить',lock:'Закрепить позицию',unlock:'Открепить позицию',
       over:'сверх лимита',full:'На оправке нет места · макс. 80 мм',shuffled:'Порядок перемешан · закреплённые круги на месте',nothing:'Открепите хотя бы два круга, чтобы перемешать',
       added:c=>`${c} добавлен сверху набора`,
-      kind:{cont:'Сплошной круг',tagli:'Круг с прорезями',settori:'Сегментный круг',spacer:'Проставка',polish:'Полировальный круг (сторонний)'},
+      kind:{cont:'Сплошной круг',tagli:'Круг с прорезями',settori:'Сегментный круг',spacer:'Проставка',polish:'Полировальный круг (сторонний)',d100:'Алмазный круг Ø100'},wn:{C100:'Крупное зерно',F100:'Мелкое зерно'},
       sp:{d:'Диаметр',t:'Толщина',b:'Посадочное отверстие',rim:'Алмазный слой',prof:'Профиль',fix:'Крепление'},
       gola:d=>`V-канавка 90°, глубина ${d} мм`,fix:'6 отверстий Ø 6,5',
       parts:{nut:'Зажимная гайка',washer:'Шайба',base:'Оправка'}, hero:'Оправка', heroSub:'сборка'},
@@ -486,7 +489,7 @@ const UI = {
       wheels:n=>`${n} taş`,move:'Taşı',lock:'Konumu kilitle',unlock:'Kilidi aç',
       over:'sınırın üzerinde',full:'Milde yer kalmadı · en fazla 80 mm',shuffled:'Sıra karıştırıldı · kilitli taşlar yerinde',nothing:'Karıştırmak için en az iki taşın kilidini açın',
       added:c=>`${c} setin üstüne eklendi`,
-      kind:{cont:'Sürekli taş',tagli:'Yarıklı taş',settori:'Segmentli taş',spacer:'Ara halka',polish:'Polisaj taşı (başka tedarikçi)'},
+      kind:{cont:'Sürekli taş',tagli:'Yarıklı taş',settori:'Segmentli taş',spacer:'Ara halka',polish:'Polisaj taşı (başka tedarikçi)',d100:'Ø100 elmas taş'},wn:{C100:'Kaba kum',F100:'İnce kum'},
       sp:{d:'Çap',t:'Kalınlık',b:'Delik',rim:'Taç',prof:'Profil',fix:'Bağlantı'},
       gola:d=>`90° V kanal, ${d} mm derinlik`,fix:'6 delik Ø 6,5',
       parts:{nut:'Sıkma somunu',washer:'Rondela',base:'mili'}, hero:'mili', heroSub:'montaj'},
@@ -497,7 +500,7 @@ const UI = {
       wheels:n=>`${n} 片磨轮`,move:'移动',lock:'锁定位置',unlock:'解除锁定',
       over:'超出空间',full:'主轴空间已满 · 最多 80 mm',shuffled:'顺序已打乱 · 锁定的磨轮保持不动',nothing:'至少解锁两片磨轮才能打乱',
       added:c=>`${c} 已加到最上方`,
-      kind:{cont:'连续式磨轮',tagli:'开槽磨轮',settori:'节块磨轮',spacer:'隔环',polish:'抛光轮（第三方）'},
+      kind:{cont:'连续式磨轮',tagli:'开槽磨轮',settori:'节块磨轮',spacer:'隔环',polish:'抛光轮（第三方）',d100:'Ø100 金刚石轮'},wn:{C100:'粗粒度',F100:'细粒度'},
       sp:{d:'直径',t:'厚度',b:'内孔',rim:'工作层',prof:'轮廓',fix:'固定'},
       gola:d=>`90° V 形槽，深 ${d} mm`,fix:'6 孔 Ø 6.5',
       parts:{nut:'锁紧螺母',washer:'垫圈',base:'主轴'}, hero:'主轴', heroSub:'总成'},
@@ -508,13 +511,13 @@ const UI = {
       wheels:n=>`ホイール ${n} 枚`,move:'移動',lock:'位置を固定',unlock:'固定を解除',
       over:'上限超過',full:'アーバーに空きがありません · 最大 80 mm',shuffled:'順番をシャッフル · 固定したホイールはそのまま',nothing:'シャッフルするには 2 枚以上の固定を解除してください',
       added:c=>`${c} を最上段に追加しました`,
-      kind:{cont:'連続ホイール',tagli:'スリット付きホイール',settori:'セグメントホイール',spacer:'スペーサー',polish:'ポリッシングホイール（他社製）'},
+      kind:{cont:'連続ホイール',tagli:'スリット付きホイール',settori:'セグメントホイール',spacer:'スペーサー',polish:'ポリッシングホイール（他社製）',d100:'Ø100 ダイヤモンドホイール'},wn:{C100:'粗粒',F100:'細粒'},
       sp:{d:'直径',t:'厚さ',b:'穴径',rim:'ダイヤ層',prof:'プロファイル',fix:'固定'},
       gola:d=>`90° V 溝、深さ ${d} mm`,fix:'穴 6 個 Ø 6.5',
       parts:{nut:'締付ナット',washer:'ワッシャー',base:'アーバー'}, hero:'アーバー', heroSub:'一式'}
 };
 const LANGS = ['it','en','de','fr','es','pt','ru','tr','zh','ja'];
-const code = type => WHEELS[type].code ? WHEELS[type].code + UI[state.lang].seg : (WHEELS[type].name || type);
+const code = type => { const w = WHEELS[type], U = UI[state.lang]; return w.code ? w.code + U.seg : ((U.wn && U.wn[type]) || w.name || type); };
 
 /* ================================================================== renderer */
 const canvas = document.getElementById('c');
@@ -574,6 +577,7 @@ const M = {
   sinter: patch(new THREE.MeshStandardMaterial({color:0x5d5c59, metalness:.35, roughness:.82, roughnessMap:tex(gCoarse,.09,.09), bumpMap:tex(gCoarse,.09,.09), bumpScale:1.4})),
   bronze: patch(new THREE.MeshStandardMaterial({color:0xc89d5f, metalness:.85, roughness:.34, bumpMap:tex(gTurn,1,1), bumpScale:.4})),
   brass:  patch(new THREE.MeshStandardMaterial({color:0xd9b866, metalness:1, roughness:.24})),
+  bond:   patch(new THREE.MeshStandardMaterial({color:0xb5956a, metalness:.55, roughness:.58, bumpMap:tex(gTurn,1,1), bumpScale:.5})),
   resin:  patch(new THREE.MeshStandardMaterial({color:0x6a1e2b, metalness:0, roughness:.88, roughnessMap:tex(gCoarse,8,8), bumpMap:tex(gCoarse,8,8), bumpScale:.6})),
   darkFlat: new THREE.MeshStandardMaterial({color:0x15181d, metalness:.4, roughness:.8, side:THREE.DoubleSide, polygonOffset:true, polygonOffsetFactor:-2})
 };
@@ -663,11 +667,24 @@ function decal(w, t){
   const m = new THREE.Mesh(new THREE.PlaneGeometry(cone().R*2, cone().R*2), new THREE.MeshStandardMaterial({map: decalTex(variant), transparent:true, depthWrite:false, metalness:.2, roughness:.9, polygonOffset:true, polygonOffsetFactor:-2}));
   m.rotation.x = -PI/2; m.position.y = t + .03; m.name = 'decal'; return m;
 }
+function buildWheel100(w, t){   // ISO 40 family: solid cylinders, bore = shaft, machining only towards the edges
+  const g = new THREE.Group(), R = 50, rb = cone().bore;
+  if (w.kind === 'spacer'){ g.add(lathe([[rb,0],[rb + 6,0],[rb + 6,t],[rb,t]], M.steel)); g.userData.t = t; return g; }               // plain Ø34 ring
+  if (w.kind === 'polish'){ g.add(lathe([[rb,0],[R - 1.5,0],[R,1.5],[R,t - 1.5],[R - 1.5,t],[rb,t]], M.resin)); g.userData.t = t; return g; }
+  if (w.grit === 'coarse'){   // one bronze cylinder, relieved in the middle, four radial slots
+    g.add(lathe([[rb,0],[R - 1.5,0],[R,1.5],[R,5.5],[R - 1.4,7.5],[R - 1.4,t - 7.5],[R,t - 5.5],[R,t - 1.5],[R - 1.5,t],[rb,t]], M.bond));
+    for (let i = 0; i < 4; i++){ const a = i*PI/2, b = new THREE.Mesh(new THREE.BoxGeometry(9, t + .2, 2), M.darkFlat); b.position.set(Math.cos(a)*(R - 4.4), t/2, Math.sin(a)*(R - 4.4)); b.rotation.y = -a; g.add(b); }
+  } else {                    // fine: bronze core with a ring of sintered teeth
+    g.add(lathe([[rb,0],[R - 5.3,0],[R - 5.3,t],[rb,t]], M.bond));
+    g.add(teeth([[R - 5.5,0],[R,0],[R,t],[R - 5.5,t]], 36, 4.2, M.sinter));
+  }
+  g.add(decal(w, t)); g.userData.t = t;
+  return g;
+}
 function buildWheel(type){
   const w = WHEELS[type], t = tOf(type), g = new THREE.Group(), R = cone().R, rb = cone().bore, m = radMap;
+  if (state.cone === '100') return buildWheel100(w, t);
   const mp = pts => pts.map(p => [m(p[0]), p[1], p[2]]);
-  if (w.kind === 'spacer'){ g.add(lathe([[rb,0],[rb + 5.5,0],[rb + 5.5,t],[rb,t]], M.steel)); g.userData.t = t; return g; }               // plain Ø46 ring
-  if (w.kind === 'polish'){ g.add(lathe([[rb,0],[R - 2,0],[R,2],[R,t - 2],[R - 2,t],[rb,t]], M.resin)); g.userData.t = t; return g; }   // bordeaux resin, placeholder
   g.add(decal(w, t));
   if (w.kind === 'settori'){
     const holes = []; for (let i = 0; i < 6; i++) holes.push([i/6*PI*2, m(62), 3.25 * (R/100)]);
@@ -700,14 +717,14 @@ function buildBase(){
 }
 function buildBase100(){   // ISO 40: pull stud, 7:24 taper, V-flange with groove, short collar; wheels start at y = 0
   const g = new THREE.Group();
-  g.add(lathe([[0,-108],[7.8,-108],[8.5,-107],[8.5,-101],[5,-99],[5,-93],[12.4,-93],[22.2,-25],[31.75,-25],[31.75,-18],[28,-15.5],[28,-10],[31.75,-7.5],[31.75,-6],[15,-6],[15,0],[0,0]], M.steel));
+  g.add(lathe([[0,-108],[7.8,-108],[8.5,-107],[8.5,-101],[5,-99],[5,-93],[12.4,-93],[22.2,-25],[31.75,-25],[31.75,-18],[28,-15.5],[28,-10],[31.75,-7.5],[31.75,-6],[25,-6],[25,0],[0,0]], M.steel));   // collar Ø50, then the plain Ø22 shaft
   return g;
 }
-function buildWasher100(){ return lathe([[8.4,0],[16,0],[16,2.4],[14.4,4],[8.7,4],[8.4,3.7]], M.steel); }
+function buildWasher100(){ return lathe([[11.3,0],[14.5,0],[14.5,3.2],[13.7,4],[11.3,4]], M.steel); }
 function buildNut100(){   // four-lobe clamping nut, as on the real ISO 40 arbor
   const g = new THREE.Group();
-  g.add(lathe([[8.3,4],[11.5,4],[11.5,14],[8.3,14]], M.steelM, 48));
-  for (let i = 0; i < 4; i++){ const a = i*PI/2; const b = new THREE.Mesh(new THREE.BoxGeometry(6, 10, 9), M.steelM); b.position.set(Math.cos(a)*12.5, 9, Math.sin(a)*12.5); b.rotation.y = -a; g.add(b); }
+  g.add(lathe([[11.3,4],[12.5,4],[12.5,13],[11.3,13]], M.steelM, 48));   // cross nut from the photo: four square arms, ~35 mm across
+  for (let i = 0; i < 4; i++){ const a = i*PI/2; const b = new THREE.Mesh(new THREE.BoxGeometry(5.6, 9, 9), M.steelM); b.position.set(Math.cos(a)*15, 8.5, Math.sin(a)*15); b.rotation.y = -a; g.add(b); }
   return g;
 }
 function buildShaft(H){
@@ -840,9 +857,9 @@ function renderStack(){
 }
 function renderSingle(){
   const U = T(), w = WHEELS[state.single], el = $('p-single');
-  $('w-kind').textContent = U.kind[w.kind]; $('w-name').textContent = w.only ? w.title : (state.lang === 'it' ? w.title : 'D200 ' + code(state.single));
-  const rows = [[U.sp.d,`Ø ${cone().R*2} mm`],[U.sp.t,`${tOf(state.single)} mm`],[U.sp.b,'Ø 35 mm']];
-  if (w.kind === 'spacer') rows[0][1] = 'Ø 46 mm';
+  $('w-kind').textContent = U.kind[w.kind]; $('w-name').textContent = state.lang === 'it' ? w.title : (w.only === '100' ? 'Ø100 · ' + code(state.single) : 'D200 ' + code(state.single));
+  const rows = [[U.sp.d,`Ø ${cone().R*2} mm`],[U.sp.t,`${tOf(state.single)} mm`],[U.sp.b,`Ø ${cone().bore*2} mm`]];
+  if (w.kind === 'spacer') rows[0][1] = `Ø ${cone().bore*2 + 12} mm`;
   if (w.prof === 'v') rows.push([U.sp.prof, U.gola(w.d)]); else if (w.prof) rows.push([U.sp.prof, w.code || state.single]);
   if (w.kind === 'settori') rows.push([U.sp.fix, U.fix]);
   $('w-specs').innerHTML = rows.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('');
