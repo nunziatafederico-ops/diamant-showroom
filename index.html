@@ -1177,7 +1177,7 @@ keepAwake();
 
 /* ================================================================== loop */
 const ease = t => t < .5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3)/2;
-const tmp = new THREE.Vector3(), right = new THREE.Vector3(), nrm = new THREE.Vector3(), qInv = new THREE.Quaternion(), qTmp = new THREE.Quaternion();
+const tmp = new THREE.Vector3(), right = new THREE.Vector3(), back = new THREE.Vector3(), nrm = new THREE.Vector3(), qInv = new THREE.Quaternion(), qTmp = new THREE.Quaternion();
 let ex = 0, sec = 0, spinV = 0, nutAside = false, nutX = 0, nutSpin = 0, last = performance.now();
 function frame(now){
   const dt = Math.min((now - last)/1000, .05); last = now;
@@ -1195,26 +1195,28 @@ function frame(now){
   let yMin, yMax;
   if (state.mode === 'stack'){
     const n = state.stack.length, H = n ? stackH() + .1*(n - 1) : SPACE;   // the nut clamps the stack; with no wheels it eases back to the 80 mm mark
-    right.setFromMatrixColumn(camera.matrixWorld, 0); right.y = 0; right.normalize(); qInv.copy(spin.getWorldQuaternion(qTmp)).invert(); right.applyQuaternion(qInv);   // screen-right in arbor space
+    qInv.copy(spin.getWorldQuaternion(qTmp)).invert();
+    right.setFromMatrixColumn(camera.matrixWorld, 0); right.y = 0; right.normalize(); right.applyQuaternion(qInv);   // screen-right in arbor space
+    back.set(-camera.position.x, 0, -camera.position.z).normalize().applyQuaternion(qInv);                           // away from the viewer, toward the back of the stage
     // only wheels coming onto or leaving the arbor need the nut out of the way; a reorder just slides them
     let inFlight = false; for (const o of W.values()){ if (o.entering && Math.abs(o.y - o.base) < 1.5) o.entering = false; if ((o.leaving && !o.vanish) || o.entering) inFlight = true; }
-    // nut + washer swing aside (smoothly) while a wheel comes or goes, then snap back over the shaft and screw down
+    // nut + washer retreat toward the back of the stage (smoothly) while a wheel comes or goes, then snap back over the shaft and screw down
     const aside = nutAside || inFlight;
-    nutX += ((aside ? (wide() ? 128 : 112) : 0) - nutX) * (1 - Math.pow(aside ? .03 : .0002, dt));
-    const clear = nutX > 105;
+    nutX += ((aside ? 185 : 0) - nutX) * (1 - Math.pow(aside ? .03 : .0002, dt));
+    const clear = nutX > 150;
     for (const [uid, o] of W){
       if (o.vanish){ const sc = o.g.scale.x * Math.pow(.0005, dt); o.g.scale.setScalar(sc); o.g.position.y += 40*dt; if (sc < .03){ spin.remove(o.g); disposeTree(o.g); W.delete(uid); } continue; }
       if (!drag3d || drag3d.uid !== uid){ if (o.outX){ o.outX *= Math.pow(.001, dt); if (Math.abs(o.outX) < .2) o.outX = 0; o.g.position.x = right.x * o.outX; o.g.position.z = right.z * o.outX; } }
       if (o.leaving){ if (clear || o.y > H + 30){ o.y += (o.base - o.y) * (1 - Math.pow(.003, dt)) + 60*dt; } o.g.position.y = o.y; if (o.y > o.base - 12){ spin.remove(o.g); disposeTree(o.g); W.delete(uid); } continue; }
       if (!o.entering || clear) o.y += (o.base - o.y) * (1 - Math.pow(.0008, dt));
       o.g.position.y = o.y + ex*(o.kb + 1)*GAP; }
-    const prevW = washerY, hover = nutX > 2 ? 28 : 0;
+    const prevW = washerY, hover = nutX > 2 ? 34 : 0;
     washerY += (H + hover - washerY) * (1 - Math.pow(hover ? .002 : .00002, dt));
     if (!hover && washerY > H + .05) nutSpin -= (prevW - washerY) * .9;                // screwing down
     nut.rotation.y = nutSpin;
     // the shaft always ends flush with the nut
     if (Math.abs(H - shaftH) > .25){ const h = shaftH + (H - shaftH) * (1 - Math.pow(.0008, dt)); spin.remove(shaft); disposeTree(shaft); shaft = buildShaft(h); spin.add(shaft); shaftH = h; }
-    washer.position.set(right.x*nutX, washerY + ex*(n + 1)*GAP, right.z*nutX); nut.position.set(right.x*nutX, washerY + ex*(n + 2.3)*GAP, right.z*nutX);
+    washer.position.set(back.x*nutX, washerY + ex*(n + 1)*GAP, back.z*nutX); nut.position.set(back.x*nutX, washerY + ex*(n + 2.3)*GAP, back.z*nutX);
     yMin = -67; yMax = Math.max(H, shaftH) + 17 + ex*(n + 2.3)*GAP + hover;
     for (const o of W.values()) if (!o.leaving && o.y > o.base + 1.5) yMax = Math.max(yMax, o.y + WHEELS[o.type].t);   // keep a wheel in flight in frame
     const so = state.sel && W.get(state.sel);
