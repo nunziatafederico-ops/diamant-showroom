@@ -1027,6 +1027,7 @@ function setTool(name, on){
   state[name] = on; $('t-' + name).setAttribute('aria-pressed', on);
   if (name === 'explode'){ flyTo(on ? new THREE.Vector3(.85, .22, .5) : VIEW_DIR); state.stack.forEach((s, i) => { const o = W.get(s.uid), d = o && o.g.getObjectByName('decal'); if (d) d.visible = on || i === 0; }); }
   if (name === 'section') $('sect').classList.toggle('on', on);
+  layoutTargets();
 }
 $('t-explode').onclick = () => setTool('explode', !state.explode);
 $('t-section').onclick = () => setTool('section', !state.section);
@@ -1202,7 +1203,8 @@ const lay = {x:0, y:0, z:1, tx:0, ty:0, tz:1}; window.__lay = lay;
 function layoutTargets(){
   const w = innerWidth, h = innerHeight, L = app.classList.contains('open-l'), B = app.classList.contains('open-b');
   if (SHOW.on){ lay.tx = wide() ? -w*.13 : 0; lay.ty = wide() ? h*.03 : -h*.1; lay.tz = 1; return; }
-  if (wide()){ lay.tx = L ? -w*.16 : 0; lay.ty = h*.04 + (B ? h*.07 : 0); lay.tz = 1 + (L ? .22 : 0) + (B ? .14 : 0); }
+  const E = state.explode && state.mode === 'stack';   // exploded: taller and labelled on the right, so sit it lower and nearer the centre, away from the top-right tools
+  if (wide()){ lay.tx = (L ? -w*.16 : 0) + (E ? (L ? w*.07 : w*.04) : 0); lay.ty = h*.04 + (B ? h*.07 : 0) - (E ? h*.08 : 0); lay.tz = 1 + (L ? .22 : 0) + (B ? .14 : 0) + (E ? .12 : 0); }
   else { lay.tx = 0; lay.ty = -h*.08 + (L ? h*.14 : 0) + (B ? -h*.02 : 0); lay.tz = 1 + (L ? .3 : 0) + (B ? .18 : 0); }
 }
 function applyLayout(dt){
