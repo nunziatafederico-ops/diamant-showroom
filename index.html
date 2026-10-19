@@ -28,7 +28,7 @@
   --f-body:"Archivo","Helvetica Neue",Arial,sans-serif;
   --f-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
   --glass:rgba(13,20,34,.66);
-  --pw:min(330px,31vw);
+  --pw:min(272px,30vw);
   color-scheme:dark;
 }
 html,body{height:100%;margin:0;background:var(--ink);color:var(--fg);overflow:hidden}
@@ -82,7 +82,7 @@ h1{font-family:var(--f-display);font-variation-settings:"wdth" 108;font-weight:7
 .list{list-style:none;margin:0;padding:2px;display:flex;flex-direction:column;gap:5px;overflow-y:auto;min-height:98px;flex:1 1 0;scrollbar-width:none;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
 .panel>:not(.list){flex:none}
 .list::after{content:"";flex:none;height:2px}
-.row{display:grid;grid-template-columns:36px 34px minmax(0,1fr) 34px 34px 34px 34px;align-items:center;height:44px;flex:0 0 44px;border-radius:14px;padding-right:2px;cursor:grab;touch-action:pan-y;
+.row{display:grid;grid-template-columns:40px 34px minmax(0,1fr) 40px 40px;column-gap:4px;align-items:center;height:44px;flex:0 0 44px;border-radius:14px;padding-right:2px;cursor:grab;touch-action:pan-y;
   transition:background .25s,border-color .25s,transform .15s,box-shadow .2s}
 .row.sel{border-color:var(--blue-hi);background:rgba(58,104,198,.26)}
 .row.locked{background:repeating-linear-gradient(-45deg,rgba(143,176,238,.07) 0 6px,transparent 6px 12px),var(--glass);cursor:default}
@@ -94,12 +94,11 @@ h1{font-family:var(--f-display);font-variation-settings:"wdth" 108;font-weight:7
 .row .num{font:500 11px/1 var(--f-mono);color:var(--fg);text-align:center;letter-spacing:.04em}
 .row.locked .grip{cursor:default;opacity:.5}
 .row.locked .num{color:var(--blue-hi)}
-.row .mv:disabled{opacity:.2;cursor:default}
 .row img{-webkit-user-drag:none;width:34px;height:26px;object-fit:contain;filter:drop-shadow(0 4px 5px rgba(0,0,0,.5));pointer-events:none}
-.row .nm{display:flex;flex-direction:column;gap:2px;min-width:0;padding-left:6px}
+.row .nm{display:flex;flex-direction:column;gap:2px;min-width:0;padding-left:4px}
 .row .nm b{font-size:13.5px;line-height:1.1;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .row .nm small{font:500 11px/1 var(--f-mono);color:var(--mute);white-space:nowrap}
-.row button{all:unset;box-sizing:border-box;cursor:pointer;touch-action:manipulation;height:40px;width:34px;display:grid;place-items:center;color:#c2cbdb;border-radius:12px}
+.row button{all:unset;box-sizing:border-box;cursor:pointer;touch-action:manipulation;height:40px;width:40px;display:grid;place-items:center;color:#c2cbdb;border-radius:12px}
 .row button svg{width:19px;height:19px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .row button:active{background:rgba(143,176,238,.15)}
 .row .lk[aria-pressed="true"]{color:var(--blue-hi)}
@@ -108,7 +107,8 @@ h1{font-family:var(--f-display);font-variation-settings:"wdth" 108;font-weight:7
 .empty{border:1px dashed rgba(143,176,238,.35);border-radius:14px;padding:16px 14px;font-size:13.5px;line-height:1.45;color:var(--mute);text-align:center}
 .empty.over{border-color:var(--blue-hi);color:var(--fg);background:rgba(58,104,198,.18)}
 .actions{display:flex;flex-wrap:nowrap;gap:6px}
-.actions .btn{padding:0 11px;font-size:13px;height:40px;flex:0 1 auto;white-space:nowrap}
+.actions .btn{padding:0 8px;font-size:12.5px;height:40px;flex:1 1 0;min-width:0;justify-content:center;gap:6px;white-space:nowrap}
+.actions .btn svg{flex:none;width:16px;height:16px}
 .btn{all:unset;height:44px;padding:0 16px;border-radius:22px;display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:600;cursor:pointer;touch-action:manipulation;transition:background .2s}
 .btn svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .btn.primary{background:var(--blue);border:1px solid var(--blue-hi)}
@@ -243,7 +243,7 @@ dl.specs dd{font-size:15px;font-weight:500;font-variant-numeric:tabular-nums}
   .meta{margin-top:4px;font-size:11px}
   .desc,dl.specs{display:none}
   .list{gap:4px}
-  .row{height:44px;flex:0 0 44px;grid-template-columns:40px 36px minmax(0,1fr) 36px 36px 36px 36px}
+  .row{height:44px;flex:0 0 44px}
   .row .nm b{font-size:14px}
   .actions .btn{height:38px;padding:0 12px;font-size:13px}
   .presets{display:none}
@@ -722,7 +722,6 @@ state.stack = loadStack();
 const stackH = () => state.stack.reduce((a, s) => a + WHEELS[s.type].t, 0);
 
 /* reorder that respects locked slots: only unlocked items move, into unlocked slots */
-function freeSlot(i, dir){ const st = state.stack; for (let j = i + dir; j >= 0 && j < st.length; j += dir) if (!st[j].locked) return j; return -1; }
 function moveTo(uid, slot){
   const st = state.stack, from = st.findIndex(s => s.uid === uid);
   if (from < 0 || st[from].locked || st[slot].locked || from === slot) return false;
@@ -797,7 +796,6 @@ const ICON = {
   lock:'<svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>',
   open:'<svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 7.6-1.7"/></svg>',
   x:'<svg viewBox="0 0 24 24"><path d="M7 7l10 10M17 7L7 17"/></svg>',
-  up:'<svg viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></svg>', dn:'<svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>',
   grip:'<svg viewBox="0 0 14 10"><circle cx="3" cy="2" r="1.4"/><circle cx="7" cy="2" r="1.4"/><circle cx="11" cy="2" r="1.4"/><circle cx="3" cy="8" r="1.4"/><circle cx="7" cy="8" r="1.4"/><circle cx="11" cy="8" r="1.4"/></svg>'
 };
 function renderStack(){
@@ -810,8 +808,6 @@ function renderStack(){
       <span class="grip" aria-label="${U.move}"><span class="num">${String(i+1).padStart(2,'0')}</span>${ICON.grip}</span>
       <img src="${thumbs[s.type] || ''}" alt="">
       <span class="nm"><b>${code(s.type)}</b><small>${w.t} mm</small></span>
-      <button class="mv up" aria-label="${U.up}" ${s.locked || !freeSlot(i, -1) ? 'disabled' : ''}>${ICON.up}</button>
-      <button class="mv dn" aria-label="${U.down}" ${s.locked || !freeSlot(i, 1) ? 'disabled' : ''}>${ICON.dn}</button>
       <button class="lk" aria-pressed="${s.locked}" aria-label="${s.locked ? U.unlock : U.lock}">${s.locked ? ICON.lock : ICON.open}</button>
       <button class="del" aria-label="${U.del}">${ICON.x}</button></li>`;
   }).join('');
@@ -851,9 +847,6 @@ list.addEventListener('click', e => {
   const row = e.target.closest('.row'); if (!row) return; const uid = +row.dataset.uid, s = state.stack.find(x => x.uid === uid);
   if (e.target.closest('.lk')){ s.locked = !s.locked; syncStack(); return; }
   if (e.target.closest('.del')){ state.stack = state.stack.filter(x => x.uid !== uid); if (state.sel === uid) state.sel = null; syncStack(); return; }
-  const i = state.stack.indexOf(s);
-  if (e.target.closest('.up')){ const j = freeSlot(i, -1); if (j >= 0 && moveTo(uid, j)){ state.sel = uid; syncStack(); } return; }
-  if (e.target.closest('.dn')){ const j = freeSlot(i, 1); if (j >= 0 && moveTo(uid, j)){ state.sel = uid; syncStack(); } return; }
   if (state.sel === uid){ openSheet({mode:'replace', uid}); return; }
   select(uid);
 });
