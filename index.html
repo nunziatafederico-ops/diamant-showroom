@@ -385,14 +385,16 @@ const PRESETS = { tagli:['V3.6','V3.12','V4P.2','V33','V44','V55'], settori:['V3
 const MAX_WHEELS = 8;
 // the two arbors: Ø200 wheels on the flanged cone, Ø100 wheels on the ISO 40 taper
 const CONE = {
-  '200': {R:100, space:80, shaftR:17.4, yMin:-67,  aside:185, nutR:37, washerR:47.5, label:'Ø 200', sub:'80 mm',
+  '200': {R:100, space:80, bore:17.5, tk:1, shaftR:17.4, threadR:17.4, yMin:-67,  aside:185, nutR:37, washerR:47.5, label:'Ø 200', sub:'80 mm',
           setA:['V3.6','V3.12','V4P.2','V33','V44'], setB:['V3.6','V4P.2','V33S','V44S','V55S']},
-  '100': {R:50,  space:62, shaftR:8.7,  yMin:-110, aside:120, nutR:14, washerR:13, label:'Ø 100', sub:'ISO 40 · 62 mm',
-          setA:['V3.6','V4P.2','V33','V44'], setB:['V3.6','V33S','V44S','V55S']}
+  '100': {R:50,  space:62, bore:17.5, tk:2, shaftR:17.4, threadR:8, yMin:-110, aside:120, nutR:14, washerR:16, label:'Ø 100', sub:'ISO 40 · 62 mm',
+          setA:['V3.6','V33'], setB:['V3.6','V44S']}
 };
 let SPACE = 80;
 const cone = () => CONE[state.cone];
-const wheelK = () => cone().R / 100;   // in-plane scale of every wheel
+const tOf = type => WHEELS[type].t * cone().tk;   // thickness on the active arbor (Ø100 wheels are thicker)
+// radial mapping: the bore stays Ø35 on both arbors, the outer radius becomes R
+const radMap = r => { const c = cone(); return c.bore + (r - 17.5) * (c.R - c.bore) / (100 - 17.5); };
 const fits = t => stackH() + t <= SPACE && state.stack.length < MAX_WHEELS;
 
 const UI = {
@@ -653,27 +655,28 @@ function decalTex(variant){ // 'cont' (no PATENTED, rim from r86) | 'pat' | 'nop
 }
 function decal(w, t){
   const variant = w.prof === 'v' ? 'cont' : (w.prof === 'pencil' ? 'pat' : 'nopat');
-  const m = new THREE.Mesh(new THREE.PlaneGeometry(200, 200), new THREE.MeshStandardMaterial({map: decalTex(variant), transparent:true, depthWrite:false, metalness:.2, roughness:.9, polygonOffset:true, polygonOffsetFactor:-2}));
+  const m = new THREE.Mesh(new THREE.PlaneGeometry(cone().R*2, cone().R*2), new THREE.MeshStandardMaterial({map: decalTex(variant), transparent:true, depthWrite:false, metalness:.2, roughness:.9, polygonOffset:true, polygonOffsetFactor:-2}));
   m.rotation.x = -PI/2; m.position.y = t + .03; m.name = 'decal'; return m;
 }
 function buildWheel(type){
-  const w = WHEELS[type], t = w.t, g = new THREE.Group(); const k = wheelK(); g.scale.set(k, 1, k);
+  const w = WHEELS[type], t = tOf(type), g = new THREE.Group(), R = cone().R, rb = cone().bore, m = radMap;
+  const mp = pts => pts.map(p => [m(p[0]), p[1], p[2]]);
   g.add(decal(w, t));
   if (w.kind === 'settori'){
-    const holes = []; for (let i = 0; i < 6; i++) holes.push([i/6*PI*2, 62, 3.25]);
-    g.add(flatRing(holedDisk(93, 17.5, holes), t - 1, .5, M.face, .5));
-    g.add(teeth(rimPts(w, 93.3), 57, 5, M.sinter));
+    const holes = []; for (let i = 0; i < 6; i++) holes.push([i/6*PI*2, m(62), 3.25 * (R/100)]);
+    g.add(flatRing(holedDisk(m(93), rb, holes), t - 1, .5, M.face, .5));
+    g.add(teeth(mp(rimPts(w, 93.3)), Math.round(57 * R/100), 5 * R/100, M.sinter));
   } else {
     const rimIn = w.kind === 'cont' ? 86 : 93;
-    g.add(lathe([[18.5,0],[rimIn,0],[rimIn,t],[18.5,t],[17.5,t-1],[17.5,1]], M.face));
-    const pts = rimPts(w, rimIn + .3), mat = w.rim === 'bronze' ? M.bronze : M.plated;
+    g.add(lathe([[rb + 1,0],[m(rimIn),0],[m(rimIn),t],[rb + 1,t],[rb,t-1],[rb,1]], M.face));
+    const pts = mp(rimPts(w, rimIn + .3)), mat = w.rim === 'bronze' ? M.bronze : M.plated;
     if (w.kind === 'cont') g.add(lathe(pts, mat));
     else {
-      const d = 1.5/96.5, step = PI*2/10, cap = new THREE.ShapeGeometry(shapeOf(pts));
+      const d = 1.5/m(96.5), step = PI*2/10, cap = new THREE.ShapeGeometry(shapeOf(pts));
       for (let k = 0; k < 10; k++){
         const p0 = k*step + d, len = step - 2*d;
         g.add(lathe(pts, mat, 22, p0, len));
-        [p0, p0 + len].forEach(ph => { const m = new THREE.Mesh(cap, capMat(mat)); m.rotation.y = ph - PI/2; g.add(m); });
+        [p0, p0 + len].forEach(ph => { const mm = new THREE.Mesh(cap, capMat(mat)); mm.rotation.y = ph - PI/2; g.add(mm); });
       }
     }
   }
@@ -693,18 +696,19 @@ function buildBase100(){   // ISO 40: pull stud, 7:24 taper, V-flange with groov
   g.add(lathe([[0,-108],[7.8,-108],[8.5,-107],[8.5,-101],[5,-99],[5,-93],[12.4,-93],[22.2,-25],[31.75,-25],[31.75,-18],[28,-15.5],[28,-10],[31.75,-7.5],[31.75,-6],[15,-6],[15,0],[0,0]], M.steel));
   return g;
 }
-function buildWasher100(){ return lathe([[9.1,0],[13,0],[13,2.2],[11.6,4],[9.4,4],[9.1,3.7]], M.steel); }
+function buildWasher100(){ return lathe([[8.4,0],[16,0],[16,2.4],[14.4,4],[8.7,4],[8.4,3.7]], M.steel); }
 function buildNut100(){   // four-lobe clamping nut, as on the real ISO 40 arbor
   const g = new THREE.Group();
-  g.add(lathe([[9.0,0],[11,0],[11,10],[9.0,10]], M.steelM, 48));
-  for (let i = 0; i < 4; i++){ const a = i*PI/2; const b = new THREE.Mesh(new THREE.BoxGeometry(5.5, 10, 9), M.steelM); b.position.set(Math.cos(a)*11.5, 5, Math.sin(a)*11.5); b.rotation.y = -a; g.add(b); }
+  g.add(lathe([[8.3,4],[11.5,4],[11.5,14],[8.3,14]], M.steelM, 48));
+  for (let i = 0; i < 4; i++){ const a = i*PI/2; const b = new THREE.Mesh(new THREE.BoxGeometry(6, 10, 9), M.steelM); b.position.set(Math.cos(a)*12.5, 9, Math.sin(a)*12.5); b.rotation.y = -a; g.add(b); }
   return g;
 }
 function buildShaft(H){
-  const r = cone().shaftR, g = new THREE.Group();
+  const r = cone().shaftR, rt = cone().threadR, g = new THREE.Group();
   const body = lathe([[0,0],[r,0],[r,1],[0,1]], M.steelM, 96); body.name = 'body'; body.position.y = -24; g.add(body);   // unit height, scaled to length
   const top = new THREE.Group(); top.name = 'top';
-  top.add(lathe(thread(0, 14, 0, r - 1, r, r > 12 ? 2 : 1.5), M.steel, 96));
+  if (rt < r) top.add(lathe([[0,0],[r,0],[r,2.5],[rt + .8,2.5],[rt,3.3],[0,3.3]], M.steelM, 96));   // step down to the thinner thread
+  top.add(lathe(thread(rt < r ? 3 : 0, 14, 0, rt - 1, rt, rt > 12 ? 2 : 1.5), M.steel, 96));
   const hole = new THREE.Mesh(new THREE.CircleGeometry(2.4, 24), M.darkFlat); hole.rotation.x = -PI/2; hole.position.y = 14.03; top.add(hole);
   g.add(top); setShaftH(g, H);
   return g;
@@ -731,7 +735,7 @@ function loadStack(){
 }
 function saveStack(){ try { localStorage.setItem('diamant-stack-v2', JSON.stringify(state.stack.map(({type, locked}) => ({type, locked})))); } catch(e){} }
 state.stack = loadStack();
-const stackH = () => state.stack.reduce((a, s) => a + WHEELS[s.type].t, 0);
+const stackH = () => state.stack.reduce((a, s) => a + tOf(s.type), 0);
 
 /* reorder that respects locked slots: only unlocked items move, into unlocked slots */
 function moveTo(uid, slot){
@@ -773,7 +777,7 @@ function enterMode(mode, instant){
   if (mode === 'stack'){
     const c100 = state.cone === '100';
     base = c100 ? buildBase100() : buildBase(); washer = c100 ? buildWasher100() : buildWasher(); nut = c100 ? buildNut100() : buildNut(); spin.add(base, washer, nut, halo);
-    halo.scale.setScalar(wheelK());
+    halo.scale.setScalar(cone().R / 100);
     syncStack(instant !== false);
   } else {
     single = buildWheel(state.single); spin.add(single);
@@ -793,7 +797,7 @@ function syncStack(instant){
     const s = state.stack[i]; let o = W.get(s.uid);
     if (o && o.type !== s.type){ spin.remove(o.g); disposeTree(o.g); W.delete(s.uid); o = null; }
     if (!o){ const g = buildWheel(s.type); spin.add(g); o = {g, type:s.type, y: instant ? y : y + 75, entering: !instant}; g.position.y = o.y; if (!instant) g.scale.setScalar(.001); W.set(s.uid, o); }
-    o.base = y; o.kb = n - 1 - i; y += WHEELS[s.type].t + .1;
+    o.base = y; o.kb = n - 1 - i; y += tOf(s.type) + .1;
     const d = o.g.getObjectByName('decal'); if (d) d.visible = i === 0;   // only the top face is visible in the stack
   }
   if (!shaft){ const h = n ? y : SPACE; shaft = buildShaft(h); spin.add(shaft); shaftH = h; washerY = h; }
@@ -820,7 +824,7 @@ function renderStack(){
     return `<li class="row glass${s.locked ? ' locked' : ''}${state.sel === s.uid ? ' sel' : ''}${drag && drag.uid === s.uid ? ' drag' : ''}" data-uid="${s.uid}">
       <span class="grip" aria-label="${U.move}"><span class="num">${String(i+1).padStart(2,'0')}</span>${ICON.grip}</span>
       <img src="${thumbs[s.type] || ''}" alt="">
-      <span class="nm"><b>${code(s.type)}</b><small>${w.t} mm</small></span>
+      <span class="nm"><b>${code(s.type)}</b><small>${tOf(s.type)} mm</small></span>
       <button class="lk" aria-pressed="${s.locked}" aria-label="${s.locked ? U.unlock : U.lock}">${s.locked ? ICON.lock : ICON.open}</button>
       <button class="del" aria-label="${U.del}">${ICON.x}</button></li>`;
   }).join('');
@@ -829,11 +833,11 @@ function renderStack(){
 function renderSingle(){
   const U = T(), w = WHEELS[state.single], el = $('p-single');
   $('w-kind').textContent = U.kind[w.kind]; $('w-name').textContent = state.lang === 'it' ? w.title : 'D200 ' + code(state.single);
-  const rows = [[U.sp.d,'Ø 200 mm'],[U.sp.t,`${w.t} mm`],[U.sp.b,'Ø 35 mm']];
+  const rows = [[U.sp.d,`Ø ${cone().R*2} mm`],[U.sp.t,`${tOf(state.single)} mm`],[U.sp.b,'Ø 35 mm']];
   if (w.prof === 'v') rows.push([U.sp.prof, U.gola(w.d)]); else rows.push([U.sp.prof, w.code || state.single]);
   if (w.kind === 'settori') rows.push([U.sp.fix, U.fix]);
   $('w-specs').innerHTML = rows.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('');
-  $('b-addthis').disabled = !fits(w.t);
+  $('b-addthis').disabled = !fits(tOf(state.single));
   if (!el.hidden){ el.classList.remove('swap'); void el.offsetWidth; el.classList.add('swap'); }
 }
 function renderUI(){
@@ -844,7 +848,7 @@ function renderUI(){
   document.documentElement.lang = state.lang;
   document.querySelectorAll('.card').forEach(c => {
     if (c.dataset.k.startsWith('stack')){ const cc = CONE[c.dataset.k.slice(5)]; c.querySelector('b').textContent = `${U.hero} ${cc.label}`; c.querySelector('small').textContent = cc.sub; }
-    else { c.querySelector('b').textContent = code(c.dataset.k); c.querySelector('small').textContent = `${WHEELS[c.dataset.k].t} mm`; }
+    else { c.querySelector('b').textContent = code(c.dataset.k); c.querySelector('small').textContent = `${tOf(c.dataset.k)} mm`; }
   });
   renderStack(); renderSingle(); buildLabels();
   if (!$('sheet').hidden) openSheet(sheetCtx);
@@ -892,7 +896,7 @@ document.querySelectorAll('[data-preset]').forEach(b => b.onclick = () => { setP
   state.stack = PRESETS[b.dataset.preset].map(t => mk(t)); state.sel = null; syncStack();
 });
 $('b-addthis').onclick = () => {
-  if (!fits(WHEELS[state.single].t)){ toast(T().full); return; }
+  if (!fits(tOf(state.single))){ toast(T().full); return; }
   const it = mk(state.single); state.stack.unshift(it); state.sel = it.uid;
   enterMode('stack', false); flyHome(); toast(T().added(code(it.type)));
 };
@@ -905,13 +909,13 @@ function openSheet(ctx){
   $('sh-ey').textContent = ctx.mode === 'add' ? U.addEy : U.pickPos(pos);
   $('sh-title').textContent = U.pickTitle;
   const room = cur ? 1e9 : SPACE - stackH();
-  $('sh-grid').innerHTML = ORDER.map(k => `<button class="opt" data-k="${k}" aria-current="${cur && cur.type === k}" ${WHEELS[k].t > room ? 'aria-disabled="true"' : ''}><img src="${thumbs[k]}" alt=""><b>${code(k)}</b><small>${WHEELS[k].t} mm</small></button>`).join('');
+  $('sh-grid').innerHTML = ORDER.map(k => `<button class="opt" data-k="${k}" aria-current="${cur && cur.type === k}" ${tOf(k) > room ? 'aria-disabled="true"' : ''}><img src="${thumbs[k]}" alt=""><b>${code(k)}</b><small>${tOf(k)} mm</small></button>`).join('');
   $('sh-remove').hidden = !cur; $('sheet').hidden = false;
 }
 function closeSheet(){ $('sheet').hidden = true; sheetCtx = null; }
 $('sh-grid').addEventListener('click', e => {
   const o = e.target.closest('.opt'); if (!o || !sheetCtx) return; const k = o.dataset.k;
-  if (sheetCtx.mode === 'add'){ if (!fits(WHEELS[k].t)){ toast(T().full); return; } const it = mk(k); state.stack.unshift(it); state.sel = it.uid; }
+  if (sheetCtx.mode === 'add'){ if (!fits(tOf(k))){ toast(T().full); return; } const it = mk(k); state.stack.unshift(it); state.sel = it.uid; }
   else { const s = state.stack.find(x => x.uid === sheetCtx.uid); if (!s) return; s.type = k; }
   closeSheet(); syncStack();
 });
@@ -985,7 +989,7 @@ function stageY(cx, cy){ // pointer → height along the arbor, in mm
   return hitP.y / MM + viewC;
 }
 function slotAtY(y, skipUid){ // how many wheels sit above this height = insertion index
-  let n = 0; for (const s of state.stack){ if (s.uid === skipUid) continue; const o = W.get(s.uid); if (o && o.base + WHEELS[s.type].t/2 > y) n++; }
+  let n = 0; for (const s of state.stack){ if (s.uid === skipUid) continue; const o = W.get(s.uid); if (o && o.base + tOf(s.type)/2 > y) n++; }
   return n;
 }
 let dropSlot = -1;
@@ -1047,7 +1051,7 @@ addEventListener('pointermove', e => {
   if (!pick.on){
     const dx = e.clientX - pick.x, dy = e.clientY - pick.y;
     if (Math.abs(dy) < 12 || Math.abs(dy) < Math.abs(dx)) return;          // sideways = scroll the strip
-    if (!fits(WHEELS[pick.k].t)){ toast(T().full); pick = null; return; }
+    if (!fits(tOf(pick.k))){ toast(T().full); pick = null; return; }
     pick.on = true; cardBlock = true; try { pick.el.setPointerCapture(e.pointerId); } catch(x){}
     if (state.mode !== 'stack'){ enterMode('stack', true); flyHome(); }
     setTool('explode', false); setTool('section', false);
@@ -1083,7 +1087,7 @@ function buildLabels(){
     d.innerHTML = `<div class="stem"></div><div class="dot"></div><div class="tag">${txt}${sub ? `<em>${sub}</em>` : ''}</div>`; labelsEl.appendChild(d); labels.push({el:d, get}); };
   add(U.parts.nut, '', () => [cone().nutR, nut.position.y + 11]);
   add(U.parts.washer, '', () => [cone().washerR, washer.position.y + 3]);
-  state.stack.forEach(s => add(code(s.type), `${WHEELS[s.type].t} mm`, () => { const o = W.get(s.uid); return o ? [cone().R + 1, o.g.position.y + WHEELS[s.type].t/2] : null; }));
+  state.stack.forEach(s => add(code(s.type), `${tOf(s.type)} mm`, () => { const o = W.get(s.uid); return o ? [cone().R + 1, o.g.position.y + tOf(s.type)/2] : null; }));
   add(U.parts.base, '', () => [state.cone === '100' ? 32 : 40, -12]);
 }
 
@@ -1093,12 +1097,12 @@ function makeThumbs(){
   const pr = renderer.getPixelRatio(); renderer.setPixelRatio(1); renderer.setSize(Wd, Hd, false); shadow.visible = false;
   const shot = (obj, r, dir) => { spin.add(obj); cam.position.copy(dir).normalize().multiplyScalar(r / Math.sin(13*PI/180)); cam.lookAt(0,0,0);
     renderer.render(scene, cam); const u = canvas.toDataURL('image/png'); spin.remove(obj); disposeTree(obj); return u; };
-  ORDER.forEach(k => { const g = buildWheel(k); g.position.y = -WHEELS[k].t/2; out[k] = shot(g, 1.0, new THREE.Vector3(.25, .62, 1)); });
+  ORDER.forEach(k => { const g = buildWheel(k); g.position.y = -tOf(k)/2; out[k] = shot(g, 1.0, new THREE.Vector3(.25, .62, 1)); });
   const keep = state.cone;
   for (const c of ['200','100']){
     state.cone = c; SPACE = CONE[c].space;
     const tmp = new THREE.Group(); tmp.add(c === '100' ? buildBase100() : buildBase()); let y = 0;
-    [...CONE[c].setA].reverse().forEach(k => { const g = buildWheel(k); g.position.y = y; y += WHEELS[k].t; tmp.add(g); });
+    [...CONE[c].setA].reverse().forEach(k => { const g = buildWheel(k); g.position.y = y; y += tOf(k); tmp.add(g); });
     tmp.add(buildShaft(y)); const ws = c === '100' ? buildWasher100() : buildWasher(); ws.position.y = y; const nt = c === '100' ? buildNut100() : buildNut(); nt.position.y = y; tmp.add(ws, nt);
     tmp.position.y = -(y + 17 + CONE[c].yMin)/2; out['stack' + c] = shot(tmp, c === '100' ? 1.15 : 1.25, new THREE.Vector3(.6, .45, .7));
   }
@@ -1258,11 +1262,11 @@ function frame(now){
     const px = SHOW.on ? (back.x*.7 + right.x*.7) : back.x, pz = SHOW.on ? (back.z*.7 + right.z*.7) : back.z;
     washer.position.set(px*nutX, washerY + ex*(n + 1)*GAP, pz*nutX); nut.position.set(px*nutX, washerY + ex*(n + 2.3)*GAP, pz*nutX);
     yMin = cone().yMin; yMax = Math.max(H, shaftH) + 17 + ex*(n + 2.3)*GAP + hover;
-    for (const o of W.values()) if (!o.leaving && o.y > o.base + 1.5) yMax = Math.max(yMax, o.y + WHEELS[o.type].t);   // keep a wheel in flight in frame
+    for (const o of W.values()) if (!o.leaving && o.y > o.base + 1.5) yMax = Math.max(yMax, o.y + tOf(o.type));   // keep a wheel in flight in frame
     const so = state.sel && W.get(state.sel);
     if (pick && pick.on && dropSlot >= 0){ let hy = 0; for (let i = n - 1; i >= dropSlot; i--) hy += WHEELS[state.stack[i].type].t; halo.visible = true; halo.position.y = hy; halo.material.opacity = .9; }
-    else { halo.visible = !!so; if (so){ halo.position.y = so.g.position.y + WHEELS[so.type].t/2; halo.material.opacity = .55 + .35*Math.sin(now/260); } }
-  } else { yMin = 0; yMax = WHEELS[state.single].t; if (single) single.position.y = 0; }
+    else { halo.visible = !!so; if (so){ halo.position.y = so.g.position.y + tOf(so.type)/2; halo.material.opacity = .55 + .35*Math.sin(now/260); } }
+  } else { yMin = 0; yMax = tOf(state.single); if (single) single.position.y = 0; }
   const c = (yMin + yMax)/2; viewC += (c - viewC) * k;
   root.position.y = -viewC * MM;
   viewR = Math.hypot(cone().R + (state.mode === 'stack' && state.cone === '100' ? 0 : 0), (yMax - yMin)/2) * MM;
@@ -1303,7 +1307,7 @@ $('strip').innerHTML = ['200','100'].map(c => `<button class="card hero" data-k=
 let tapT = 0, tapK = null;
 function addFromCatalogue(k){
   if (state.mode !== 'stack'){ enterMode('stack', true); flyHome(); }
-  if (!fits(WHEELS[k].t)){ toast(T().full); return; }
+  if (!fits(tOf(k))){ toast(T().full); return; }
   setTool('explode', false); setTool('section', false);
   const it = mk(k); state.stack.unshift(it); state.sel = it.uid; syncStack(false); toast(T().added(code(k)));
 }
