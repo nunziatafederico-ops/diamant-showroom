@@ -273,7 +273,8 @@ dl.specs dd{font-size:15px;font-weight:500;font-variant-numeric:tabular-nums}
 }
 @media (max-width:420px){ .grid{grid-template-columns:repeat(2,minmax(0,1fr))} .sheet-card h2{font-size:22px} }
 @media (min-aspect-ratio:1/1) and (max-height:620px){ .panel{top:calc(env(safe-area-inset-top,0px) + 80px)} .panel h1{font-size:24px} .row{height:40px;flex:0 0 40px} .tool{width:60px;height:60px} .desc{display:none} }
-@media (min-aspect-ratio:1/1) and (max-height:780px){ .tools{gap:8px;top:52%} .tool{width:62px;height:62px;border-radius:18px;font-size:10px;gap:5px} .tool svg{width:22px;height:22px} #app.open-r .tab-r{right:calc(24px + 62px + 12px)} }
+#app.open-b .tools{transform:translateY(-72%)}
+@media (min-aspect-ratio:1/1) and (max-height:780px){ .tools{gap:8px;top:52%} #app.open-b .tools{transform:translateY(-78%)} .tool{width:62px;height:62px;border-radius:18px;font-size:10px;gap:5px} .tool svg{width:22px;height:22px} #app.open-r .tab-r{right:calc(24px + 62px + 12px)} }
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 
@@ -1092,7 +1093,7 @@ function makeThumbs(){
 /* ================================================================== layout */
 const wide = () => innerWidth / innerHeight > 1 && innerWidth > 760;
 /* layout: where the composition sits and how big it is depends on which panels are open; it eases there every frame */
-const lay = {x:0, y:0, z:1, tx:0, ty:0, tz:1};
+const lay = {x:0, y:0, z:1, tx:0, ty:0, tz:1}; window.__lay = lay;
 function layoutTargets(){
   const w = innerWidth, h = innerHeight, L = app.classList.contains('open-l'), R = app.classList.contains('open-r'), B = app.classList.contains('open-b');
   if (SHOW.on){ lay.tx = wide() ? -w*.13 : 0; lay.ty = wide() ? h*.03 : -h*.1; lay.tz = 1; return; }
