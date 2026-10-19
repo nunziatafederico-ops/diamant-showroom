@@ -212,7 +212,8 @@ dl.specs dd{font-size:15px;font-weight:500;font-variant-numeric:tabular-nums}
 @keyframes sway{0%,100%{transform:translateX(-5px)}50%{transform:translateX(5px)}}
 .hint.off{opacity:0}
 .cap{position:absolute;left:28px;top:48%;transform:translate(0,calc(-50% + 14px));text-align:left;z-index:8;pointer-events:none;opacity:0;transition:opacity .9s,transform .9s;max-width:min(40vw,620px)}
-.cap.on{opacity:1;transform:translate(0,-50%)}
+.cap.on{opacity:1;transform:translate(0,-50%);animation:capIn 1.1s cubic-bezier(.2,.7,.2,1)}
+@keyframes capIn{from{filter:blur(14px);letter-spacing:.04em;opacity:0}to{filter:blur(0);letter-spacing:-.02em;opacity:1}}
 .cap em{display:block;font:500 13px/1.4 var(--f-mono);font-style:normal;letter-spacing:.22em;text-transform:uppercase;color:var(--blue-hi);margin-bottom:10px}
 .cap b{display:block;font-family:var(--f-display);font-variation-settings:"wdth" 112;font-weight:700;font-size:clamp(34px,5vw,70px);line-height:1;letter-spacing:-.02em;text-wrap:balance;text-shadow:0 10px 40px rgba(0,0,0,.6)}
 #app.show .panel,#app.show .strip,#app.show .tools,#app.show .hint,#app.show #labels,#app.show .sect{opacity:0;pointer-events:none;transition:opacity .6s}
@@ -272,6 +273,7 @@ dl.specs dd{font-size:15px;font-weight:500;font-variant-numeric:tabular-nums}
 }
 @media (max-width:420px){ .grid{grid-template-columns:repeat(2,minmax(0,1fr))} .sheet-card h2{font-size:22px} }
 @media (min-aspect-ratio:1/1) and (max-height:620px){ .panel{top:calc(env(safe-area-inset-top,0px) + 80px)} .panel h1{font-size:24px} .row{height:40px;flex:0 0 40px} .tool{width:60px;height:60px} .desc{display:none} }
+@media (min-aspect-ratio:1/1) and (max-height:780px){ .tools{gap:8px;top:52%} .tool{width:62px;height:62px;border-radius:18px;font-size:10px;gap:5px} .tool svg{width:22px;height:22px} #app.open-r .tab-r{right:calc(24px + 62px + 12px)} }
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 
@@ -285,9 +287,6 @@ dl.specs dd{font-size:15px;font-weight:500;font-variant-numeric:tabular-nums}
         <button class="pill glass" id="l-btn" aria-haspopup="menu" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3.3 3 14.7 0 18M12 3c-3 3.3-3 14.7 0 18"/></svg><span id="l-cur">IT</span></button>
         <div class="menu glass" id="l-menu" role="menu" hidden></div>
       </div>
-      <button class="pill glass" id="fs" aria-label="Schermo intero" style="width:44px">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
-      </button>
     </div>
   </header>
 
@@ -337,6 +336,10 @@ dl.specs dd{font-size:15px;font-weight:500;font-variant-numeric:tabular-nums}
     <button class="tool glass" id="t-reset" aria-pressed="false">
       <svg viewBox="0 0 28 28"><path d="M4 9V4h5M24 9V4h-5M4 19v5h5M24 19v5h-5"/><circle cx="14" cy="14" r="4"/></svg>
       <span data-t="reset"></span>
+    </button>
+    <button class="tool glass" id="fs">
+      <svg viewBox="0 0 28 28"><path d="M5 10V5h5M23 10V5h-5M5 18v5h5M23 18v5h-5"/></svg>
+      <span data-t="fsBtn"></span>
     </button>
   </nav>
 
@@ -403,7 +406,7 @@ const MAX_WHEELS = 8, SPACE = 80;   // mm available on the arbor
 const fits = t => stackH() + t <= SPACE && state.stack.length < MAX_WHEELS;
 
 const UI = {
-  it:{wheelsBtn:'Mole',removed:'tolta dal set',up:'Su',down:'Giù',compose:'Componi il tuo set',show:'Show',caps:[['Diamant · dal 1975','Around your Edges'],['Un cono','Il tuo set su misura'],['Profili su disegno','La sezione racconta il filo'],['Made in Italy','Brevettate'],['Mole a settori','Stesso cono, un altro set']],empty:'Set vuoto · trascina qui una mola dal catalogo, o toccane una',del:'Elimina',clear:'Svuota',name:'Italiano',seg:' settori',explode:'Esplodi',section:'Sezione',spin:'In moto',reset:'Vista',sectionOn:'Sezione sul profilo',hint:'Tocca o trascina una mola dal catalogo per montarla · Doppio tocco per la scheda',
+  it:{fsBtn:'Schermo',wheelsBtn:'Mole',removed:'tolta dal set',up:'Su',down:'Giù',compose:'Componi il tuo set',show:'Show',caps:[['Diamant · dal 1975','Around your Edges'],['Un cono','Il tuo set su misura'],['Profili su disegno','La sezione racconta il filo'],['Made in Italy','Brevettate'],['Mole a settori','Stesso cono, un altro set'],['Precisione','Ogni profilo al suo posto']],empty:'Set vuoto · trascina qui una mola dal catalogo, o toccane una',del:'Elimina',clear:'Svuota',name:'Italiano',seg:' settori',explode:'Esplodi',section:'Sezione',spin:'In moto',reset:'Vista',sectionOn:'Sezione sul profilo',hint:'Tocca o trascina una mola dal catalogo per montarla · Doppio tocco per la scheda',
       stackEy:'Cono completo',stackTitle:'Componi il set',shuffle:'Mescola',add:'Aggiungi',presets:'Parti da',
       pTagli:'Set a tagli',pSettori:'Set a settori',remove:'Rimuovi dal set',cancel:'Annulla',addThis:'Aggiungi al set',
       pickPos:n=>`Posizione ${n} dall'alto`,pickTitle:'Scegli la mola',addEy:'Nuova mola in cima al set',
@@ -414,7 +417,7 @@ const UI = {
       sp:{d:'Diametro',t:'Spessore',b:'Foro',rim:'Corona',prof:'Profilo',fix:'Fissaggio'},
       gola:d=>`Gola a V 90°, prof. ${d} mm`,fix:'6 fori Ø 6,5',
       parts:{nut:'Dado di serraggio',washer:'Rondella',base:'Cono'}, hero:'Cono', heroSub:'assieme'},
-  en:{wheelsBtn:'Wheels',removed:'removed from the set',up:'Up',down:'Down',compose:'Build your set',show:'Show',caps:[['Diamant · since 1975','Around your Edges'],['One arbor','Your set, your way'],['Profiles to drawing','The section tells the edge'],['Made in Italy','Patented'],['Segmented wheels','Same arbor, another set']],empty:'Empty set · drag a wheel here from the catalogue, or tap one',del:'Delete',clear:'Clear',name:'English',seg:' segm.',explode:'Explode',section:'Section',spin:'Spin',reset:'View',sectionOn:'Section through the profile',hint:'Tap or drag a wheel from the catalogue to mount it · Double tap for its sheet',
+  en:{fsBtn:'Screen',wheelsBtn:'Wheels',removed:'removed from the set',up:'Up',down:'Down',compose:'Build your set',show:'Show',caps:[['Diamant · since 1975','Around your Edges'],['One arbor','Your set, your way'],['Profiles to drawing','The section tells the edge'],['Made in Italy','Patented'],['Segmented wheels','Same arbor, another set'],['Precision','Every profile in its place']],empty:'Empty set · drag a wheel here from the catalogue, or tap one',del:'Delete',clear:'Clear',name:'English',seg:' segm.',explode:'Explode',section:'Section',spin:'Spin',reset:'View',sectionOn:'Section through the profile',hint:'Tap or drag a wheel from the catalogue to mount it · Double tap for its sheet',
       stackEy:'Complete arbor',stackTitle:'Build the set',shuffle:'Shuffle',add:'Add',presets:'Start from',
       pTagli:'Slotted set',pSettori:'Segmented set',remove:'Remove from stack',cancel:'Cancel',addThis:'Add to stack',
       pickPos:n=>`Position ${n} from the top`,pickTitle:'Choose a wheel',addEy:'New wheel on top of the stack',
@@ -425,7 +428,7 @@ const UI = {
       sp:{d:'Diameter',t:'Thickness',b:'Bore',rim:'Rim',prof:'Profile',fix:'Fixing'},
       gola:d=>`90° V-groove, ${d} mm deep`,fix:'6 holes Ø 6.5',
       parts:{nut:'Clamping nut',washer:'Washer',base:'arbor'}, hero:'arbor', heroSub:'assembly'},
-  de:{wheelsBtn:'Scheiben',removed:'aus dem Set entfernt',up:'Nach oben',down:'Nach unten',compose:'Stellen Sie Ihr Set zusammen',show:'Show',caps:[['Diamant · seit 1975','Around your Edges'],['Ein Dorn','Ihr Set nach Maß'],['Profile nach Zeichnung','Der Schnitt zeigt die Kante'],['Made in Italy','Patentiert'],['Segmentscheiben','Gleicher Dorn, anderes Set']],empty:'Leeres Set · Scheibe aus dem Katalog hierher ziehen oder antippen',del:'Löschen',clear:'Leeren',name:'Deutsch',seg:' Segm.',explode:'Explosion',section:'Schnitt',spin:'Drehen',reset:'Ansicht',sectionOn:'Schnitt durch das Profil',hint:'Ziehen zum Drehen · Scheibe antippen zum Wechseln',
+  de:{fsBtn:'Vollbild',wheelsBtn:'Scheiben',removed:'aus dem Set entfernt',up:'Nach oben',down:'Nach unten',compose:'Stellen Sie Ihr Set zusammen',show:'Show',caps:[['Diamant · seit 1975','Around your Edges'],['Ein Dorn','Ihr Set nach Maß'],['Profile nach Zeichnung','Der Schnitt zeigt die Kante'],['Made in Italy','Patentiert'],['Segmentscheiben','Gleicher Dorn, anderes Set'],['Präzision','Jedes Profil an seinem Platz']],empty:'Leeres Set · Scheibe aus dem Katalog hierher ziehen oder antippen',del:'Löschen',clear:'Leeren',name:'Deutsch',seg:' Segm.',explode:'Explosion',section:'Schnitt',spin:'Drehen',reset:'Ansicht',sectionOn:'Schnitt durch das Profil',hint:'Ziehen zum Drehen · Scheibe antippen zum Wechseln',
       stackEy:'Kompletter Dorn',stackTitle:'Paket aufbauen',shuffle:'Mischen',add:'Hinzufügen',presets:'Starten mit',
       pTagli:'Paket mit Schlitzen',pSettori:'Paket mit Segmenten',remove:'Aus dem Paket entfernen',cancel:'Abbrechen',addThis:'Zum Paket hinzufügen',
       pickPos:n=>`Position ${n} von oben`,pickTitle:'Scheibe wählen',addEy:'Neue Scheibe oben auf dem Paket',
@@ -436,7 +439,7 @@ const UI = {
       sp:{d:'Durchmesser',t:'Dicke',b:'Bohrung',rim:'Kranz',prof:'Profil',fix:'Befestigung'},
       gola:d=>`90°-V-Nut, ${d} mm tief`,fix:'6 Bohrungen Ø 6,5',
       parts:{nut:'Spannmutter',washer:'Scheibe',base:'Dorn'}, hero:'Dorn', heroSub:'Baugruppe'},
-  es:{wheelsBtn:'Muelas',removed:'quitada del set',up:'Subir',down:'Bajar',compose:'Compón tu set',show:'Show',caps:[['Diamant · desde 1975','Around your Edges'],['Un cono','Tu set a medida'],['Perfiles según plano','La sección cuenta el canto'],['Made in Italy','Patentadas'],['Muelas de segmentos','Mismo cono, otro set']],empty:'Set vacío · arrastra aquí una muela del catálogo, o tócala',del:'Eliminar',clear:'Vaciar',name:'Español',seg:' segm.',explode:'Explosión',section:'Sección',spin:'Girar',reset:'Vista',sectionOn:'Sección por el perfil',hint:'Arrastra para girar · Toca una muela para cambiarla',
+  es:{fsBtn:'Pantalla',wheelsBtn:'Muelas',removed:'quitada del set',up:'Subir',down:'Bajar',compose:'Compón tu set',show:'Show',caps:[['Diamant · desde 1975','Around your Edges'],['Un cono','Tu set a medida'],['Perfiles según plano','La sección cuenta el canto'],['Made in Italy','Patentadas'],['Muelas de segmentos','Mismo cono, otro set'],['Precisión','Cada perfil en su sitio']],empty:'Set vacío · arrastra aquí una muela del catálogo, o tócala',del:'Eliminar',clear:'Vaciar',name:'Español',seg:' segm.',explode:'Explosión',section:'Sección',spin:'Girar',reset:'Vista',sectionOn:'Sección por el perfil',hint:'Arrastra para girar · Toca una muela para cambiarla',
       stackEy:'Cono completo',stackTitle:'Compón el paquete',shuffle:'Mezclar',add:'Añadir',presets:'Empezar desde',
       pTagli:'Paquete con ranuras',pSettori:'Paquete con segmentos',remove:'Quitar del paquete',cancel:'Cancelar',addThis:'Añadir al paquete',
       pickPos:n=>`Posición ${n} desde arriba`,pickTitle:'Elige la muela',addEy:'Nueva muela encima del paquete',
@@ -447,7 +450,7 @@ const UI = {
       sp:{d:'Diámetro',t:'Espesor',b:'Agujero',rim:'Corona',prof:'Perfil',fix:'Fijación'},
       gola:d=>`Garganta en V 90°, prof. ${d} mm`,fix:'6 agujeros Ø 6,5',
       parts:{nut:'Tuerca de apriete',washer:'Arandela',base:'Cono'}, hero:'Cono', heroSub:'conjunto'},
-  fr:{wheelsBtn:'Meules',removed:'retirée du jeu',up:'Monter',down:'Descendre',compose:'Composez votre jeu',show:'Show',caps:[['Diamant · depuis 1975','Around your Edges'],['Un cône','Votre jeu sur mesure'],['Profils sur plan','La coupe révèle le chant'],['Made in Italy','Brevetées'],['Meules à segments','Même cône, autre jeu']],empty:'Jeu vide · glissez ici une meule du catalogue, ou touchez-en une',del:'Supprimer',clear:'Vider',name:'Français',seg:' segm.',explode:'Éclaté',section:'Coupe',spin:'Rotation',reset:'Vue',sectionOn:'Coupe sur le profil',hint:'Glisser pour tourner · Toucher une meule pour la changer',
+  fr:{fsBtn:'Écran',wheelsBtn:'Meules',removed:'retirée du jeu',up:'Monter',down:'Descendre',compose:'Composez votre jeu',show:'Show',caps:[['Diamant · depuis 1975','Around your Edges'],['Un cône','Votre jeu sur mesure'],['Profils sur plan','La coupe révèle le chant'],['Made in Italy','Brevetées'],['Meules à segments','Même cône, autre jeu'],['Précision','Chaque profil à sa place']],empty:'Jeu vide · glissez ici une meule du catalogue, ou touchez-en une',del:'Supprimer',clear:'Vider',name:'Français',seg:' segm.',explode:'Éclaté',section:'Coupe',spin:'Rotation',reset:'Vue',sectionOn:'Coupe sur le profil',hint:'Glisser pour tourner · Toucher une meule pour la changer',
       stackEy:'Cône complet',stackTitle:'Composez le jeu',shuffle:'Mélanger',add:'Ajouter',presets:'Partir de',
       pTagli:'Jeu à fentes',pSettori:'Jeu à segments',remove:'Retirer du jeu',cancel:'Annuler',addThis:'Ajouter au jeu',
       pickPos:n=>`Position ${n} depuis le haut`,pickTitle:'Choisir la meule',addEy:'Nouvelle meule en haut du jeu',
@@ -458,7 +461,7 @@ const UI = {
       sp:{d:'Diamètre',t:'Épaisseur',b:'Alésage',rim:'Couronne',prof:'Profil',fix:'Fixation'},
       gola:d=>`Gorge en V 90°, prof. ${d} mm`,fix:'6 trous Ø 6,5',
       parts:{nut:'Écrou de serrage',washer:'Rondelle',base:'Cône'}, hero:'Cône', heroSub:'ensemble'},
-  pt:{wheelsBtn:'Mós',removed:'removida do conjunto',up:'Subir',down:'Descer',compose:'Monte o seu conjunto',show:'Show',caps:[['Diamant · desde 1975','Around your Edges'],['Um cone','O seu conjunto à medida'],['Perfis sob desenho','A secção mostra a aresta'],['Made in Italy','Patenteadas'],['Mós de segmentos','Mesmo cone, outro conjunto']],empty:'Conjunto vazio · arraste para aqui uma mó do catálogo, ou toque numa',del:'Eliminar',clear:'Esvaziar',name:'Português',seg:' segm.',explode:'Explodir',section:'Secção',spin:'Rodar',reset:'Vista',sectionOn:'Secção pelo perfil',hint:'Arraste para rodar · Toque numa mó para a trocar',
+  pt:{fsBtn:'Ecrã',wheelsBtn:'Mós',removed:'removida do conjunto',up:'Subir',down:'Descer',compose:'Monte o seu conjunto',show:'Show',caps:[['Diamant · desde 1975','Around your Edges'],['Um cone','O seu conjunto à medida'],['Perfis sob desenho','A secção mostra a aresta'],['Made in Italy','Patenteadas'],['Mós de segmentos','Mesmo cone, outro conjunto'],['Precisão','Cada perfil no seu lugar']],empty:'Conjunto vazio · arraste para aqui uma mó do catálogo, ou toque numa',del:'Eliminar',clear:'Esvaziar',name:'Português',seg:' segm.',explode:'Explodir',section:'Secção',spin:'Rodar',reset:'Vista',sectionOn:'Secção pelo perfil',hint:'Arraste para rodar · Toque numa mó para a trocar',
       stackEy:'Cone completo',stackTitle:'Monte o conjunto',shuffle:'Baralhar',add:'Adicionar',presets:'Começar de',
       pTagli:'Conjunto com ranhuras',pSettori:'Conjunto com segmentos',remove:'Remover do conjunto',cancel:'Cancelar',addThis:'Adicionar ao conjunto',
       pickPos:n=>`Posição ${n} a contar de cima`,pickTitle:'Escolha a mó',addEy:'Nova mó no topo do conjunto',
@@ -469,7 +472,7 @@ const UI = {
       sp:{d:'Diâmetro',t:'Espessura',b:'Furo',rim:'Coroa',prof:'Perfil',fix:'Fixação'},
       gola:d=>`Garganta em V 90°, prof. ${d} mm`,fix:'6 furos Ø 6,5',
       parts:{nut:'Porca de aperto',washer:'Anilha',base:'Cone'}, hero:'Cone', heroSub:'conjunto'},
-  ru:{wheelsBtn:'Круги',removed:'убран из набора',up:'Вверх',down:'Вниз',compose:'Соберите свой набор',show:'Шоу',caps:[['Diamant · с 1975','Around your Edges'],['Одна оправка','Ваш набор на заказ'],['Профили по чертежу','Разрез показывает кромку'],['Made in Italy','Запатентовано'],['Сегментные круги','Та же оправка, другой набор']],empty:'Набор пуст · перетащите круг из каталога или коснитесь его',del:'Удалить',clear:'Очистить',name:'Русский',seg:' сегм.',explode:'Разнести',section:'Разрез',spin:'Вращение',reset:'Вид',sectionOn:'Разрез по профилю',hint:'Тяните, чтобы вращать · Коснитесь круга, чтобы заменить',
+  ru:{fsBtn:'Экран',wheelsBtn:'Круги',removed:'убран из набора',up:'Вверх',down:'Вниз',compose:'Соберите свой набор',show:'Шоу',caps:[['Diamant · с 1975','Around your Edges'],['Одна оправка','Ваш набор на заказ'],['Профили по чертежу','Разрез показывает кромку'],['Made in Italy','Запатентовано'],['Сегментные круги','Та же оправка, другой набор'],['Точность','Каждый профиль на своём месте']],empty:'Набор пуст · перетащите круг из каталога или коснитесь его',del:'Удалить',clear:'Очистить',name:'Русский',seg:' сегм.',explode:'Разнести',section:'Разрез',spin:'Вращение',reset:'Вид',sectionOn:'Разрез по профилю',hint:'Тяните, чтобы вращать · Коснитесь круга, чтобы заменить',
       stackEy:'Оправка в сборе',stackTitle:'Соберите набор',shuffle:'Перемешать',add:'Добавить',presets:'Начать с',
       pTagli:'Набор с прорезями',pSettori:'Набор с сегментами',remove:'Убрать из набора',cancel:'Отмена',addThis:'Добавить в набор',
       pickPos:n=>`Позиция ${n} сверху`,pickTitle:'Выберите круг',addEy:'Новый круг сверху набора',
@@ -480,7 +483,7 @@ const UI = {
       sp:{d:'Диаметр',t:'Толщина',b:'Посадочное отверстие',rim:'Алмазный слой',prof:'Профиль',fix:'Крепление'},
       gola:d=>`V-канавка 90°, глубина ${d} мм`,fix:'6 отверстий Ø 6,5',
       parts:{nut:'Зажимная гайка',washer:'Шайба',base:'Оправка'}, hero:'Оправка', heroSub:'сборка'},
-  tr:{wheelsBtn:'Taşlar',removed:'setten çıkarıldı',up:'Yukarı',down:'Aşağı',compose:'Setinizi oluşturun',show:'Show',caps:[['Diamant · 1975’ten beri','Around your Edges'],['Tek mil','Size özel set'],['Çizime göre profiller','Kesit kenarı anlatır'],['Made in Italy','Patentli'],['Segmentli taşlar','Aynı mil, başka set']],empty:'Set boş · katalogdan bir taşı buraya sürükleyin veya dokunun',del:'Sil',clear:'Boşalt',name:'Türkçe',seg:' segm.',explode:'Dağıt',section:'Kesit',spin:'Döndür',reset:'Görünüm',sectionOn:'Profil boyunca kesit',hint:'Döndürmek için sürükleyin · Değiştirmek için taşa dokunun',
+  tr:{fsBtn:'Ekran',wheelsBtn:'Taşlar',removed:'setten çıkarıldı',up:'Yukarı',down:'Aşağı',compose:'Setinizi oluşturun',show:'Show',caps:[['Diamant · 1975’ten beri','Around your Edges'],['Tek mil','Size özel set'],['Çizime göre profiller','Kesit kenarı anlatır'],['Made in Italy','Patentli'],['Segmentli taşlar','Aynı mil, başka set'],['Hassasiyet','Her profil yerli yerinde']],empty:'Set boş · katalogdan bir taşı buraya sürükleyin veya dokunun',del:'Sil',clear:'Boşalt',name:'Türkçe',seg:' segm.',explode:'Dağıt',section:'Kesit',spin:'Döndür',reset:'Görünüm',sectionOn:'Profil boyunca kesit',hint:'Döndürmek için sürükleyin · Değiştirmek için taşa dokunun',
       stackEy:'Komple mili',stackTitle:'Seti oluşturun',shuffle:'Karıştır',add:'Ekle',presets:'Şununla başla',
       pTagli:'Yarıklı set',pSettori:'Segmentli set',remove:'Setten çıkar',cancel:'İptal',addThis:'Sete ekle',
       pickPos:n=>`Üstten ${n}. konum`,pickTitle:'Taşı seçin',addEy:'Setin üstüne yeni taş',
@@ -491,7 +494,7 @@ const UI = {
       sp:{d:'Çap',t:'Kalınlık',b:'Delik',rim:'Taç',prof:'Profil',fix:'Bağlantı'},
       gola:d=>`90° V kanal, ${d} mm derinlik`,fix:'6 delik Ø 6,5',
       parts:{nut:'Sıkma somunu',washer:'Rondela',base:'mili'}, hero:'mili', heroSub:'montaj'},
-  zh:{wheelsBtn:'磨轮',removed:'已从组中移除',up:'上移',down:'下移',compose:'组合您的磨轮组',show:'演示',caps:[['Diamant · 始于 1975','Around your Edges'],['一根主轴','您的定制磨轮组'],['按图纸定制轮廓','剖面展现磨边'],['意大利制造','已获专利'],['节块磨轮','同一主轴，另一组']],empty:'空组 · 从目录拖一片磨轮到这里，或点击一片',del:'删除',clear:'清空',name:'中文',seg:' 节块',explode:'爆炸图',section:'剖面',spin:'旋转',reset:'视图',sectionOn:'沿轮廓剖切',hint:'拖动旋转 · 点击磨轮可更换',
+  zh:{fsBtn:'全屏',wheelsBtn:'磨轮',removed:'已从组中移除',up:'上移',down:'下移',compose:'组合您的磨轮组',show:'演示',caps:[['Diamant · 始于 1975','Around your Edges'],['一根主轴','您的定制磨轮组'],['按图纸定制轮廓','剖面展现磨边'],['意大利制造','已获专利'],['节块磨轮','同一主轴，另一组'],['精准','每个轮廓各就其位']],empty:'空组 · 从目录拖一片磨轮到这里，或点击一片',del:'删除',clear:'清空',name:'中文',seg:' 节块',explode:'爆炸图',section:'剖面',spin:'旋转',reset:'视图',sectionOn:'沿轮廓剖切',hint:'拖动旋转 · 点击磨轮可更换',
       stackEy:'主轴总成',stackTitle:'组合磨轮组',shuffle:'打乱',add:'添加',presets:'从以下开始',
       pTagli:'开槽磨轮组',pSettori:'节块磨轮组',remove:'从组中移除',cancel:'取消',addThis:'加入磨轮组',
       pickPos:n=>`自上而下第 ${n} 位`,pickTitle:'选择磨轮',addEy:'新磨轮置于最上方',
@@ -502,7 +505,7 @@ const UI = {
       sp:{d:'直径',t:'厚度',b:'内孔',rim:'工作层',prof:'轮廓',fix:'固定'},
       gola:d=>`90° V 形槽，深 ${d} mm`,fix:'6 孔 Ø 6.5',
       parts:{nut:'锁紧螺母',washer:'垫圈',base:'主轴'}, hero:'主轴', heroSub:'总成'},
-  ja:{wheelsBtn:'ホイール',removed:'セットから外しました',up:'上へ',down:'下へ',compose:'あなたのセットを組む',show:'ショー',caps:[['Diamant · 1975年創業','Around your Edges'],['ひとつのアーバー','あなただけのセット'],['図面どおりのプロファイル','断面がエッジを語る'],['Made in Italy','特許取得'],['セグメントホイール','同じアーバー、別のセット']],empty:'空のセット · カタログからホイールをここへドラッグ、またはタップ',del:'削除',clear:'すべて外す',name:'日本語',seg:' セグ',explode:'分解',section:'断面',spin:'回転',reset:'表示',sectionOn:'プロファイル断面',hint:'ドラッグで回転 · ホイールをタップで変更',
+  ja:{fsBtn:'全画面',wheelsBtn:'ホイール',removed:'セットから外しました',up:'上へ',down:'下へ',compose:'あなたのセットを組む',show:'ショー',caps:[['Diamant · 1975年創業','Around your Edges'],['ひとつのアーバー','あなただけのセット'],['図面どおりのプロファイル','断面がエッジを語る'],['Made in Italy','特許取得'],['セグメントホイール','同じアーバー、別のセット'],['精密','すべてのプロファイルが定位置に']],empty:'空のセット · カタログからホイールをここへドラッグ、またはタップ',del:'削除',clear:'すべて外す',name:'日本語',seg:' セグ',explode:'分解',section:'断面',spin:'回転',reset:'表示',sectionOn:'プロファイル断面',hint:'ドラッグで回転 · ホイールをタップで変更',
       stackEy:'アーバー一式',stackTitle:'ホイールを組む',shuffle:'シャッフル',add:'追加',presets:'ここから始める',
       pTagli:'スリット付きセット',pSettori:'セグメントセット',remove:'セットから外す',cancel:'キャンセル',addThis:'セットに追加',
       pickPos:n=>`上から ${n} 番目`,pickTitle:'ホイールを選ぶ',addEy:'新しいホイールを最上段に',
@@ -532,6 +535,7 @@ scene.environmentIntensity = 1.25;
 const key = new THREE.DirectionalLight(0xfff4e6, 2.2); key.position.set(-3, 5, 4); scene.add(key);
 const rimL = new THREE.DirectionalLight(0x7fa3ff, 2.2); rimL.position.set(4, 1.5, -4); scene.add(rimL);
 const fill = new THREE.DirectionalLight(0xbfd2ff, .6); fill.position.set(2, -3, 3); scene.add(fill);
+const glow = new THREE.PointLight(0x4f7fe0, 0, 12, 1.6); scene.add(glow);   // the show's roaming accent light
 
 const camera = new THREE.PerspectiveCamera(30, 1, .05, 100);
 const controls = new OrbitControls(camera, canvas);
@@ -909,7 +913,7 @@ $('sheet').addEventListener('click', e => { if (e.target.id === 'sheet') closeSh
 
 /* collapsible panels */
 const app = $('app');
-function setOpen(side, on){ app.classList.toggle('open-' + side, on); $(side === 'l' ? 'tab-l' : side === 'r' ? 'tab-r' : 'd-r').setAttribute('aria-expanded', on); if (side === 'l') resize(); try { localStorage.setItem('diamant-open-' + side, on ? 1 : 0); } catch(e){} }
+function setOpen(side, on){ app.classList.toggle('open-' + side, on); $(side === 'l' ? 'tab-l' : side === 'r' ? 'tab-r' : 'd-r').setAttribute('aria-expanded', on); layoutTargets(); try { localStorage.setItem('diamant-open-' + side, on ? 1 : 0); } catch(e){} }
 const isOpen = side => app.classList.contains('open-' + side);
 $('tab-l').onclick = () => setOpen('l', !isOpen('l'));
 $('tab-r').onclick = () => setOpen('r', !isOpen('r'));
@@ -1087,78 +1091,159 @@ function makeThumbs(){
 
 /* ================================================================== layout */
 const wide = () => innerWidth / innerHeight > 1 && innerWidth > 760;
+/* layout: where the composition sits and how big it is depends on which panels are open; it eases there every frame */
+const lay = {x:0, y:0, z:1, tx:0, ty:0, tz:1};
+function layoutTargets(){
+  const w = innerWidth, h = innerHeight, L = app.classList.contains('open-l'), R = app.classList.contains('open-r'), B = app.classList.contains('open-b');
+  if (SHOW.on){ lay.tx = wide() ? -w*.13 : 0; lay.ty = wide() ? h*.03 : -h*.1; lay.tz = 1; return; }
+  if (wide()){ lay.tx = (L ? -w*.16 : 0) + (R ? w*.045 : 0); lay.ty = h*.02 + (B ? h*.075 : 0); lay.tz = 1 + (L ? .22 : 0) + (B ? .14 : 0) + (R ? .05 : 0); }
+  else { lay.tx = 0; lay.ty = -h*.08 + (L ? h*.14 : 0) + (B ? -h*.02 : 0); lay.tz = 1 + (L ? .3 : 0) + (B ? .18 : 0); }
+}
+function applyLayout(dt){
+  const k = 1 - Math.pow(.004, dt), w = innerWidth, h = innerHeight;
+  const nx = lay.x + (lay.tx - lay.x)*k, ny = lay.y + (lay.ty - lay.y)*k, nz = lay.z + (lay.tz - lay.z)*k;
+  if (Math.abs(nx - lay.x) > .01 || Math.abs(ny - lay.y) > .01){ lay.x = nx; lay.y = ny; camera.setViewOffset(w, h, lay.x, lay.y, w, h); camera.updateProjectionMatrix(); }
+  if (Math.abs(nz - lay.z) > 1e-4){ if (!SHOW.on && !camFly) camera.position.multiplyScalar(nz / lay.z); lay.z = nz; }
+}
 function resize(){
   const w = innerWidth, h = innerHeight;
   renderer.setSize(w, h, false); camera.aspect = w/h;
-  if (wide()) camera.setViewOffset(w, h, SHOW.on ? -w*.13 : (app.classList.contains('open-l') ? -w*.14 : 0), h*.03, w, h);
-  else camera.setViewOffset(w, h, 0, -h*.16, w, h);
-  camera.updateProjectionMatrix();
+  layoutTargets(); camera.setViewOffset(w, h, lay.x, lay.y, w, h); camera.updateProjectionMatrix();
 }
 addEventListener('resize', resize);
 function fitDist(){
   const vfov = camera.fov * PI / 180, hfov = 2*Math.atan(Math.tan(vfov/2)*camera.aspect);
-  const usable = wide() ? Math.min(vfov * .66, hfov * .5) : Math.min(vfov * .4, hfov * .72);
-  return viewR / Math.sin(usable/2);
+  const usable = wide() ? Math.min(vfov * .8, hfov * .62) : Math.min(vfov * .46, hfov * .84);   // panels closed: big and centred
+  return viewR / Math.sin(usable/2) * lay.tz;
 }
 
 /* idle / attract */
 let idle = 0;
 /* ---- SHOW: a one-minute choreography that loops; any touch leaves it ---- */
-const SHOW = {on:false, t:0, i:0, theta:0, saved:null};
+const SHOW = {on:false, t:0, i:0, theta:0, saved:null, cam:null};
 const SHOW_SET_A = ['V3.6','V3.12','V4P.2','V33','V44'], SHOW_SET_B = ['V3.6','V4P.2','V33S','V44S','V55S'];
 function setStack(types, instant){ state.stack = types.map(t => mk(t)); state.sel = null; syncStack(instant); }
-function dropIn(type){ state.stack.unshift(mk(type)); state.sel = null; syncStack(false); }   // lands on top of what is there
-function liftOff(){ if (state.stack.length){ state.stack.shift(); state.sel = null; syncStack(false); } } // the top one leaves
-function caption(i){ const c = $('cap'); if (i < 0){ c.classList.remove('on'); return; } const [e, t] = T().caps[i]; $('cap-e').textContent = e; $('cap-t').textContent = t; c.classList.add('on'); }
-// [time, action] — the nut lifts while wheels come and go, so nothing ever passes through it
-const STEP = 1.25, EV = [];
-let tt = 0;
-EV.push([0, () => { nutAside = true; caption(0); }]);
-[...SHOW_SET_A].reverse().forEach((k, i) => EV.push([1 + i*STEP, () => dropIn(k)]));
-tt = 1 + SHOW_SET_A.length*STEP + 1;
-EV.push([tt, () => { nutAside = false; caption(-1); }]);
-EV.push([tt + 2.5, () => { setTool('explode', true); caption(1); }]);
-EV.push([tt + 9, () => { setTool('explode', false); caption(-1); }]);
-EV.push([tt + 11.5, () => setTool('spin', true)]);
-EV.push([tt + 16, () => { setTool('spin', false); nutAside = true; }]);
-SHOW_SET_A.forEach((k, i) => EV.push([tt + 17.5 + i*STEP*.8, liftOff]));
-tt = tt + 17.5 + SHOW_SET_A.length*STEP*.8 + 1;
-EV.push([tt, () => caption(4)]);
-[...SHOW_SET_B].reverse().forEach((k, i) => EV.push([tt + .5 + i*STEP, () => dropIn(k)]));
-tt = tt + .5 + SHOW_SET_B.length*STEP + 1;
-EV.push([tt, () => { nutAside = false; caption(-1); }]);
-EV.push([tt + 2.5, () => { setTool('explode', true); caption(3); }]);
-EV.push([tt + 9, () => { setTool('explode', false); caption(-1); }]);
-EV.push([tt + 11.5, () => setTool('spin', true)]);
-EV.push([tt + 16, () => { setTool('spin', false); nutAside = true; caption(2); }]);
-SHOW_SET_B.forEach((k, i) => EV.push([tt + 17.5 + i*STEP*.8, liftOff]));
-const SHOW_LEN = tt + 17.5 + SHOW_SET_B.length*STEP*.8 + 2.5;           // ≈ 64 s, then it loops
+function caption(i){ const c = $('cap'); if (i < 0){ c.classList.remove('on'); return; } const [e, t] = T().caps[i]; $('cap-e').textContent = e; $('cap-t').textContent = t; c.classList.remove('on'); void c.offsetWidth; c.classList.add('on'); }
+
+/* --- poses: where each wheel wants to be, relative to its place on the arbor --- */
+const ease3 = t => t < 0 ? 0 : t > 1 ? 1 : t*t*(3 - 2*t);
+const wheelsTopDown = () => state.stack.map(x => W.get(x.uid)).filter(Boolean);
+function pose(o, p, delay = 0){ o.pose = p; o.poseAt = SHOW.t + delay; }
+function poseAll(fn, stagger = .3, fromBottom = false){ const ws = wheelsTopDown(); (fromBottom ? [...ws].reverse() : ws).forEach((o, i) => pose(o, fn(i, ws.length, o), i*stagger)); }
+const HOME = {x:0, y:0, z:0, rx:0, ry:0, rz:0, spin:0};
+const helix   = (i, n) => ({x:128, y:60 + i*30, z:0, rx:.45, ry:i*1.05, rz:0, spin:.6, orbit:.5});          // a rising spiral, wheels tilted toward the axis
+const carousel= (i, n) => ({x:150, y:70, z:0, rx:PI/2, ry:i*(PI*2/n), rz:0, spin:0, orbit:-.4, face:true}); // standing wheels on a ring
+const column  = (i, n) => ({x:0, y:40 + (n - 1 - i)*52, z:0, rx:0, ry:0, rz:0, spin:1.4});                 // exploded, each wheel spinning on its axis
+const gallery = (i, n) => ({x:(i - (n - 1)/2)*118, y:70, z:0, rx:PI/2, ry:0, rz:0, spin:0, screen:true});    // a row facing the viewer
+function nutPose(p){ SHOW.nut = p; }   // {y, r, spin} or null
+
+/* --- camera keyframes: [t, theta turns, phi (rad), distance ×, look-at y (mm)] --- */
+const CAM = [
+  [0,   0,   1.32, 1.35, 10], [5,  .25, 1.05, 1.0, 20], [12, .9,  .62, 1.1, 60], [19, 1.5, 1.1, 1.0, 70],
+  [26, 2.1,  .95, 1.05, 60], [33, 2.7, 1.3, .9, 15], [38, 3.2, 1.0, 1.0, 20], [46, 3.9, .75, 1.1, 70],
+  [53, 4.6,  1.2, 1.0, 60], [60, 5.2, .95, .95, 20], [66, 5.7, 1.25, 1.1, 15], [72, 6.0, 1.32, 1.35, 10]
+];
+function camAt(t){
+  let k = 0; while (k < CAM.length - 2 && t >= CAM[k + 1][0]) k++;
+  const A = CAM[k], B = CAM[k + 1], u = ease3((t - A[0]) / (B[0] - A[0]));
+  return [A[1] + (B[1] - A[1])*u, A[2] + (B[2] - A[2])*u, A[3] + (B[3] - A[3])*u, A[4] + (B[4] - A[4])*u];
+}
+
+/* --- the script: [time, action] --- */
+const EV = [];
+const SHOW_LEN = 72;
+EV.push([0,  () => { setStack(SHOW_SET_A, true); poseAll(() => HOME, 0); nutPose(null); caption(0); glowTo(1.2); }]);
+EV.push([5,  () => { nutPose({y:150, r:0, spin:3}); poseAll(helix, .32); caption(-1); }]);          // the set unwinds into a spiral
+EV.push([9,  () => caption(1)]);
+EV.push([13, () => { poseAll(carousel, .25); caption(-1); }]);                                       // then stands up in a ring
+EV.push([17, () => caption(2)]);
+EV.push([20, () => { poseAll(column, .22); caption(-1); }]);                                          // exploded column, every wheel spinning
+EV.push([24, () => caption(3)]);
+EV.push([27, () => { poseAll(() => HOME, .28, true); caption(-1); }]);                                 // reassembles from the bottom up
+EV.push([30, () => nutPose({y:0, r:0, spin:0})]);                                                     // the nut screws back on
+EV.push([32, () => { setTool('spin', true); glowTo(2.6); }]);
+EV.push([36, () => { setTool('spin', false); glowTo(1.2); }]);
+EV.push([37, () => { nutPose({y:150, r:0, spin:3}); poseAll(gallery, .2); }]);                        // the wheels line up for the viewer…
+EV.push([41, () => { wheelsTopDown().forEach((o, i) => { setTimeout(() => { o.vanish = true; }, i*120); }); }]);
+EV.push([42, () => { state.stack = []; syncStack(true); setStack(SHOW_SET_B, true); poseAll(gallery, 0); wheelsTopDown().forEach(o => { o.g.scale.setScalar(.01); o.grow = true; }); caption(4); }]); // …and the segmented set takes their place
+EV.push([46, () => { poseAll(helix, .3); caption(-1); }]);
+EV.push([50, () => caption(5)]);
+EV.push([53, () => { poseAll(() => HOME, .28, true); caption(-1); }]);
+EV.push([56, () => nutPose({y:0, r:0, spin:0})]);
+EV.push([58, () => { setTool('spin', true); glowTo(2.6); caption(3); }]);
+EV.push([63, () => { setTool('spin', false); glowTo(1.2); caption(-1); }]);
+EV.push([65, () => { nutPose({y:150, r:0, spin:3}); poseAll(column, .2); }]);
+EV.push([68, () => { caption(0); wheelsTopDown().forEach((o, i) => setTimeout(() => { o.vanish = true; }, i*140)); }]);
+EV.push([70, () => { state.stack = []; syncStack(true); }]);
+
+let glowTarget = 0;
+window.__show = SHOW;   // handy for the preview pane
+function glowTo(v){ glowTarget = v; }
 function startShow(auto){
   if (SHOW.on) return;
-  SHOW.on = true; SHOW.auto = auto; SHOW.t = 0; SHOW.i = 0;
+  SHOW.on = true; SHOW.auto = auto; SHOW.t = 0; SHOW.i = 0; SHOW.nut = null;
   SHOW.saved = state.stack.map(({type, locked}) => ({type, locked}));
   closeSheet(); setMenu(false); if (state.mode !== 'stack') enterMode('stack', true);
   setTool('explode', false); setTool('section', false); setTool('spin', false); camFly = null;
-  setStack([], true);
+  for (const [uid, o] of W){ spin.remove(o.g); disposeTree(o.g); W.delete(uid); }
   const sp = new THREE.Spherical().setFromVector3(camera.position); SHOW.theta = sp.theta;
   controls.enabled = false; $('app').classList.add('show'); $('t-show').setAttribute('aria-pressed', true);
   $('attract-t').textContent = T().compose; $('attract').classList.add('on'); resize();
 }
 function stopShow(){
   if (!SHOW.on) return;
-  SHOW.on = false; caption(-1); nutAside = false; $('attract').classList.remove('on'); $('app').classList.remove('show'); $('t-show').setAttribute('aria-pressed', false);
+  SHOW.on = false; caption(-1); nutAside = false; SHOW.nut = null; glowTarget = 0; glow.intensity = 0;
+  $('attract').classList.remove('on'); $('app').classList.remove('show'); $('t-show').setAttribute('aria-pressed', false);
   setTool('explode', false); setTool('section', false); setTool('spin', false);
   state.stack = SHOW.saved.map(x => mk(x.type, x.locked)); state.sel = null;
-  for (const [uid, o] of W){ spin.remove(o.g); disposeTree(o.g); W.delete(uid); }   // no leftovers from the show
+  for (const [uid, o] of W){ spin.remove(o.g); disposeTree(o.g); W.delete(uid); }
+  nut.rotation.set(0, 0, 0); washer.rotation.set(0, 0, 0); spin.rotation.y = 0;
   syncStack(true); controls.enabled = true; resize(); flyHome();
 }
 function tickShow(dt){
   SHOW.t += dt;
-  if (SHOW.t >= SHOW_LEN){ SHOW.t = 0; SHOW.i = 0; setStack([], true); }
+  if (SHOW.t >= SHOW_LEN){ SHOW.t = 0; SHOW.i = 0; for (const [uid, o] of W){ spin.remove(o.g); disposeTree(o.g); W.delete(uid); } state.stack = []; }
   while (SHOW.i < EV.length && SHOW.t >= EV[SHOW.i][0]){ EV[SHOW.i][1](); SHOW.i++; }
-  SHOW.theta += dt * (.2 + .08*Math.sin(SHOW.t*.13));
-  const phi = 1.0 + .16*Math.sin(SHOW.t*.29) - (nutAside ? .1 : 0), dist = fitDist() * ((wide() ? 1.0 : 1.06) + .04*Math.sin(SHOW.t*.21));
-  camera.position.setFromSphericalCoords(dist, phi, SHOW.theta); camera.lookAt(0, 0, 0);
+  // camera on rails
+  const [turns, phi, dm, ly] = camAt(SHOW.t);
+  const dist = fitDist() * dm * (wide() ? 1.0 : 1.12);
+  camera.position.setFromSphericalCoords(dist, phi, SHOW.theta + turns * PI * 2 * .35);
+  camera.position.y += (ly - viewC) * MM * .35;
+  camera.lookAt(0, (ly - viewC) * MM * .35, 0);
+  // the accent light circles the set
+  glow.intensity += (glowTarget - glow.intensity) * (1 - Math.pow(.1, dt));
+  glow.position.set(Math.cos(SHOW.t*.9)*2.2, .9 + .5*Math.sin(SHOW.t*.6), Math.sin(SHOW.t*.9)*2.2);
+}
+/* per-frame pose easing for wheels (and the nut) while the show runs */
+function applyPoses(dt){
+  const n = state.stack.length;
+  for (const o of W.values()){
+    if (o.vanish) continue;
+    if (o.grow){ const sc = o.g.scale.x + (1 - o.g.scale.x) * (1 - Math.pow(.002, dt)); o.g.scale.setScalar(sc); if (sc > .995){ o.g.scale.setScalar(1); o.grow = false; } }
+    const p = (SHOW.on && o.pose && SHOW.t >= o.poseAt) ? o.pose : HOME;
+    o.cur = o.cur || {x:0, y:0, z:0, rx:0, ry:0, rz:0, a:0, sp:0};
+    const c = o.cur, k = 1 - Math.pow(.0015, dt);
+    if (p.orbit) c.a += dt * p.orbit;                                   // the whole formation turns
+    const ang = (p.ry || 0) + c.a, tx = p.x * Math.cos(ang), tz = p.x * Math.sin(ang);
+    c.x += (tx - c.x) * k; c.z += (tz - c.z) * k; c.y += (p.y - c.y) * k;
+    c.rx += (p.rx - c.rx) * k; c.rz += (p.rz - c.rz) * k;
+    c.sp += ((p.spin || 0) - c.sp) * k; c.ry += c.sp * dt;
+    let ry = p.face ? ang : (p.screen ? Math.atan2(camera.position.x, camera.position.z) - spin.rotation.y : 0);
+    o.g.position.x = c.x + (o.outX ? right.x * o.outX : 0); o.g.position.z = c.z + (o.outX ? right.z * o.outX : 0);
+    o.g.position.y = o.y + ex*(o.kb + 1)*GAP + c.y;
+    if (p === HOME && Math.abs(c.rx) < .002 && Math.abs(c.sp) < .002) o.g.rotation.set(0, c.ry, 0); else o.g.rotation.set(c.rx, ry + c.ry, c.rz);
+    if (!SHOW.on) o.pose = null;
+  }
+  // nut + washer: in the show they fly straight up and twirl instead of retreating
+  if (SHOW.on && SHOW.nut){
+    const t = SHOW.nut; SHOW.nutCur = SHOW.nutCur || {y:0, sp:0};
+    const k = 1 - Math.pow(.002, dt); SHOW.nutCur.y += (t.y - SHOW.nutCur.y) * k; SHOW.nutCur.sp += (t.spin - SHOW.nutCur.sp) * k;
+    nut.rotation.y += SHOW.nutCur.sp * dt; washer.rotation.y += SHOW.nutCur.sp * .6 * dt;
+    const H = n ? stackH() + .1*(n - 1) : SPACE;
+    washer.position.set(0, H + SHOW.nutCur.y, 0); nut.position.set(0, H + SHOW.nutCur.y, 0);
+    return true;
+  }
+  return false;
 }
 function wake(){ idle = 0; if (SHOW.on) stopShow(); }
 addEventListener('pointerdown', e => { if (e.target.closest && e.target.closest('#t-show')) { idle = 0; return; } wake(); }, {capture:true}); addEventListener('wheel', wake, {passive:true});
@@ -1194,24 +1279,25 @@ function frame(now){
     // only wheels coming onto or leaving the arbor need the nut out of the way; a reorder just slides them
     let inFlight = false; for (const o of W.values()){ if (o.entering && Math.abs(o.y - o.base) < 1.5) o.entering = false; if ((o.leaving && !o.vanish) || o.entering) inFlight = true; }
     // nut + washer retreat toward the back of the stage (smoothly) while a wheel comes or goes, then snap back over the shaft and screw down
-    const aside = nutAside || inFlight;
+    const aside = !SHOW.on && (nutAside || inFlight);
     nutX += ((aside ? 185 : 0) - nutX) * (1 - Math.pow(aside ? .03 : .0002, dt));
-    const clear = nutX > 150;
+    const clear = SHOW.on || nutX > 150;
     for (const [uid, o] of W){
       if (o.vanish){ const sc = o.g.scale.x * Math.pow(.0005, dt); o.g.scale.setScalar(sc); o.g.position.y += 40*dt; if (sc < .03){ spin.remove(o.g); disposeTree(o.g); W.delete(uid); } continue; }
       if (!drag3d || drag3d.uid !== uid){ if (o.outX){ o.outX *= Math.pow(.001, dt); if (Math.abs(o.outX) < .2) o.outX = 0; o.g.position.x = right.x * o.outX; o.g.position.z = right.z * o.outX; } }
       if (o.leaving){ if (clear || o.y > H + 30){ o.y += (o.base - o.y) * (1 - Math.pow(.003, dt)) + 60*dt; } o.g.position.y = o.y; if (o.y > o.base - 12){ spin.remove(o.g); disposeTree(o.g); W.delete(uid); } continue; }
       if (!o.entering || clear) o.y += (o.base - o.y) * (1 - Math.pow(.0008, dt));
       o.g.position.y = o.y + ex*(o.kb + 1)*GAP; }
+    const posed = applyPoses(dt);
     const prevW = washerY, hover = nutX > 2 ? 34 : 0;
     washerY += (H + hover - washerY) * (1 - Math.pow(hover ? .002 : .00002, dt));
     if (!hover && washerY > H + .05) nutSpin -= (prevW - washerY) * .9;                // screwing down
     nut.rotation.y = nutSpin;
     // the shaft always ends flush with the nut
     if (Math.abs(H - shaftH) > .25){ const h = shaftH + (H - shaftH) * (1 - Math.pow(.0008, dt)); spin.remove(shaft); disposeTree(shaft); shaft = buildShaft(h); spin.add(shaft); shaftH = h; }
-    washer.position.set(back.x*nutX, washerY + ex*(n + 1)*GAP, back.z*nutX); nut.position.set(back.x*nutX, washerY + ex*(n + 2.3)*GAP, back.z*nutX);
+    if (!posed){ washer.position.set(back.x*nutX, washerY + ex*(n + 1)*GAP, back.z*nutX); nut.position.set(back.x*nutX, washerY + ex*(n + 2.3)*GAP, back.z*nutX); }
     yMin = -67; yMax = Math.max(H, shaftH) + 17 + ex*(n + 2.3)*GAP + hover;
-    for (const o of W.values()) if (!o.leaving && o.y > o.base + 1.5) yMax = Math.max(yMax, o.y + WHEELS[o.type].t);   // keep a wheel in flight in frame
+    for (const o of W.values()){ if (!o.leaving && o.y > o.base + 1.5) yMax = Math.max(yMax, o.y + WHEELS[o.type].t); if (SHOW.on && o.cur) yMax = Math.max(yMax, o.y + o.cur.y + 30); }   // keep flying wheels in frame
     const so = state.sel && W.get(state.sel);
     if (pick && pick.on && dropSlot >= 0){ let hy = 0; for (let i = n - 1; i >= dropSlot; i--) hy += WHEELS[state.stack[i].type].t; halo.visible = true; halo.position.y = hy; halo.material.opacity = .9; }
     else { halo.visible = !!so; if (so){ halo.position.y = so.g.position.y + WHEELS[so.type].t/2; halo.material.opacity = .55 + .35*Math.sin(now/260); } }
@@ -1231,6 +1317,7 @@ function frame(now){
     camera.position.lerpVectors(camFly.from, camFly.to, t);
     if (camFly.t >= 1) camFly = null;
   }
+  applyLayout(dt);
   controls.minDistance = viewR * 1.6; controls.maxDistance = viewR * 8;
   if (!SHOW.on) controls.update();
   renderer.render(scene, camera);
