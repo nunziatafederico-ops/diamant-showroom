@@ -57,7 +57,7 @@ button:focus-visible{outline:2px solid var(--blue-hi);outline-offset:2px}
 .lang{position:relative}
 .lang .pill{gap:8px;padding:0 16px 0 12px}
 .lang .pill[aria-expanded="true"]{background:var(--fg);color:var(--ink)}
-.menu{position:absolute;right:0;top:52px;min-width:190px;border-radius:20px;padding:6px;display:flex;flex-direction:column;gap:2px;z-index:20;animation:swap .25s cubic-bezier(.2,.7,.2,1)}
+.menu{position:absolute;right:0;top:52px;min-width:190px;max-height:calc(100vh - 70px);overflow-y:auto;border-radius:20px;padding:6px;display:flex;flex-direction:column;gap:2px;z-index:20;animation:swap .25s cubic-bezier(.2,.7,.2,1)}
 .menu[hidden]{display:none!important}
 .menu hr{border:0;border-top:1px solid var(--line);margin:4px 8px}
 .menu button{all:unset;display:flex;align-items:center;justify-content:space-between;gap:16px;height:44px;padding:0 14px;border-radius:14px;font-size:15px;cursor:pointer;touch-action:manipulation}
@@ -409,7 +409,7 @@ const UI = {
       wheels:n=>`${n} ${n===1?'mola':'mole'}`,move:'Sposta',lock:'Blocca posizione',unlock:'Sblocca posizione',
       over:'oltre lo spazio',full:'Spazio sul cono esaurito · max 80 mm',shuffled:'Ordine mescolato · le mole bloccate restano ferme',nothing:'Sblocca almeno due mole per mescolarle',
       added:c=>`${c} aggiunta in cima al set`,
-      kind:{cont:'Mola continua',tagli:'Mola a tagli',settori:'Mola a settori',spacer:'Distanziale',polish:'Mola polishing (altro fornitore)',d100:'Mola diamantata Ø100'},wn:{C100:'Grana grossa',F100:'Grana fine'},
+      kind:{cont:'Mola continua',tagli:'Mola a tagli',settori:'Mola a settori',spacer:'Distanziale',polish:'Mola polishing (altro fornitore)',d100:'Mola diamantata Ø100'},wn:{SPACER:'Distanziale',POLISH:'Lucidatura'},
       sp:{d:'Diametro',t:'Spessore',b:'Foro',rim:'Corona',prof:'Profilo',fix:'Fissaggio'},
       gola:d=>`Gola a V 90°, prof. ${d} mm`,fix:'6 fori Ø 6,5',
       parts:{nut:'Dado di serraggio',washer:'Rondella',base:'Cono'}, hero:'Cono', heroSub:'assieme'},
@@ -420,7 +420,7 @@ const UI = {
       wheels:n=>`${n} ${n===1?'wheel':'wheels'}`,move:'Move',lock:'Lock position',unlock:'Unlock position',
       over:'over the limit',full:'No room left on the arbor · 80 mm max',shuffled:'Order shuffled · locked wheels stay put',nothing:'Unlock at least two wheels to shuffle',
       added:c=>`${c} added on top of the stack`,
-      kind:{cont:'Continuous wheel',tagli:'Slotted wheel',settori:'Segmented wheel',spacer:'Spacer',polish:'Polishing wheel (third party)',d100:'Ø100 diamond wheel'},wn:{C100:'Coarse grit',F100:'Fine grit'},
+      kind:{cont:'Continuous wheel',tagli:'Slotted wheel',settori:'Segmented wheel',spacer:'Spacer',polish:'Polishing wheel (third party)',d100:'Ø100 diamond wheel'},wn:{SPACER:'Spacer',POLISH:'Polishing'},
       sp:{d:'Diameter',t:'Thickness',b:'Bore',rim:'Rim',prof:'Profile',fix:'Fixing'},
       gola:d=>`90° V-groove, ${d} mm deep`,fix:'6 holes Ø 6.5',
       parts:{nut:'Clamping nut',washer:'Washer',base:'arbor'}, hero:'arbor', heroSub:'assembly'},
@@ -431,7 +431,7 @@ const UI = {
       wheels:n=>`${n} ${n===1?'Scheibe':'Scheiben'}`,move:'Verschieben',lock:'Position sperren',unlock:'Position freigeben',
       over:'über dem Limit',full:'Kein Platz mehr auf dem Dorn · max. 80 mm',shuffled:'Reihenfolge gemischt · gesperrte Scheiben bleiben',nothing:'Mindestens zwei Scheiben zum Mischen freigeben',
       added:c=>`${c} oben auf das Paket gelegt`,
-      kind:{cont:'Durchgehende Scheibe',tagli:'Geschlitzte Scheibe',settori:'Segmentscheibe',spacer:'Distanzring',polish:'Polierscheibe (Fremdfabrikat)',d100:'Ø100 Diamantscheibe'},wn:{C100:'Grobkorn',F100:'Feinkorn'},
+      kind:{cont:'Durchgehende Scheibe',tagli:'Geschlitzte Scheibe',settori:'Segmentscheibe',spacer:'Distanzring',polish:'Polierscheibe (Fremdfabrikat)',d100:'Ø100 Diamantscheibe'},wn:{SPACER:'Distanzring',POLISH:'Polieren'},
       sp:{d:'Durchmesser',t:'Dicke',b:'Bohrung',rim:'Kranz',prof:'Profil',fix:'Befestigung'},
       gola:d=>`90°-V-Nut, ${d} mm tief`,fix:'6 Bohrungen Ø 6,5',
       parts:{nut:'Spannmutter',washer:'Scheibe',base:'Dorn'}, hero:'Dorn', heroSub:'Baugruppe'},
@@ -442,7 +442,7 @@ const UI = {
       wheels:n=>`${n} ${n===1?'muela':'muelas'}`,move:'Mover',lock:'Bloquear posición',unlock:'Desbloquear posición',
       over:'fuera del límite',full:'No queda espacio en el cono · máx. 80 mm',shuffled:'Orden mezclado · las muelas bloqueadas no se mueven',nothing:'Desbloquea al menos dos muelas para mezclar',
       added:c=>`${c} añadida encima del paquete`,
-      kind:{cont:'Muela continua',tagli:'Muela ranurada',settori:'Muela de segmentos',spacer:'Separador',polish:'Muela de pulido (otro proveedor)',d100:'Muela diamantada Ø100'},wn:{C100:'Grano grueso',F100:'Grano fino'},
+      kind:{cont:'Muela continua',tagli:'Muela ranurada',settori:'Muela de segmentos',spacer:'Separador',polish:'Muela de pulido (otro proveedor)',d100:'Muela diamantada Ø100'},wn:{SPACER:'Separador',POLISH:'Pulido'},
       sp:{d:'Diámetro',t:'Espesor',b:'Agujero',rim:'Corona',prof:'Perfil',fix:'Fijación'},
       gola:d=>`Garganta en V 90°, prof. ${d} mm`,fix:'6 agujeros Ø 6,5',
       parts:{nut:'Tuerca de apriete',washer:'Arandela',base:'Cono'}, hero:'Cono', heroSub:'conjunto'},
@@ -453,7 +453,7 @@ const UI = {
       wheels:n=>`${n} ${n===1?'meule':'meules'}`,move:'Déplacer',lock:'Verrouiller la position',unlock:'Déverrouiller la position',
       over:'au-delà de la limite',full:'Plus de place sur le cône · 80 mm max',shuffled:'Ordre mélangé · les meules verrouillées restent en place',nothing:'Déverrouillez au moins deux meules pour mélanger',
       added:c=>`${c} ajoutée en haut du jeu`,
-      kind:{cont:'Meule continue',tagli:'Meule à fentes',settori:'Meule à segments',spacer:'Entretoise',polish:'Meule de polissage (autre fournisseur)',d100:'Meule diamant Ø100'},wn:{C100:'Grain gros',F100:'Grain fin'},
+      kind:{cont:'Meule continue',tagli:'Meule à fentes',settori:'Meule à segments',spacer:'Entretoise',polish:'Meule de polissage (autre fournisseur)',d100:'Meule diamant Ø100'},wn:{SPACER:'Entretoise',POLISH:'Polissage'},
       sp:{d:'Diamètre',t:'Épaisseur',b:'Alésage',rim:'Couronne',prof:'Profil',fix:'Fixation'},
       gola:d=>`Gorge en V 90°, prof. ${d} mm`,fix:'6 trous Ø 6,5',
       parts:{nut:'Écrou de serrage',washer:'Rondelle',base:'Cône'}, hero:'Cône', heroSub:'ensemble'},
@@ -464,7 +464,7 @@ const UI = {
       wheels:n=>`${n} ${n===1?'mó':'mós'}`,move:'Mover',lock:'Bloquear posição',unlock:'Desbloquear posição',
       over:'acima do limite',full:'Sem espaço no cone · máx. 80 mm',shuffled:'Ordem baralhada · as mós bloqueadas ficam no lugar',nothing:'Desbloqueie pelo menos duas mós para baralhar',
       added:c=>`${c} adicionada no topo do conjunto`,
-      kind:{cont:'Mó contínua',tagli:'Mó ranhurada',settori:'Mó de segmentos',spacer:'Espaçador',polish:'Mó de polimento (outro fornecedor)',d100:'Mó diamantada Ø100'},wn:{C100:'Grão grosso',F100:'Grão fino'},
+      kind:{cont:'Mó contínua',tagli:'Mó ranhurada',settori:'Mó de segmentos',spacer:'Espaçador',polish:'Mó de polimento (outro fornecedor)',d100:'Mó diamantada Ø100'},wn:{SPACER:'Espaçador',POLISH:'Polimento'},
       sp:{d:'Diâmetro',t:'Espessura',b:'Furo',rim:'Coroa',prof:'Perfil',fix:'Fixação'},
       gola:d=>`Garganta em V 90°, prof. ${d} mm`,fix:'6 furos Ø 6,5',
       parts:{nut:'Porca de aperto',washer:'Anilha',base:'Cone'}, hero:'Cone', heroSub:'conjunto'},
@@ -475,7 +475,7 @@ const UI = {
       wheels:n=>`${n} ${n===1?'круг':(n<5?'круга':'кругов')}`,move:'Переместить',lock:'Закрепить позицию',unlock:'Открепить позицию',
       over:'сверх лимита',full:'На оправке нет места · макс. 80 мм',shuffled:'Порядок перемешан · закреплённые круги на месте',nothing:'Открепите хотя бы два круга, чтобы перемешать',
       added:c=>`${c} добавлен сверху набора`,
-      kind:{cont:'Сплошной круг',tagli:'Круг с прорезями',settori:'Сегментный круг',spacer:'Проставка',polish:'Полировальный круг (сторонний)',d100:'Алмазный круг Ø100'},wn:{C100:'Крупное зерно',F100:'Мелкое зерно'},
+      kind:{cont:'Сплошной круг',tagli:'Круг с прорезями',settori:'Сегментный круг',spacer:'Проставка',polish:'Полировальный круг (сторонний)',d100:'Алмазный круг Ø100'},wn:{SPACER:'Проставка',POLISH:'Полировка'},
       sp:{d:'Диаметр',t:'Толщина',b:'Посадочное отверстие',rim:'Алмазный слой',prof:'Профиль',fix:'Крепление'},
       gola:d=>`V-канавка 90°, глубина ${d} мм`,fix:'6 отверстий Ø 6,5',
       parts:{nut:'Зажимная гайка',washer:'Шайба',base:'Оправка'}, hero:'Оправка', heroSub:'сборка'},
@@ -486,7 +486,7 @@ const UI = {
       wheels:n=>`${n} taş`,move:'Taşı',lock:'Konumu kilitle',unlock:'Kilidi aç',
       over:'sınırın üzerinde',full:'Milde yer kalmadı · en fazla 80 mm',shuffled:'Sıra karıştırıldı · kilitli taşlar yerinde',nothing:'Karıştırmak için en az iki taşın kilidini açın',
       added:c=>`${c} setin üstüne eklendi`,
-      kind:{cont:'Sürekli taş',tagli:'Yarıklı taş',settori:'Segmentli taş',spacer:'Ara halka',polish:'Polisaj taşı (başka tedarikçi)',d100:'Ø100 elmas taş'},wn:{C100:'Kaba kum',F100:'İnce kum'},
+      kind:{cont:'Sürekli taş',tagli:'Yarıklı taş',settori:'Segmentli taş',spacer:'Ara halka',polish:'Polisaj taşı (başka tedarikçi)',d100:'Ø100 elmas taş'},wn:{SPACER:'Ara halka',POLISH:'Polisaj'},
       sp:{d:'Çap',t:'Kalınlık',b:'Delik',rim:'Taç',prof:'Profil',fix:'Bağlantı'},
       gola:d=>`90° V kanal, ${d} mm derinlik`,fix:'6 delik Ø 6,5',
       parts:{nut:'Sıkma somunu',washer:'Rondela',base:'mili'}, hero:'mili', heroSub:'montaj'},
@@ -497,7 +497,7 @@ const UI = {
       wheels:n=>`${n} 片磨轮`,move:'移动',lock:'锁定位置',unlock:'解除锁定',
       over:'超出空间',full:'主轴空间已满 · 最多 80 mm',shuffled:'顺序已打乱 · 锁定的磨轮保持不动',nothing:'至少解锁两片磨轮才能打乱',
       added:c=>`${c} 已加到最上方`,
-      kind:{cont:'连续式磨轮',tagli:'开槽磨轮',settori:'节块磨轮',spacer:'隔环',polish:'抛光轮（第三方）',d100:'Ø100 金刚石轮'},wn:{C100:'粗粒度',F100:'细粒度'},
+      kind:{cont:'连续式磨轮',tagli:'开槽磨轮',settori:'节块磨轮',spacer:'隔环',polish:'抛光轮（第三方）',d100:'Ø100 金刚石轮'},wn:{SPACER:'隔环',POLISH:'抛光'},
       sp:{d:'直径',t:'厚度',b:'内孔',rim:'工作层',prof:'轮廓',fix:'固定'},
       gola:d=>`90° V 形槽，深 ${d} mm`,fix:'6 孔 Ø 6.5',
       parts:{nut:'锁紧螺母',washer:'垫圈',base:'主轴'}, hero:'主轴', heroSub:'总成'},
@@ -508,12 +508,67 @@ const UI = {
       wheels:n=>`ホイール ${n} 枚`,move:'移動',lock:'位置を固定',unlock:'固定を解除',
       over:'上限超過',full:'アーバーに空きがありません · 最大 80 mm',shuffled:'順番をシャッフル · 固定したホイールはそのまま',nothing:'シャッフルするには 2 枚以上の固定を解除してください',
       added:c=>`${c} を最上段に追加しました`,
-      kind:{cont:'連続ホイール',tagli:'スリット付きホイール',settori:'セグメントホイール',spacer:'スペーサー',polish:'ポリッシングホイール（他社製）',d100:'Ø100 ダイヤモンドホイール'},wn:{C100:'粗粒',F100:'細粒'},
+      kind:{cont:'連続ホイール',tagli:'スリット付きホイール',settori:'セグメントホイール',spacer:'スペーサー',polish:'ポリッシングホイール（他社製）',d100:'Ø100 ダイヤモンドホイール'},wn:{SPACER:'スペーサー',POLISH:'ポリッシング'},
       sp:{d:'直径',t:'厚さ',b:'穴径',rim:'ダイヤ層',prof:'プロファイル',fix:'固定'},
       gola:d=>`90° V 溝、深さ ${d} mm`,fix:'穴 6 個 Ø 6.5',
-      parts:{nut:'締付ナット',washer:'ワッシャー',base:'アーバー'}, hero:'アーバー', heroSub:'一式'}
+      parts:{nut:'締付ナット',washer:'ワッシャー',base:'アーバー'}, hero:'アーバー', heroSub:'一式'},
+  nl:{fsBtn:'Scherm',wheelsBtn:'Schijven',removed:'uit de set gehaald',up:'Omhoog',down:'Omlaag',compose:'Stel je set samen',show:'Show',caps:[['Diamant · sinds 1975','Around your Edges'],['Eén opname','Jouw set op maat'],['Profielen naar tekening','De doorsnede toont de rand'],['Made in Italy','Gepatenteerd'],['Segmentschijven','Zelfde opname, andere set'],['Precisie','Elk profiel op zijn plaats']],empty:'Lege set · sleep hier een schijf uit de catalogus, of tik erop',del:'Verwijderen',clear:'Leegmaken',name:'Nederlands',seg:' segm.',explode:'Exploderen',section:'Doorsnede',spin:'Draaien',reset:'Beeld',sectionOn:'Doorsnede door het profiel',hint:'Tik of sleep een schijf uit de catalogus om te monteren · Dubbel tikken voor de fiche',
+      stackEy:'Complete opname',stackTitle:'Stel de set samen',shuffle:'Schudden',add:'Toevoegen',presets:'Begin met',
+      pTagli:'Set met sleuven',pSettori:'Set met segmenten',remove:'Uit de set halen',cancel:'Annuleren',addThis:'Aan de set toevoegen',
+      pickPos:n=>`Positie ${n} van boven`,pickTitle:'Kies een schijf',addEy:'Nieuwe schijf bovenop de set',
+      wheels:n=>`${n} ${n===1?'schijf':'schijven'}`,move:'Verplaatsen',lock:'Positie vastzetten',unlock:'Positie vrijgeven',
+      over:'buiten de ruimte',full:'Geen ruimte meer op de opname · max 80 mm',shuffled:'Volgorde geschud · vastgezette schijven blijven staan',nothing:'Maak minstens twee schijven vrij om te schudden',
+      added:c=>`${c} bovenop de set gezet`,
+      kind:{cont:'Doorlopende schijf',tagli:'Schijf met sleuven',settori:'Segmentschijf',spacer:'Afstandsring',polish:'Polijstschijf (andere leverancier)',d100:'Ø100 diamantschijf'},wn:{SPACER:'Afstandsring',POLISH:'Polijsten'},
+      sp:{d:'Diameter',t:'Dikte',b:'Boring',rim:'Rand',prof:'Profiel',fix:'Bevestiging'},
+      gola:d=>`V-groef 90°, ${d} mm diep`,fix:'6 gaten Ø 6,5',
+      parts:{nut:'Spanmoer',washer:'Sluitring',base:'Opname'}, hero:'Opname', heroSub:'samenstel'},
+  pl:{fsBtn:'Ekran',wheelsBtn:'Tarcze',removed:'usunięta z zestawu',up:'W górę',down:'W dół',compose:'Złóż swój zestaw',show:'Pokaz',caps:[['Diamant · od 1975','Around your Edges'],['Jeden trzpień','Twój zestaw na miarę'],['Profile według rysunku','Przekrój pokazuje krawędź'],['Made in Italy','Opatentowane'],['Tarcze segmentowe','Ten sam trzpień, inny zestaw'],['Precyzja','Każdy profil na swoim miejscu']],empty:'Pusty zestaw · przeciągnij tu tarczę z katalogu albo ją dotknij',del:'Usuń',clear:'Wyczyść',name:'Polski',seg:' segm.',explode:'Rozsuń',section:'Przekrój',spin:'Obroty',reset:'Widok',sectionOn:'Przekrój przez profil',hint:'Dotknij lub przeciągnij tarczę z katalogu, aby ją zamontować · Podwójne dotknięcie: karta',
+      stackEy:'Kompletny trzpień',stackTitle:'Złóż zestaw',shuffle:'Przetasuj',add:'Dodaj',presets:'Zacznij od',
+      pTagli:'Zestaw nacinany',pSettori:'Zestaw segmentowy',remove:'Usuń z zestawu',cancel:'Anuluj',addThis:'Dodaj do zestawu',
+      pickPos:n=>`Pozycja ${n} od góry`,pickTitle:'Wybierz tarczę',addEy:'Nowa tarcza na górze zestawu',
+      wheels:n=>`${n} ${n===1?'tarcza':(n<5?'tarcze':'tarcz')}`,move:'Przesuń',lock:'Zablokuj pozycję',unlock:'Odblokuj pozycję',
+      over:'poza miejscem',full:'Brak miejsca na trzpieniu · maks. 80 mm',shuffled:'Kolejność przetasowana · zablokowane tarcze zostają',nothing:'Odblokuj co najmniej dwie tarcze, aby przetasować',
+      added:c=>`${c} dodana na górze zestawu`,
+      kind:{cont:'Tarcza ciągła',tagli:'Tarcza nacinana',settori:'Tarcza segmentowa',spacer:'Pierścień dystansowy',polish:'Tarcza polerska (inny dostawca)',d100:'Tarcza diamentowa Ø100'},wn:{SPACER:'Dystans',POLISH:'Polerowanie'},
+      sp:{d:'Średnica',t:'Grubość',b:'Otwór',rim:'Wieniec',prof:'Profil',fix:'Mocowanie'},
+      gola:d=>`Rowek V 90°, gł. ${d} mm`,fix:'6 otworów Ø 6,5',
+      parts:{nut:'Nakrętka mocująca',washer:'Podkładka',base:'Trzpień'}, hero:'Trzpień', heroSub:'zespół'},
+  sv:{fsBtn:'Skärm',wheelsBtn:'Skivor',removed:'borttagen från setet',up:'Upp',down:'Ned',compose:'Bygg ditt set',show:'Show',caps:[['Diamant · sedan 1975','Around your Edges'],['En hållare','Ditt set, på ditt sätt'],['Profiler enligt ritning','Snittet visar kanten'],['Made in Italy','Patenterade'],['Segmentskivor','Samma hållare, annat set'],['Precision','Varje profil på sin plats']],empty:'Tomt set · dra hit en skiva från katalogen eller tryck på en',del:'Ta bort',clear:'Töm',name:'Svenska',seg:' segm.',explode:'Sprängvy',section:'Snitt',spin:'Rotera',reset:'Vy',sectionOn:'Snitt genom profilen',hint:'Tryck eller dra en skiva från katalogen för att montera · Dubbeltryck för bladet',
+      stackEy:'Komplett hållare',stackTitle:'Bygg setet',shuffle:'Blanda',add:'Lägg till',presets:'Börja från',
+      pTagli:'Slitsat set',pSettori:'Segmenterat set',remove:'Ta bort från setet',cancel:'Avbryt',addThis:'Lägg till i setet',
+      pickPos:n=>`Position ${n} uppifrån`,pickTitle:'Välj en skiva',addEy:'Ny skiva överst i setet',
+      wheels:n=>`${n} ${n===1?'skiva':'skivor'}`,move:'Flytta',lock:'Lås position',unlock:'Lås upp position',
+      over:'över utrymmet',full:'Ingen plats kvar på hållaren · max 80 mm',shuffled:'Ordningen blandad · låsta skivor står kvar',nothing:'Lås upp minst två skivor för att blanda',
+      added:c=>`${c} lagd överst i setet`,
+      kind:{cont:'Kontinuerlig skiva',tagli:'Slitsad skiva',settori:'Segmentskiva',spacer:'Distansring',polish:'Polerskiva (annan leverantör)',d100:'Ø100 diamantskiva'},wn:{SPACER:'Distans',POLISH:'Polering'},
+      sp:{d:'Diameter',t:'Tjocklek',b:'Hål',rim:'Krans',prof:'Profil',fix:'Infästning'},
+      gola:d=>`V-spår 90°, ${d} mm djupt`,fix:'6 hål Ø 6,5',
+      parts:{nut:'Spännmutter',washer:'Bricka',base:'Hållare'}, hero:'Hållare', heroSub:'enhet'},
+  ko:{fsBtn:'전체 화면',wheelsBtn:'휠',removed:'세트에서 제거됨',up:'위로',down:'아래로',compose:'나만의 세트 구성',show:'쇼',caps:[['Diamant · 1975년부터','Around your Edges'],['하나의 아버','맞춤 세트'],['도면 그대로의 프로파일','단면이 엣지를 말해줍니다'],['Made in Italy','특허 취득'],['세그먼트 휠','같은 아버, 다른 세트'],['정밀','모든 프로파일이 제자리에']],empty:'빈 세트 · 카탈로그에서 휠을 끌어오거나 탭하세요',del:'삭제',clear:'비우기',name:'한국어',seg:' 세그',explode:'분해',section:'단면',spin:'회전',reset:'보기',sectionOn:'프로파일 단면',hint:'카탈로그의 휠을 탭하거나 끌어서 장착 · 두 번 탭하면 상세',
+      stackEy:'완성된 아버',stackTitle:'세트 구성',shuffle:'섞기',add:'추가',presets:'기본 세트',
+      pTagli:'슬롯 세트',pSettori:'세그먼트 세트',remove:'세트에서 제거',cancel:'취소',addThis:'세트에 추가',
+      pickPos:n=>`위에서 ${n}번째`,pickTitle:'휠 선택',addEy:'세트 맨 위에 새 휠',
+      wheels:n=>`휠 ${n}개`,move:'이동',lock:'위치 고정',unlock:'고정 해제',
+      over:'공간 초과',full:'아버에 공간이 없습니다 · 최대 80 mm',shuffled:'순서를 섞었습니다 · 고정된 휠은 그대로',nothing:'섞으려면 휠을 두 개 이상 고정 해제하세요',
+      added:c=>`${c} 세트 맨 위에 추가됨`,
+      kind:{cont:'연속 휠',tagli:'슬롯 휠',settori:'세그먼트 휠',spacer:'스페이서',polish:'폴리싱 휠 (타사)',d100:'Ø100 다이아몬드 휠'},wn:{SPACER:'스페이서',POLISH:'폴리싱'},
+      sp:{d:'직경',t:'두께',b:'내경',rim:'림',prof:'프로파일',fix:'고정'},
+      gola:d=>`90° V 홈, 깊이 ${d} mm`,fix:'구멍 6개 Ø 6.5',
+      parts:{nut:'클램핑 너트',washer:'와셔',base:'아버'}, hero:'아버', heroSub:'조립'},
+  el:{fsBtn:'Οθόνη',wheelsBtn:'Τροχοί',removed:'αφαιρέθηκε από το σετ',up:'Πάνω',down:'Κάτω',compose:'Φτιάξε το σετ σου',show:'Show',caps:[['Diamant · από το 1975','Around your Edges'],['Ένας άξονας','Το σετ στα μέτρα σου'],['Προφίλ κατά σχέδιο','Η τομή δείχνει την ακμή'],['Made in Italy','Κατοχυρωμένα'],['Τροχοί τμημάτων','Ίδιος άξονας, άλλο σετ'],['Ακρίβεια','Κάθε προφίλ στη θέση του']],empty:'Άδειο σετ · σύρε εδώ έναν τροχό από τον κατάλογο ή άγγιξέ τον',del:'Διαγραφή',clear:'Άδειασμα',name:'Ελληνικά',seg:' τμημ.',explode:'Ανάπτυγμα',section:'Τομή',spin:'Περιστροφή',reset:'Προβολή',sectionOn:'Τομή στο προφίλ',hint:'Άγγιξε ή σύρε έναν τροχό από τον κατάλογο για τοποθέτηση · Διπλό άγγιγμα για την καρτέλα',
+      stackEy:'Πλήρης άξονας',stackTitle:'Φτιάξε το σετ',shuffle:'Ανακάτεμα',add:'Προσθήκη',presets:'Ξεκίνα από',
+      pTagli:'Σετ με εγκοπές',pSettori:'Σετ τμημάτων',remove:'Αφαίρεση από το σετ',cancel:'Άκυρο',addThis:'Προσθήκη στο σετ',
+      pickPos:n=>`Θέση ${n} από πάνω`,pickTitle:'Διάλεξε τροχό',addEy:'Νέος τροχός στην κορυφή',
+      wheels:n=>`${n} ${n===1?'τροχός':'τροχοί'}`,move:'Μετακίνηση',lock:'Κλείδωμα θέσης',unlock:'Ξεκλείδωμα θέσης',
+      over:'εκτός χώρου',full:'Δεν υπάρχει χώρος στον άξονα · μέγ. 80 mm',shuffled:'Η σειρά ανακατεύτηκε · οι κλειδωμένοι τροχοί μένουν',nothing:'Ξεκλείδωσε τουλάχιστον δύο τροχούς για ανακάτεμα',
+      added:c=>`${c} προστέθηκε στην κορυφή`,
+      kind:{cont:'Συνεχής τροχός',tagli:'Τροχός με εγκοπές',settori:'Τροχός τμημάτων',spacer:'Αποστάτης',polish:'Τροχός στίλβωσης (άλλος προμηθευτής)',d100:'Διαμαντοτροχός Ø100'},wn:{SPACER:'Αποστάτης',POLISH:'Στίλβωση'},
+      sp:{d:'Διάμετρος',t:'Πάχος',b:'Οπή',rim:'Στεφάνη',prof:'Προφίλ',fix:'Στερέωση'},
+      gola:d=>`Αυλάκι V 90°, βάθος ${d} mm`,fix:'6 οπές Ø 6,5',
+      parts:{nut:'Παξιμάδι σύσφιξης',washer:'Ροδέλα',base:'Άξονας'}, hero:'Άξονας', heroSub:'σύνολο'}
 };
-const LANGS = ['it','en','de','fr','es','pt','ru','tr','zh','ja'];
+const LANGS = ['it','en','de','fr','es','pt','ru','tr','zh','ja','nl','pl','sv','ko','el'];
 const code = type => { const w = WHEELS[type], U = UI[state.lang]; return w.code ? w.code + U.seg : ((U.wn && U.wn[type]) || w.name || type); };
 
 /* ================================================================== renderer */
@@ -641,37 +696,38 @@ function arcText(g, txt, r, top, size, weight, spacing){
   });
 }
 const decalCache = {};
-function decalTex(variant){ // 'cont' (no PATENTED, rim from r86) | 'pat' | 'nopat'
-  if (decalCache[variant]) return decalCache[variant];
+function decalTex(variant, small){ // 'cont' (no PATENTED, rim from r86) | 'pat' | 'nopat'; small = Ø100 wheels (the plane is halved, so everything is drawn at double size)
+  const key = variant + (small ? '-s' : ''); if (decalCache[key]) return decalCache[key];
   const S = 1024, c = document.createElement('canvas'); c.width = c.height = S; const g = c.getContext('2d');
   const px = S/200;                                   // 5.12 px per mm, the canvas spans the full Ø200
   const ink = 'rgba(22,26,34,.95)'; g.fillStyle = ink; g.strokeStyle = ink; g.textAlign = 'center'; g.textBaseline = 'middle';
   // everything sits on the vertical axis of the face, between the Ø47.5 washer and the rim (r86 continuous, r93 the others)
-  const rt = (variant === 'cont' ? 79 : 85) * px;                         // text arcs
-  const rl = (variant === 'cont' ? 62 : 66) * px, hl = 18*px;             // the "D": centre radius and height (18 mm)
+  const rt = (small ? 72 : variant === 'cont' ? 79 : 85) * px;           // text arcs (Ø100: r36 on the wheel)
+  const rl = (small ? 50 : variant === 'cont' ? 62 : 66) * px, hl = (small ? 22 : 18)*px;   // the "D": centre radius and height (18 mm; 11 mm on the Ø100)
+  const fs = small ? 1.4 : 1;                                             // bigger letters on the small wheel so they stay legible
   const k = hl/101.26, ox = 512 - 41.5*k - 16.78*k, oy = 512 - rl - hl/2 - 12.14*k;
   const R = (x, y, w, h) => g.fillRect(ox + x*k, oy + y*k, w*k, h*k);
   const P = pts => { g.beginPath(); pts.forEach((p, i) => i ? g.lineTo(ox + p[0]*k, oy + p[1]*k) : g.moveTo(ox + p[0]*k, oy + p[1]*k)); g.closePath(); g.fill(); };
   R(16.78,12.14,18.3,18.3); R(39.95,12.14,36.61,18.3); R(16.78,35.31,18.3,54.91); R(81.43,35.31,18.3,54.91); R(39.95,35.31,36.88,54.91);
   P([[81.43,12.14],[81.43,30.44],[99.73,30.44]]); R(16.78,95.09,18.3,18.3); R(39.95,95.09,36.61,18.3); P([[81.43,113.4],[99.73,95.09],[81.43,95.09]]);
-  arcText(g, 'MADE IN ITALY', rt, true, 6*px, 600, 2.4*px);
-  if (variant === 'pat') arcText(g, 'PATENTED', rt, false, 6.4*px, 700, 3.2*px);
+  arcText(g, 'MADE IN ITALY', rt, true, 6*px*fs, 600, 2.4*px*fs);
+  if (variant === 'pat') arcText(g, 'PATENTED', rt, false, 6.4*px*fs, 700, 3.2*px*fs);
   const t = new THREE.CanvasTexture(c); t.anisotropy = 8; t.colorSpace = THREE.SRGBColorSpace;
-  return decalCache[variant] = t;
+  return decalCache[key] = t;
 }
 function decal(w, t){
   const variant = w.prof === 'v' ? 'cont' : (w.prof === 'pencil' ? 'pat' : 'nopat');
-  const m = new THREE.Mesh(new THREE.PlaneGeometry(cone().R*2, cone().R*2), new THREE.MeshStandardMaterial({map: decalTex(variant), transparent:true, depthWrite:false, metalness:.2, roughness:.9, polygonOffset:true, polygonOffsetFactor:-2}));
+  const m = new THREE.Mesh(new THREE.PlaneGeometry(cone().R*2, cone().R*2), new THREE.MeshStandardMaterial({map: decalTex(variant, state.cone === '100'), transparent:true, depthWrite:false, metalness:.2, roughness:.9, polygonOffset:true, polygonOffsetFactor:-2}));
   m.rotation.x = -PI/2; m.position.y = t + .03; m.name = 'decal'; return m;
 }
 function buildWheel100(w, t){   // ISO 40 family: solid cylinders, bore = shaft, the Ø200 rim profiles kept at true depth on the Ø100 periphery
   const g = new THREE.Group(), R = 50, rb = cone().bore, sh = p => [p[0] - 50, p[1], p[2]];
   if (w.kind === 'spacer'){ g.add(lathe([[rb,0],[rb + 6,0],[rb + 6,t],[rb,t]], M.steel)); g.userData.t = t; return g; }               // plain Ø34 ring
   if (w.kind === 'polish'){ g.add(lathe([[rb,0],[R - 1.5,0],[R,1.5],[R,t - 1.5],[R - 1.5,t],[rb,t]], M.resin)); g.userData.t = t; return g; }
-  if (w.kind === 'cont') g.add(lathe(rimPts(w, rb + 50).map(sh), M.bond));                       // one bronze body with the groove
+  g.add(lathe([[rb,0],[43.3,0],[43.3,t],[rb,t]], M.face));                                        // steel body, like the Ø200 plate
+  const pts = rimPts(w, 93).map(sh);
+  if (w.kind === 'cont') g.add(lathe(pts, M.bronze));                                              // bronze rim with the groove
   else {
-    g.add(lathe([[rb,0],[43.3,0],[43.3,t],[rb,t]], M.bond));                                      // bronze core
-    const pts = rimPts(w, 93).map(sh);
     if (w.kind === 'settori') g.add(teeth(pts, 36, 4.2, M.sinter));
     else {                                                                                       // slotted rim, ten segments
       const d = 1.5/50, step = PI*2/10, cap = new THREE.ShapeGeometry(shapeOf(pts));
