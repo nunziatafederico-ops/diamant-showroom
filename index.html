@@ -57,8 +57,13 @@ button:focus-visible{outline:2px solid var(--blue-hi);outline-offset:2px}
 .lang{position:relative}
 .lang .pill{gap:8px;padding:0 16px 0 12px}
 .lang .pill[aria-expanded="true"]{background:var(--fg);color:var(--ink)}
-.menu{position:absolute;right:0;top:52px;min-width:190px;max-height:calc(100vh - 70px);overflow-y:auto;border-radius:20px;padding:6px;display:flex;flex-direction:column;gap:2px;z-index:20;animation:swap .25s cubic-bezier(.2,.7,.2,1)}
+.menu{position:absolute;right:0;top:52px;min-width:190px;max-height:calc(100vh - 118px);max-height:calc(100dvh - 118px);border-radius:20px;padding:6px;display:flex;flex-direction:column;gap:2px;z-index:20;animation:swap .25s cubic-bezier(.2,.7,.2,1)}
 .menu[hidden]{display:none!important}
+/* scroll container with pinned actions: the language list scrolls inside, Vista/Schermo stay at the bottom; the box stops above the wheel strip */
+.menu .scroll{display:flex;flex-direction:column;gap:2px;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;min-height:0;flex:1 1 auto}
+.menu .scroll button,.menu .fixed button{flex:0 0 44px}
+.menu .fixed{flex:0 0 auto;display:flex;flex-direction:column;gap:2px}
+#app.open-b #l-menu{max-height:calc(100vh - 272px);max-height:calc(100dvh - 272px)}
 .menu hr{border:0;border-top:1px solid var(--line);margin:4px 8px}
 .menu button{all:unset;display:flex;align-items:center;justify-content:space-between;gap:16px;height:44px;padding:0 14px;border-radius:14px;font-size:15px;cursor:pointer;touch-action:manipulation}
 .menu button small{font:500 11px/1 var(--f-mono);letter-spacing:.1em;color:var(--mute)}
@@ -1034,7 +1039,7 @@ $('t-section').onclick = () => setTool('section', !state.section);
 $('t-spin').onclick = () => setTool('spin', !state.spin);
 $('t-show').onclick = e => { e.stopPropagation(); startShow(false); };
 function resetView(){ setTool('explode', false); setTool('section', false); setTool('spin', false); flyHome(); };
-function renderLangMenu(){ $('l-menu').innerHTML = LANGS.map(l => `<button role="menuitemradio" aria-checked="${l === state.lang}" data-l="${l}">${UI[l].name}<small>${l.toUpperCase()}</small></button>`).join('') + `<hr><button data-act="reset">${T().reset}</button>` + (fsAvailable ? `<button data-act="fs">${T().fsBtn}</button>` : ''); }
+function renderLangMenu(){ $('l-menu').innerHTML = `<div class="scroll">` + LANGS.map(l => `<button role="menuitemradio" aria-checked="${l === state.lang}" data-l="${l}">${UI[l].name}<small>${l.toUpperCase()}</small></button>`).join('') + `</div><div class="fixed"><hr><button data-act="reset">${T().reset}</button>` + (fsAvailable ? `<button data-act="fs">${T().fsBtn}</button>` : '') + `</div>`; }
 function setMenu(open){ $('l-menu').hidden = !open; $('l-btn').setAttribute('aria-expanded', open); }
 $('l-btn').onclick = e => { e.stopPropagation(); setMenu($('l-menu').hidden); };
 $('l-menu').addEventListener('click', e => { const a = e.target.closest('[data-act]'); if (a){ setMenu(false); if (a.dataset.act === 'fs') toggleFs(); else resetView(); return; }
