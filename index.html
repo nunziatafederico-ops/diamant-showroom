@@ -116,12 +116,14 @@ h1{font-family:var(--f-display);font-variation-settings:"wdth" 108;font-weight:7
 .actions{display:flex;flex-wrap:nowrap;gap:6px}
 .actions .btn{padding:0 8px;font-size:12.5px;height:40px;flex:1 1 0;min-width:0;justify-content:center;gap:6px;white-space:nowrap}
 .actions .btn svg{flex:none;width:16px;height:16px}
-.cones{display:flex;gap:6px;margin-top:10px}
-.cones button{all:unset;box-sizing:border-box;flex:1 1 0;min-width:0;display:flex;align-items:center;gap:6px;padding:5px 8px 5px 5px;border-radius:13px;cursor:pointer;touch-action:manipulation;border:1px solid transparent}
-.cones img{width:34px;height:26px;object-fit:contain;flex:0 0 auto}
-.cones span{display:flex;flex-direction:column;min-width:0;line-height:1.15}
-.cones b{font-size:12px;white-space:nowrap}.cones small{font:500 9.5px/1.2 var(--f-mono);color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.cones button[aria-pressed="true"]{border-color:var(--blue-hi);background:rgba(58,104,198,.26)}
+.cones{display:flex;gap:7px;margin-top:12px}
+.cones button{all:unset;box-sizing:border-box;flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 6px 7px;border-radius:15px;cursor:pointer;touch-action:manipulation;border:1px solid var(--line);background:rgba(143,176,238,.05);transition:background .25s,border-color .25s,transform .25s}
+.cones button:active{transform:scale(.97)}
+.cones img{width:52px;height:40px;object-fit:contain;flex:0 0 auto;filter:drop-shadow(0 6px 10px rgba(0,0,0,.5))}
+.cones span{display:flex;flex-direction:column;align-items:center;min-width:0;line-height:1.15;text-align:center}
+.cones b{font-size:13px;white-space:nowrap}.cones small{font:500 9.5px/1.2 var(--f-mono);color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.cones button[aria-pressed="true"]{border-color:var(--blue-hi);background:linear-gradient(180deg,rgba(58,104,198,.38),rgba(58,104,198,.22));box-shadow:0 0 0 1px rgba(143,176,238,.25) inset,0 10px 24px -14px rgba(58,104,198,.9)}
+.cones button[aria-pressed="true"] small{color:var(--blue-hi)}
 .hdr{display:flex;align-items:center;gap:6px;margin-top:10px}
 .hdr .meta{margin:0;flex:1 1 auto;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:11px}
 .hdr button{all:unset;box-sizing:border-box;width:40px;height:40px;border-radius:12px;display:grid;place-items:center;color:#c2cbdb;cursor:pointer;touch-action:manipulation;position:relative}
@@ -228,7 +230,7 @@ dl.specs dd{font-size:15px;font-weight:500;font-variant-numeric:tabular-nums}
 .dragghost{position:fixed;left:0;top:0;width:96px;height:72px;pointer-events:none;z-index:30;transform:translate(-50%,-60%) scale(1.15);filter:drop-shadow(0 18px 22px rgba(0,0,0,.7));transition:opacity .2s}
 .dragghost img{width:100%;height:100%;object-fit:contain}
 #app.dropping canvas{cursor:copy}
-.toast{position:absolute;left:62%;bottom:calc(env(safe-area-inset-bottom,0px) + 140px);transform:translate(-50%,10px);padding:11px 18px;border-radius:22px;background:rgba(10,15,26,.9);border:1px solid var(--line);
+.toast{position:absolute;left:50%;top:calc(env(safe-area-inset-top,0px) + 82px);transform:translate(-50%,-16px);padding:11px 18px;border-radius:22px;background:rgba(10,15,26,.9);border:1px solid var(--line);
   font-size:13.5px;color:#d5dceb;opacity:0;transition:opacity .3s,transform .3s;z-index:7;pointer-events:none;white-space:nowrap}
 .toast.on{opacity:1;transform:translate(-50%,0)}
 .hint{position:absolute;left:62%;bottom:calc(env(safe-area-inset-bottom,0px) + 140px);transform:translateX(-50%);display:flex;align-items:center;gap:12px;
@@ -297,7 +299,7 @@ dl.specs dd{font-size:15px;font-weight:500;font-variant-numeric:tabular-nums}
   .cap{text-align:center}
   .cap b{font-size:clamp(30px,9vw,54px)}
   .hint{bottom:calc(env(safe-area-inset-bottom,0px) + 118px);font-size:12.5px}
-  .toast{bottom:calc(env(safe-area-inset-bottom,0px) + 118px)}
+  .toast{top:calc(env(safe-area-inset-top,0px) + 70px)}
   .sect{bottom:calc(env(safe-area-inset-bottom,0px) + 178px)}
   .sstyle{bottom:calc(env(safe-area-inset-bottom,0px) + 136px)}
   .grid{grid-template-columns:repeat(3,minmax(0,1fr))}
@@ -397,7 +399,7 @@ dl.specs dd{font-size:15px;font-weight:500;font-variant-numeric:tabular-nums}
 import * as THREE from 'three';
 import { OrbitControls } from './vendor/OrbitControls.js';
 import { RoomEnvironment } from './vendor/RoomEnvironment.js';
-const BUILD = '20261020-110657';           // stamped by build.py
+const BUILD = '20261020-111516';           // stamped by build.py
 const CAT = {"wheels": {"V3.6": {"t": 12, "kind": "cont", "prof": "v", "d": 4, "rim": "bronze", "title": "Mola D200 V3.6"}, "V3.12": {"t": 16, "kind": "cont", "prof": "v", "d": 6, "rim": "bronze", "title": "Mola D200 V3.12"}, "V4P.2": {"t": 12, "kind": "tagli", "prof": "p", "title": "Mola D200 V4P.2"}, "V33": {"t": 12, "kind": "tagli", "prof": "pencil", "L": 1, "title": "Mola D200 V33"}, "V44": {"t": 14, "kind": "tagli", "prof": "pencil", "L": 1, "title": "Mola D200 V44"}, "V55": {"t": 14, "kind": "tagli", "prof": "pencil", "L": 0.5, "title": "Mola D200 V55"}, "V66": {"t": 18, "kind": "tagli", "prof": "pencil", "L": 0.5, "title": "Mola D200 V66"}, "V33S": {"t": 12, "kind": "settori", "prof": "pencil", "L": 1, "code": "V33", "title": "Mola V33 a settori"}, "V44S": {"t": 14, "kind": "settori", "prof": "pencil", "L": 1, "code": "V44", "title": "Mola V44 a settori"}, "V55S": {"t": 14, "kind": "settori", "prof": "pencil", "L": 0.5, "code": "V55", "title": "Mola V55 a settori"}, "V66S": {"t": 18, "kind": "settori", "prof": "pencil", "L": 0.5, "code": "V66", "title": "Mola V66 a settori"}, "SPACER": {"t": 10, "kind": "spacer", "name": "Spacer", "title": "Spacer 10 mm", "only": "100"}, "POLISH": {"t": 20, "kind": "polish", "name": "Lucidante", "title": "Mola lucidante", "only": "100"}}, "order": ["V3.6", "V3.12", "V4P.2", "V33", "V44", "V55", "V66", "V33S", "V44S", "V55S", "V66S", "SPACER", "POLISH"], "presets": {"tagli": ["V3.6", "V3.12", "V4P.2", "V33", "V44", "V55"], "settori": ["V3.6", "V3.12", "V4P.2", "V33S", "V44S", "V55S"], "iso": ["POLISH", "SPACER", "V33S", "V3.6"]}, "maxWheels": 8, "cone": {"200": {"R": 100, "space": 80, "bore": 17.5, "tk": 1, "shaftR": 17.25, "threadR": 17.25, "yMin": -67, "aside": 185, "nutR": 37, "washerR": 47.5, "teeth": 57, "label": "Ø 200", "sub": "80 mm", "setA": ["V3.6", "V3.12", "V4P.2", "V33", "V44"], "setB": ["V3.6", "V4P.2", "V33S", "V44S", "V55S"]}, "150": {"R": 75, "space": 70, "bore": 17.5, "tk": 1, "shaftR": 17.25, "threadR": 17.25, "yMin": -44, "aside": 160, "nutR": 37, "washerR": 47.5, "teeth": 43, "label": "Ø 150", "sub": "HSK 50 · 70 mm", "setA": ["V3.6", "V3.12", "V33", "V44"], "setB": ["V3.6", "V4P.2", "V33S", "V44S", "V55S"]}, "100": {"R": 50, "space": 62, "bore": 11, "tk": 1, "shaftR": 10.8, "threadR": 10.8, "yMin": -110, "aside": 120, "nutR": 17, "washerR": 14.5, "teeth": 36, "label": "Ø 100", "sub": "ISO 40 · 62 mm", "setA": ["POLISH", "SPACER", "V33S", "V3.6"], "setB": ["POLISH", "V44S", "V3.12"]}}};             // catalog.json, injected by build.py — edit the JSON, not this file
 
 /* ==================================================================
