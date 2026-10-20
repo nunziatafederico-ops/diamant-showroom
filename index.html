@@ -387,7 +387,7 @@ dl.specs dd{font-size:15px;font-weight:500;font-variant-numeric:tabular-nums}
 import * as THREE from 'three';
 import { OrbitControls } from './vendor/OrbitControls.js';
 import { RoomEnvironment } from './vendor/RoomEnvironment.js';
-const BUILD = '20261019-233922';           // stamped by build.py
+const BUILD = '20261020-104319';           // stamped by build.py
 const CAT = {"wheels": {"V3.6": {"t": 12, "kind": "cont", "prof": "v", "d": 4, "rim": "bronze", "title": "Mola D200 V3.6"}, "V3.12": {"t": 16, "kind": "cont", "prof": "v", "d": 6, "rim": "bronze", "title": "Mola D200 V3.12"}, "V4P.2": {"t": 12, "kind": "tagli", "prof": "p", "title": "Mola D200 V4P.2"}, "V33": {"t": 12, "kind": "tagli", "prof": "pencil", "L": 1, "title": "Mola D200 V33"}, "V44": {"t": 14, "kind": "tagli", "prof": "pencil", "L": 1, "title": "Mola D200 V44"}, "V55": {"t": 14, "kind": "tagli", "prof": "pencil", "L": 0.5, "title": "Mola D200 V55"}, "V66": {"t": 18, "kind": "tagli", "prof": "pencil", "L": 0.5, "title": "Mola D200 V66"}, "V33S": {"t": 12, "kind": "settori", "prof": "pencil", "L": 1, "code": "V33", "title": "Mola V33 a settori"}, "V44S": {"t": 14, "kind": "settori", "prof": "pencil", "L": 1, "code": "V44", "title": "Mola V44 a settori"}, "V55S": {"t": 14, "kind": "settori", "prof": "pencil", "L": 0.5, "code": "V55", "title": "Mola V55 a settori"}, "V66S": {"t": 18, "kind": "settori", "prof": "pencil", "L": 0.5, "code": "V66", "title": "Mola V66 a settori"}, "SPACER": {"t": 10, "kind": "spacer", "name": "Spacer", "title": "Spacer 10 mm", "only": "100"}, "POLISH": {"t": 20, "kind": "polish", "name": "Polishing", "title": "Mola polishing", "only": "100"}}, "order": ["V3.6", "V3.12", "V4P.2", "V33", "V44", "V55", "V66", "V33S", "V44S", "V55S", "V66S", "SPACER", "POLISH"], "presets": {"tagli": ["V3.6", "V3.12", "V4P.2", "V33", "V44", "V55"], "settori": ["V3.6", "V3.12", "V4P.2", "V33S", "V44S", "V55S"], "iso": ["POLISH", "SPACER", "V33S", "V3.6"]}, "maxWheels": 8, "cone": {"200": {"R": 100, "space": 80, "bore": 17.5, "tk": 1, "shaftR": 17.25, "threadR": 17.25, "yMin": -67, "aside": 185, "nutR": 37, "washerR": 47.5, "teeth": 57, "label": "Ø 200", "sub": "80 mm", "setA": ["V3.6", "V3.12", "V4P.2", "V33", "V44"], "setB": ["V3.6", "V4P.2", "V33S", "V44S", "V55S"]}, "100": {"R": 50, "space": 62, "bore": 11, "tk": 1, "shaftR": 10.8, "threadR": 10.8, "yMin": -110, "aside": 120, "nutR": 17, "washerR": 14.5, "teeth": 36, "label": "Ø 100", "sub": "ISO 40 · 62 mm", "setA": ["POLISH", "SPACER", "V33S", "V3.6"], "setB": ["POLISH", "V44S", "V3.12"]}}};             // catalog.json, injected by build.py — edit the JSON, not this file
 
 /* ==================================================================
@@ -683,9 +683,11 @@ function rimPts(w, rIn){
   const t = w.t;
   if (w.prof === 'v'){ const L = 1.35, d = w.d;
     return [[rIn,0],[99.4,0],[100,.6],[100,L],[100-d,L+d],[100-d,t-L-d],[100,t-L],[100,t-.6],[99.4,t],[rIn,t]]; }
-  if (w.prof === 'p') return [[rIn,0],[98,0],[100,2],[100,5],[98.6,5.6],[98.6,6.4],[100,7],[100,10],[98,12],[rIn,12]];
+  // V4P.2 (drawing 18/06/2026): 3 mm lands, then the central wedge rises 2 mm OUTWARD with 45° flanks and a 2 mm tip — the patented wedge
+  if (w.prof === 'p') return [[rIn,0],[98,0],[98,3],[100,5],[100,7],[98,9],[98,12],[rIn,12]];
+  // pencil (V33/V44/V55/V66 drawings 19/06/2026): lands L at full radius, 45° in to a 1.5 mm deep plateau, central wedge pointing OUTWARD (1.4 flanks, tip ~1.2)
   const L = w.L, c = t/2;
-  return [[rIn,0],[100,0],[100,L],[97,L+3],[97,c-1.5],[99.5,c-.5],[99.5,c+.5],[97,c+1.5],[97,t-L-3],[100,t-L],[100,t],[rIn,t]];
+  return [[rIn,0],[100,0],[100,L],[98.5,L+1.5],[98.5,c-1.3],[99.9,c-.45],[99.9,c+.45],[98.5,c+1.3],[98.5,t-L-1.5],[100,t-L],[100,t],[rIn,t]];
 }
 function arcText(g, txt, r, top, size, weight, spacing){
   // letters along a circle of radius r (px), centred on the vertical axis; top = outer arc read left→right, else bottom arc
