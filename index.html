@@ -50,7 +50,7 @@ button:focus-visible{outline:2px solid var(--blue-hi);outline-offset:2px}
 #app.fs .logo{padding-left:84px}
 .logo{display:flex;flex-direction:column;align-items:flex-start;gap:3px;line-height:1}
 .logo .word{font-family:var(--f-display);font-variation-settings:"wdth" 118;font-weight:800;font-size:34px;letter-spacing:.06em}
-.logo .mii{display:flex;align-items:center;gap:7px;font:600 10.5px/1 var(--f-mono);letter-spacing:.26em;color:#dfe4ec;padding-left:2px}
+.logo .mii{display:flex;align-items:center;gap:7px;font:600 11px/1 var(--f-mono);letter-spacing:.24em;color:#dfe4ec;padding-left:2px}
 .logo .flag{width:18px;height:12px;border-radius:2px;background:linear-gradient(90deg,#009246 0 33.3%,#f4f5f0 33.3% 66.6%,#ce2b37 66.6%);box-shadow:0 0 0 1px rgba(255,255,255,.12)}
 .topr{display:flex;gap:10px;pointer-events:auto}
 .pill{height:44px;min-width:44px;border-radius:22px;color:var(--fg);font:500 13px/1 var(--f-mono);letter-spacing:.08em;
@@ -124,7 +124,7 @@ h1{font-family:var(--f-display);font-variation-settings:"wdth" 108;font-weight:7
 .cones button:active{transform:scale(.97)}
 .cones img{width:52px;height:40px;object-fit:contain;flex:0 0 auto;filter:drop-shadow(0 6px 10px rgba(0,0,0,.5))}
 .cones span{display:flex;flex-direction:column;align-items:center;min-width:0;line-height:1.15;text-align:center}
-.cones b{font-size:13px;white-space:nowrap}.cones small{font:500 9.5px/1.2 var(--f-mono);color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.cones b{font-size:13px;white-space:nowrap}.cones small{font:500 11px/1.2 var(--f-mono);color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
 .cones button[aria-pressed="true"]{border-color:var(--blue-hi);background:linear-gradient(180deg,rgba(58,104,198,.38),rgba(58,104,198,.22));box-shadow:0 0 0 1px rgba(143,176,238,.25) inset,0 10px 24px -14px rgba(58,104,198,.9)}
 .cones button[aria-pressed="true"] small{color:var(--blue-hi)}
 .hdr{display:flex;align-items:center;gap:6px;margin-top:10px}
@@ -157,7 +157,7 @@ dl.specs dd{font-size:15px;font-weight:500;font-variant-numeric:tabular-nums}
 /* tool rail */
 .tools{display:flex;gap:8px;pointer-events:auto}
 .tool{all:unset;box-sizing:border-box;width:56px;height:56px;border-radius:18px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;
-  font:500 9px/1 var(--f-mono);letter-spacing:.04em;text-transform:uppercase;color:#c2cbdb;transition:background .25s,border-color .25s,transform .15s,opacity .25s;touch-action:manipulation}
+  font:500 11px/1 var(--f-mono);letter-spacing:.01em;text-transform:uppercase;color:#c2cbdb;transition:background .25s,border-color .25s,transform .15s,opacity .25s;touch-action:manipulation}
 .tool svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
 .tool:active{transform:scale(.95)}
 .tool[aria-pressed="true"]{background:var(--blue);border-color:var(--blue-hi);color:#fff;box-shadow:0 10px 30px -10px rgba(58,104,198,.9)}
@@ -297,7 +297,7 @@ dl.specs dd{font-size:15px;font-weight:500;font-variant-numeric:tabular-nums}
   #app{background:radial-gradient(ellipse 80% 40% at 50% 62%, #182640 0%, transparent 75%),var(--ink)}
   #app::before{display:none}
   .top{padding-left:12px;padding-right:12px}
-  .logo .word{font-size:26px}.logo .mii{font-size:9px;letter-spacing:.2em}
+  .logo .word{font-size:26px}.logo .mii{font-size:11px;letter-spacing:.16em}
   .panel{left:10px;right:10px;width:auto;top:calc(env(safe-area-inset-top,0px) + 66px);bottom:auto;max-height:46%;gap:8px}
   #app.open-l .tab-l{left:auto;right:10px;top:calc(env(safe-area-inset-top,0px) + 70px);transform:none;width:44px;height:44px;border-radius:14px}
   .tab-l{top:calc(env(safe-area-inset-top,0px) + 70px);transform:none}
@@ -313,7 +313,7 @@ dl.specs dd{font-size:15px;font-weight:500;font-variant-numeric:tabular-nums}
   .tools{gap:5px}
   .tool{width:46px;height:46px;border-radius:14px;font-size:8px}
   .tool svg{width:19px;height:19px}
-  .tool{width:54px;height:54px;border-radius:16px;font-size:10px;gap:4px}
+  .tool{width:54px;height:54px;border-radius:16px;font-size:11px;gap:4px}
   .tool svg{width:20px;height:20px}
   .strip{left:10px;right:10px;transform:none;max-width:none;bottom:calc(env(safe-area-inset-bottom,0px) + 12px);padding:5px;gap:4px}
   #app.open-b .handle{bottom:calc(env(safe-area-inset-bottom,0px) + 106px)}
@@ -428,7 +428,7 @@ dl.specs dd{font-size:15px;font-weight:500;font-variant-numeric:tabular-nums}
 import * as THREE from 'three';
 import { OrbitControls } from './vendor/OrbitControls.js';
 import { RoomEnvironment } from './vendor/RoomEnvironment.js';
-const BUILD = '20261020-182548';           // stamped by build.py
+const BUILD = '20261020-182628';           // stamped by build.py
 const CAT = {"wheels": {"V3.6": {"t": 12, "kind": "cont", "prof": "v", "d": 4, "rim": "bronze", "title": "Mola D200 V3.6"}, "V3.12": {"t": 16, "kind": "cont", "prof": "v", "d": 6, "rim": "bronze", "title": "Mola D200 V3.12"}, "V4P.2": {"t": 12, "kind": "tagli", "prof": "p", "title": "Mola D200 V4P.2"}, "V33": {"t": 12, "kind": "tagli", "prof": "pencil", "L": 1, "title": "Mola D200 V33", "tw": 1.2, "fw": 1.4}, "V44": {"t": 14, "kind": "tagli", "prof": "pencil", "L": 1, "title": "Mola D200 V44", "tw": 2, "fw": 2}, "V55": {"t": 14, "kind": "tagli", "prof": "pencil", "L": 0.5, "title": "Mola D200 V55", "tw": 2, "fw": 3}, "V66": {"t": 18, "kind": "tagli", "prof": "pencil", "L": 0.5, "title": "Mola D200 V66", "tw": 2, "fw": 3}, "V33S": {"t": 12, "kind": "settori", "prof": "pencil", "L": 1, "code": "V33", "title": "Mola V33 a settori", "tw": 1.2, "fw": 1.4}, "V44S": {"t": 14, "kind": "settori", "prof": "pencil", "L": 1, "code": "V44", "title": "Mola V44 a settori", "tw": 2, "fw": 2}, "V55S": {"t": 14, "kind": "settori", "prof": "pencil", "L": 0.5, "code": "V55", "title": "Mola V55 a settori", "tw": 2, "fw": 3}, "V66S": {"t": 18, "kind": "settori", "prof": "pencil", "L": 0.5, "code": "V66", "title": "Mola V66 a settori", "tw": 2, "fw": 3}, "SPACER": {"t": 10, "kind": "spacer", "name": "Spacer", "title": "Spacer 10 mm", "only": "100"}, "POLISH": {"t": 20, "kind": "polish", "name": "Lucidante", "title": "Mola lucidante", "only": "100"}}, "order": ["V3.6", "V3.12", "V4P.2", "V33", "V44", "V55", "V66", "V33S", "V44S", "V55S", "V66S", "SPACER", "POLISH"], "presets": {"tagli": ["V3.6", "V3.12", "V4P.2", "V33", "V44", "V55"], "settori": ["V3.6", "V3.12", "V4P.2", "V33S", "V44S", "V55S"], "iso": ["POLISH", "SPACER", "V33S", "V3.6"]}, "maxWheels": 8, "cone": {"200": {"R": 100, "space": 80, "bore": 17.5, "tk": 1, "shaftR": 17.25, "threadR": 17.25, "yMin": -67, "aside": 185, "nutR": 37, "washerR": 47.5, "teeth": 57, "label": "Ø 200", "sub": "80 mm", "setA": ["V3.6", "V3.12", "V4P.2", "V33", "V44"], "setB": ["V3.6", "V4P.2", "V33S", "V44S", "V55S"]}, "150": {"R": 75, "space": 70, "bore": 17.5, "tk": 1, "shaftR": 17.25, "threadR": 17.25, "yMin": -44, "aside": 160, "nutR": 37, "washerR": 47.5, "teeth": 43, "label": "Ø 150", "sub": "HSK 50 · 70 mm", "setA": ["V3.6", "V3.12", "V33", "V44"], "setB": ["V3.6", "V4P.2", "V33S", "V44S", "V55S"]}, "100": {"R": 50, "space": 62, "bore": 11, "tk": 1, "shaftR": 10.8, "threadR": 10.8, "yMin": -110, "aside": 120, "nutR": 17, "washerR": 14.5, "teeth": 36, "label": "Ø 100", "sub": "ISO 40 · 62 mm", "setA": ["POLISH", "SPACER", "V33S", "V3.6"], "setB": ["POLISH", "V44S", "V3.12"]}}, "families": [{"id": "pencil", "versions": {"tagli": ["V33", "V44", "V55", "V66"], "settori": ["V33S", "V44S", "V55S", "V66S"]}}, {"id": "v", "versions": {"cont": ["V3.6", "V3.12"]}}, {"id": "p", "versions": {"tagli": ["V4P.2"]}}, {"id": "acc", "versions": {"all": ["SPACER", "POLISH"]}, "only": "100"}]};             // catalog.json, injected by build.py — edit the JSON, not this file
 
 /* ==================================================================
