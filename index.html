@@ -91,6 +91,9 @@ h1{font-family:var(--f-display);font-variation-settings:"wdth" 108;font-weight:7
 .row.sel{border-color:var(--blue-hi);background:rgba(58,104,198,.26)}
 .row.locked{background:repeating-linear-gradient(-45deg,rgba(143,176,238,.07) 0 6px,transparent 6px 12px),var(--glass);cursor:default}
 .row.locked.sel{background:repeating-linear-gradient(-45deg,rgba(143,176,238,.1) 0 6px,transparent 6px 12px),rgba(58,104,198,.26)}
+.row.cand{animation:cand 1.1s ease-in-out infinite;border-color:#f0b35a}
+.row.dim{opacity:.35}
+@keyframes cand{0%,100%{box-shadow:0 0 0 0 rgba(240,179,90,0)}50%{box-shadow:0 0 0 4px rgba(240,179,90,.35)}}
 .row.drag{transform:scale(1.04);box-shadow:0 14px 30px -12px rgba(0,0,0,.8);border-color:var(--blue-hi);cursor:grabbing;z-index:2}
 .row .grip{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:var(--mute);cursor:grab;touch-action:none;border-right:1px solid var(--line);border-radius:14px 0 0 14px}
 .row .grip:active{background:rgba(143,176,238,.15)}
@@ -113,6 +116,12 @@ h1{font-family:var(--f-display);font-variation-settings:"wdth" 108;font-weight:7
 .actions{display:flex;flex-wrap:nowrap;gap:6px}
 .actions .btn{padding:0 8px;font-size:12.5px;height:40px;flex:1 1 0;min-width:0;justify-content:center;gap:6px;white-space:nowrap}
 .actions .btn svg{flex:none;width:16px;height:16px}
+.cones{display:flex;gap:6px;margin-top:10px}
+.cones button{all:unset;box-sizing:border-box;flex:1 1 0;min-width:0;display:flex;align-items:center;gap:6px;padding:5px 8px 5px 5px;border-radius:13px;cursor:pointer;touch-action:manipulation;border:1px solid transparent}
+.cones img{width:34px;height:26px;object-fit:contain;flex:0 0 auto}
+.cones span{display:flex;flex-direction:column;min-width:0;line-height:1.15}
+.cones b{font-size:12px;white-space:nowrap}.cones small{font:500 9.5px/1.2 var(--f-mono);color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cones button[aria-pressed="true"]{border-color:var(--blue-hi);background:rgba(58,104,198,.26)}
 .hdr{display:flex;align-items:center;gap:6px;margin-top:10px}
 .hdr .meta{margin:0;flex:1 1 auto;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:11px}
 .hdr button{all:unset;box-sizing:border-box;width:40px;height:40px;border-radius:12px;display:grid;place-items:center;color:#c2cbdb;cursor:pointer;touch-action:manipulation;position:relative}
@@ -326,6 +335,7 @@ dl.specs dd{font-size:15px;font-weight:500;font-variant-numeric:tabular-nums}
     <div>
       <div class="eyebrow" data-t="stackEy"></div>
       <h1 data-t="stackTitle"></h1>
+      <div class="cones" id="cones"></div>
       <div class="hdr">
         <div class="meta" id="s-meta"></div>
         <button class="glass" id="b-shuffle" data-tt="shuffle"><svg viewBox="0 0 24 24"><path d="M3 7h3.5c2 0 3.2 1 4.2 2.6l2.6 4.8c1 1.6 2.2 2.6 4.2 2.6H21M3 17h3.5c1.4 0 2.4-.5 3.2-1.3M14.3 8.3c.8-.8 1.8-1.3 3.2-1.3H21M18 4l3 3-3 3M18 14l3 3-3 3"/></svg></button>
@@ -387,8 +397,8 @@ dl.specs dd{font-size:15px;font-weight:500;font-variant-numeric:tabular-nums}
 import * as THREE from 'three';
 import { OrbitControls } from './vendor/OrbitControls.js';
 import { RoomEnvironment } from './vendor/RoomEnvironment.js';
-const BUILD = '20261020-104622';           // stamped by build.py
-const CAT = {"wheels": {"V3.6": {"t": 12, "kind": "cont", "prof": "v", "d": 4, "rim": "bronze", "title": "Mola D200 V3.6"}, "V3.12": {"t": 16, "kind": "cont", "prof": "v", "d": 6, "rim": "bronze", "title": "Mola D200 V3.12"}, "V4P.2": {"t": 12, "kind": "tagli", "prof": "p", "title": "Mola D200 V4P.2"}, "V33": {"t": 12, "kind": "tagli", "prof": "pencil", "L": 1, "title": "Mola D200 V33"}, "V44": {"t": 14, "kind": "tagli", "prof": "pencil", "L": 1, "title": "Mola D200 V44"}, "V55": {"t": 14, "kind": "tagli", "prof": "pencil", "L": 0.5, "title": "Mola D200 V55"}, "V66": {"t": 18, "kind": "tagli", "prof": "pencil", "L": 0.5, "title": "Mola D200 V66"}, "V33S": {"t": 12, "kind": "settori", "prof": "pencil", "L": 1, "code": "V33", "title": "Mola V33 a settori"}, "V44S": {"t": 14, "kind": "settori", "prof": "pencil", "L": 1, "code": "V44", "title": "Mola V44 a settori"}, "V55S": {"t": 14, "kind": "settori", "prof": "pencil", "L": 0.5, "code": "V55", "title": "Mola V55 a settori"}, "V66S": {"t": 18, "kind": "settori", "prof": "pencil", "L": 0.5, "code": "V66", "title": "Mola V66 a settori"}, "SPACER": {"t": 10, "kind": "spacer", "name": "Spacer", "title": "Spacer 10 mm", "only": "100"}, "POLISH": {"t": 20, "kind": "polish", "name": "Polishing", "title": "Mola polishing", "only": "100"}}, "order": ["V3.6", "V3.12", "V4P.2", "V33", "V44", "V55", "V66", "V33S", "V44S", "V55S", "V66S", "SPACER", "POLISH"], "presets": {"tagli": ["V3.6", "V3.12", "V4P.2", "V33", "V44", "V55"], "settori": ["V3.6", "V3.12", "V4P.2", "V33S", "V44S", "V55S"], "iso": ["POLISH", "SPACER", "V33S", "V3.6"]}, "maxWheels": 8, "cone": {"200": {"R": 100, "space": 80, "bore": 17.5, "tk": 1, "shaftR": 17.25, "threadR": 17.25, "yMin": -67, "aside": 185, "nutR": 37, "washerR": 47.5, "teeth": 57, "label": "Ø 200", "sub": "80 mm", "setA": ["V3.6", "V3.12", "V4P.2", "V33", "V44"], "setB": ["V3.6", "V4P.2", "V33S", "V44S", "V55S"]}, "100": {"R": 50, "space": 62, "bore": 11, "tk": 1, "shaftR": 10.8, "threadR": 10.8, "yMin": -110, "aside": 120, "nutR": 17, "washerR": 14.5, "teeth": 36, "label": "Ø 100", "sub": "ISO 40 · 62 mm", "setA": ["POLISH", "SPACER", "V33S", "V3.6"], "setB": ["POLISH", "V44S", "V3.12"]}}};             // catalog.json, injected by build.py — edit the JSON, not this file
+const BUILD = '20261020-110657';           // stamped by build.py
+const CAT = {"wheels": {"V3.6": {"t": 12, "kind": "cont", "prof": "v", "d": 4, "rim": "bronze", "title": "Mola D200 V3.6"}, "V3.12": {"t": 16, "kind": "cont", "prof": "v", "d": 6, "rim": "bronze", "title": "Mola D200 V3.12"}, "V4P.2": {"t": 12, "kind": "tagli", "prof": "p", "title": "Mola D200 V4P.2"}, "V33": {"t": 12, "kind": "tagli", "prof": "pencil", "L": 1, "title": "Mola D200 V33"}, "V44": {"t": 14, "kind": "tagli", "prof": "pencil", "L": 1, "title": "Mola D200 V44"}, "V55": {"t": 14, "kind": "tagli", "prof": "pencil", "L": 0.5, "title": "Mola D200 V55"}, "V66": {"t": 18, "kind": "tagli", "prof": "pencil", "L": 0.5, "title": "Mola D200 V66"}, "V33S": {"t": 12, "kind": "settori", "prof": "pencil", "L": 1, "code": "V33", "title": "Mola V33 a settori"}, "V44S": {"t": 14, "kind": "settori", "prof": "pencil", "L": 1, "code": "V44", "title": "Mola V44 a settori"}, "V55S": {"t": 14, "kind": "settori", "prof": "pencil", "L": 0.5, "code": "V55", "title": "Mola V55 a settori"}, "V66S": {"t": 18, "kind": "settori", "prof": "pencil", "L": 0.5, "code": "V66", "title": "Mola V66 a settori"}, "SPACER": {"t": 10, "kind": "spacer", "name": "Spacer", "title": "Spacer 10 mm", "only": "100"}, "POLISH": {"t": 20, "kind": "polish", "name": "Lucidante", "title": "Mola lucidante", "only": "100"}}, "order": ["V3.6", "V3.12", "V4P.2", "V33", "V44", "V55", "V66", "V33S", "V44S", "V55S", "V66S", "SPACER", "POLISH"], "presets": {"tagli": ["V3.6", "V3.12", "V4P.2", "V33", "V44", "V55"], "settori": ["V3.6", "V3.12", "V4P.2", "V33S", "V44S", "V55S"], "iso": ["POLISH", "SPACER", "V33S", "V3.6"]}, "maxWheels": 8, "cone": {"200": {"R": 100, "space": 80, "bore": 17.5, "tk": 1, "shaftR": 17.25, "threadR": 17.25, "yMin": -67, "aside": 185, "nutR": 37, "washerR": 47.5, "teeth": 57, "label": "Ø 200", "sub": "80 mm", "setA": ["V3.6", "V3.12", "V4P.2", "V33", "V44"], "setB": ["V3.6", "V4P.2", "V33S", "V44S", "V55S"]}, "150": {"R": 75, "space": 70, "bore": 17.5, "tk": 1, "shaftR": 17.25, "threadR": 17.25, "yMin": -44, "aside": 160, "nutR": 37, "washerR": 47.5, "teeth": 43, "label": "Ø 150", "sub": "HSK 50 · 70 mm", "setA": ["V3.6", "V3.12", "V33", "V44"], "setB": ["V3.6", "V4P.2", "V33S", "V44S", "V55S"]}, "100": {"R": 50, "space": 62, "bore": 11, "tk": 1, "shaftR": 10.8, "threadR": 10.8, "yMin": -110, "aside": 120, "nutR": 17, "washerR": 14.5, "teeth": 36, "label": "Ø 100", "sub": "ISO 40 · 62 mm", "setA": ["POLISH", "SPACER", "V33S", "V3.6"], "setB": ["POLISH", "V44S", "V3.12"]}}};             // catalog.json, injected by build.py — edit the JSON, not this file
 
 /* ==================================================================
    CATALOGO — misure dai disegni Diamant (tavole del 17-19/06/2026)
@@ -396,26 +406,27 @@ const CAT = {"wheels": {"V3.6": {"t": 12, "kind": "cont", "prof": "v", "d": 4, "
 const WHEELS = CAT.wheels, ORDER = CAT.order, PRESETS = CAT.presets, MAX_WHEELS = CAT.maxWheels, CONE = CAT.cone;
 for (const c of Object.values(CONE)) c.stag = Math.PI / c.teeth + .314;   // stagger between stacked wheels: half a tooth pitch + 18°
 const orderFor = c => ORDER.filter(k => !WHEELS[k].only || WHEELS[k].only === c);
+const CONES = ['200','150','100'];   // display order
 let SPACE = 80;
 const cone = () => CONE[state.cone];
 const tOf = type => WHEELS[type].t * cone().tk;   // thickness on the active arbor (Ø100 wheels are thicker)
 // radial mapping: the bore stays Ø35 on both arbors, the outer radius becomes R
-const radMap = r => { const c = cone(); return c.bore + (r - 17.5) * (c.R - c.bore) / (100 - 17.5); };
+const radMap = r => r - (100 - cone().R);   // Ø200 drawings on the Ø150 arbor: the rim profile keeps its true depth, the plate shrinks
 const fits = t => stackH() + t <= SPACE && state.stack.length < MAX_WHEELS;
 
 const UI = {
-  it:{share:'Porta con te il set',shareHint:'Inquadra il codice con il telefono: il set si apre lì, pronto da condividere.',styleMat:'Materico',styleDraw:'Disegno',fsBtn:'Schermo intero',wheelsBtn:'Mole',removed:'tolta dal set',up:'Su',down:'Giù',compose:'Componi il tuo set',show:'Show',caps:[['Diamant · dal 1975','Around your Edges'],['Un cono','Il tuo set su misura'],['Profili su disegno','La sezione racconta il filo'],['Made in Italy','Brevettate'],['Mole a settori','Stesso cono, un altro set'],['Precisione','Ogni profilo al suo posto']],empty:'Set vuoto · trascina qui una mola dal catalogo, o toccane una',del:'Elimina',clear:'Svuota',name:'Italiano',seg:' settori',explode:'Esplodi',section:'Sezione',spin:'In moto',reset:'Vista',sectionOn:'Sezione sul profilo',hint:'Tocca o trascina una mola dal catalogo per montarla · Doppio tocco per la scheda',
+  it:{pickReplace:'Tocca la mola da sostituire',replaced:(a,b)=>`${a} sostituita con ${b}`,share:'Porta con te il set',shareHint:'Inquadra il codice con il telefono: il set si apre lì, pronto da condividere.',styleMat:'Materico',styleDraw:'Disegno',fsBtn:'Schermo intero',wheelsBtn:'Mole',removed:'tolta dal set',up:'Su',down:'Giù',compose:'Componi il tuo set',show:'Show',caps:[['Diamant · dal 1975','Around your Edges'],['Un cono','Il tuo set su misura'],['Profili su disegno','La sezione racconta il filo'],['Made in Italy','Brevettate'],['Mole a settori','Stesso cono, un altro set'],['Precisione','Ogni profilo al suo posto']],empty:'Set vuoto · trascina qui una mola dal catalogo, o toccane una',del:'Elimina',clear:'Svuota',name:'Italiano',seg:' settori',explode:'Esplodi',section:'Sezione',spin:'In moto',reset:'Vista',sectionOn:'Sezione sul profilo',hint:'Tocca o trascina una mola dal catalogo per montarla · Doppio tocco per la scheda',
       stackEy:'Cono completo',stackTitle:'Componi il set',shuffle:'Mescola',add:'Aggiungi',presets:'Parti da',
       pTagli:'Set a tagli',pSettori:'Set a settori',remove:'Rimuovi dal set',cancel:'Annulla',addThis:'Aggiungi al set',
       pickPos:n=>`Posizione ${n} dall'alto`,pickTitle:'Scegli la mola',addEy:'Nuova mola in cima al set',
       wheels:n=>`${n} ${n===1?'mola':'mole'}`,move:'Sposta',lock:'Blocca posizione',unlock:'Sblocca posizione',
       over:'oltre lo spazio',full:'Spazio sul cono esaurito · max 80 mm',shuffled:'Ordine mescolato · le mole bloccate restano ferme',nothing:'Sblocca almeno due mole per mescolarle',
       added:c=>`${c} aggiunta in cima al set`,
-      kind:{cont:'Mola continua',tagli:'Mola a tagli',settori:'Mola a settori',spacer:'Distanziale',polish:'Mola polishing (altro fornitore)',d100:'Mola diamantata Ø100'},wn:{SPACER:'Distanziale',POLISH:'Lucidatura'},
+      kind:{cont:'Mola continua',tagli:'Mola a tagli',settori:'Mola a settori',spacer:'Distanziale',polish:'Mola lucidante (altro fornitore)',d100:'Mola diamantata Ø100'},wn:{SPACER:'Distanziale',POLISH:'Lucidante'},
       sp:{d:'Diametro',t:'Spessore',b:'Foro',rim:'Corona',prof:'Profilo',fix:'Fissaggio'},
       gola:d=>`Gola a V 90°, prof. ${d} mm`,fix:'6 fori Ø 6,5',
       parts:{nut:'Dado di serraggio',washer:'Rondella',base:'Cono'}, hero:'Cono', heroSub:'assieme'},
-  en:{share:'Take the set with you',shareHint:'Scan the code with your phone: the set opens there, ready to share.',styleMat:'Material',styleDraw:'Drawing',fsBtn:'Full screen',wheelsBtn:'Wheels',removed:'removed from the set',up:'Up',down:'Down',compose:'Build your set',show:'Show',caps:[['Diamant · since 1975','Around your Edges'],['One arbor','Your set, your way'],['Profiles to drawing','The section tells the edge'],['Made in Italy','Patented'],['Segmented wheels','Same arbor, another set'],['Precision','Every profile in its place']],empty:'Empty set · drag a wheel here from the catalogue, or tap one',del:'Delete',clear:'Clear',name:'English',seg:' segm.',explode:'Explode',section:'Section',spin:'Spin',reset:'View',sectionOn:'Section through the profile',hint:'Tap or drag a wheel from the catalogue to mount it · Double tap for its sheet',
+  en:{pickReplace:'Tap the wheel to replace',replaced:(a,b)=>`${a} replaced by ${b}`,share:'Take the set with you',shareHint:'Scan the code with your phone: the set opens there, ready to share.',styleMat:'Material',styleDraw:'Drawing',fsBtn:'Full screen',wheelsBtn:'Wheels',removed:'removed from the set',up:'Up',down:'Down',compose:'Build your set',show:'Show',caps:[['Diamant · since 1975','Around your Edges'],['One arbor','Your set, your way'],['Profiles to drawing','The section tells the edge'],['Made in Italy','Patented'],['Segmented wheels','Same arbor, another set'],['Precision','Every profile in its place']],empty:'Empty set · drag a wheel here from the catalogue, or tap one',del:'Delete',clear:'Clear',name:'English',seg:' segm.',explode:'Explode',section:'Section',spin:'Spin',reset:'View',sectionOn:'Section through the profile',hint:'Tap or drag a wheel from the catalogue to mount it · Double tap for its sheet',
       stackEy:'Complete arbor',stackTitle:'Build the set',shuffle:'Shuffle',add:'Add',presets:'Start from',
       pTagli:'Slotted set',pSettori:'Segmented set',remove:'Remove from stack',cancel:'Cancel',addThis:'Add to stack',
       pickPos:n=>`Position ${n} from the top`,pickTitle:'Choose a wheel',addEy:'New wheel on top of the stack',
@@ -426,7 +437,7 @@ const UI = {
       sp:{d:'Diameter',t:'Thickness',b:'Bore',rim:'Rim',prof:'Profile',fix:'Fixing'},
       gola:d=>`90° V-groove, ${d} mm deep`,fix:'6 holes Ø 6.5',
       parts:{nut:'Clamping nut',washer:'Washer',base:'arbor'}, hero:'arbor', heroSub:'assembly'},
-  de:{share:'Set mitnehmen',shareHint:'Code mit dem Handy scannen: das Set öffnet sich dort, bereit zum Teilen.',styleMat:'Material',styleDraw:'Zeichnung',fsBtn:'Vollbild',wheelsBtn:'Scheiben',removed:'aus dem Set entfernt',up:'Nach oben',down:'Nach unten',compose:'Stellen Sie Ihr Set zusammen',show:'Show',caps:[['Diamant · seit 1975','Around your Edges'],['Ein Dorn','Ihr Set nach Maß'],['Profile nach Zeichnung','Der Schnitt zeigt die Kante'],['Made in Italy','Patentiert'],['Segmentscheiben','Gleicher Dorn, anderes Set'],['Präzision','Jedes Profil an seinem Platz']],empty:'Leeres Set · Scheibe aus dem Katalog hierher ziehen oder antippen',del:'Löschen',clear:'Leeren',name:'Deutsch',seg:' Segm.',explode:'Explosion',section:'Schnitt',spin:'Drehen',reset:'Ansicht',sectionOn:'Schnitt durch das Profil',hint:'Ziehen zum Drehen · Scheibe antippen zum Wechseln',
+  de:{pickReplace:'Tippe auf die zu ersetzende Scheibe',replaced:(a,b)=>`${a} durch ${b} ersetzt`,share:'Set mitnehmen',shareHint:'Code mit dem Handy scannen: das Set öffnet sich dort, bereit zum Teilen.',styleMat:'Material',styleDraw:'Zeichnung',fsBtn:'Vollbild',wheelsBtn:'Scheiben',removed:'aus dem Set entfernt',up:'Nach oben',down:'Nach unten',compose:'Stellen Sie Ihr Set zusammen',show:'Show',caps:[['Diamant · seit 1975','Around your Edges'],['Ein Dorn','Ihr Set nach Maß'],['Profile nach Zeichnung','Der Schnitt zeigt die Kante'],['Made in Italy','Patentiert'],['Segmentscheiben','Gleicher Dorn, anderes Set'],['Präzision','Jedes Profil an seinem Platz']],empty:'Leeres Set · Scheibe aus dem Katalog hierher ziehen oder antippen',del:'Löschen',clear:'Leeren',name:'Deutsch',seg:' Segm.',explode:'Explosion',section:'Schnitt',spin:'Drehen',reset:'Ansicht',sectionOn:'Schnitt durch das Profil',hint:'Ziehen zum Drehen · Scheibe antippen zum Wechseln',
       stackEy:'Kompletter Dorn',stackTitle:'Paket aufbauen',shuffle:'Mischen',add:'Hinzufügen',presets:'Starten mit',
       pTagli:'Paket mit Schlitzen',pSettori:'Paket mit Segmenten',remove:'Aus dem Paket entfernen',cancel:'Abbrechen',addThis:'Zum Paket hinzufügen',
       pickPos:n=>`Position ${n} von oben`,pickTitle:'Scheibe wählen',addEy:'Neue Scheibe oben auf dem Paket',
@@ -437,7 +448,7 @@ const UI = {
       sp:{d:'Durchmesser',t:'Dicke',b:'Bohrung',rim:'Kranz',prof:'Profil',fix:'Befestigung'},
       gola:d=>`90°-V-Nut, ${d} mm tief`,fix:'6 Bohrungen Ø 6,5',
       parts:{nut:'Spannmutter',washer:'Scheibe',base:'Dorn'}, hero:'Dorn', heroSub:'Baugruppe'},
-  es:{share:'Llévate el set',shareHint:'Escanea el código con el móvil: el set se abre allí, listo para compartir.',styleMat:'Material',styleDraw:'Dibujo',fsBtn:'Pantalla',wheelsBtn:'Muelas',removed:'quitada del set',up:'Subir',down:'Bajar',compose:'Compón tu set',show:'Show',caps:[['Diamant · desde 1975','Around your Edges'],['Un cono','Tu set a medida'],['Perfiles según plano','La sección cuenta el canto'],['Made in Italy','Patentadas'],['Muelas de segmentos','Mismo cono, otro set'],['Precisión','Cada perfil en su sitio']],empty:'Set vacío · arrastra aquí una muela del catálogo, o tócala',del:'Eliminar',clear:'Vaciar',name:'Español',seg:' segm.',explode:'Explosión',section:'Sección',spin:'Girar',reset:'Vista',sectionOn:'Sección por el perfil',hint:'Arrastra para girar · Toca una muela para cambiarla',
+  es:{pickReplace:'Toca la muela a sustituir',replaced:(a,b)=>`${a} sustituida por ${b}`,share:'Llévate el set',shareHint:'Escanea el código con el móvil: el set se abre allí, listo para compartir.',styleMat:'Material',styleDraw:'Dibujo',fsBtn:'Pantalla',wheelsBtn:'Muelas',removed:'quitada del set',up:'Subir',down:'Bajar',compose:'Compón tu set',show:'Show',caps:[['Diamant · desde 1975','Around your Edges'],['Un cono','Tu set a medida'],['Perfiles según plano','La sección cuenta el canto'],['Made in Italy','Patentadas'],['Muelas de segmentos','Mismo cono, otro set'],['Precisión','Cada perfil en su sitio']],empty:'Set vacío · arrastra aquí una muela del catálogo, o tócala',del:'Eliminar',clear:'Vaciar',name:'Español',seg:' segm.',explode:'Explosión',section:'Sección',spin:'Girar',reset:'Vista',sectionOn:'Sección por el perfil',hint:'Arrastra para girar · Toca una muela para cambiarla',
       stackEy:'Cono completo',stackTitle:'Compón el paquete',shuffle:'Mezclar',add:'Añadir',presets:'Empezar desde',
       pTagli:'Paquete con ranuras',pSettori:'Paquete con segmentos',remove:'Quitar del paquete',cancel:'Cancelar',addThis:'Añadir al paquete',
       pickPos:n=>`Posición ${n} desde arriba`,pickTitle:'Elige la muela',addEy:'Nueva muela encima del paquete',
@@ -448,7 +459,7 @@ const UI = {
       sp:{d:'Diámetro',t:'Espesor',b:'Agujero',rim:'Corona',prof:'Perfil',fix:'Fijación'},
       gola:d=>`Garganta en V 90°, prof. ${d} mm`,fix:'6 agujeros Ø 6,5',
       parts:{nut:'Tuerca de apriete',washer:'Arandela',base:'Cono'}, hero:'Cono', heroSub:'conjunto'},
-  fr:{share:'Emportez le jeu',shareHint:'Scannez le code avec votre téléphone : le jeu s\'y ouvre, prêt à partager.',styleMat:'Matière',styleDraw:'Dessin',fsBtn:'Écran',wheelsBtn:'Meules',removed:'retirée du jeu',up:'Monter',down:'Descendre',compose:'Composez votre jeu',show:'Show',caps:[['Diamant · depuis 1975','Around your Edges'],['Un cône','Votre jeu sur mesure'],['Profils sur plan','La coupe révèle le chant'],['Made in Italy','Brevetées'],['Meules à segments','Même cône, autre jeu'],['Précision','Chaque profil à sa place']],empty:'Jeu vide · glissez ici une meule du catalogue, ou touchez-en une',del:'Supprimer',clear:'Vider',name:'Français',seg:' segm.',explode:'Éclaté',section:'Coupe',spin:'Rotation',reset:'Vue',sectionOn:'Coupe sur le profil',hint:'Glisser pour tourner · Toucher une meule pour la changer',
+  fr:{pickReplace:'Touchez la meule à remplacer',replaced:(a,b)=>`${a} remplacée par ${b}`,share:'Emportez le jeu',shareHint:'Scannez le code avec votre téléphone : le jeu s\'y ouvre, prêt à partager.',styleMat:'Matière',styleDraw:'Dessin',fsBtn:'Écran',wheelsBtn:'Meules',removed:'retirée du jeu',up:'Monter',down:'Descendre',compose:'Composez votre jeu',show:'Show',caps:[['Diamant · depuis 1975','Around your Edges'],['Un cône','Votre jeu sur mesure'],['Profils sur plan','La coupe révèle le chant'],['Made in Italy','Brevetées'],['Meules à segments','Même cône, autre jeu'],['Précision','Chaque profil à sa place']],empty:'Jeu vide · glissez ici une meule du catalogue, ou touchez-en une',del:'Supprimer',clear:'Vider',name:'Français',seg:' segm.',explode:'Éclaté',section:'Coupe',spin:'Rotation',reset:'Vue',sectionOn:'Coupe sur le profil',hint:'Glisser pour tourner · Toucher une meule pour la changer',
       stackEy:'Cône complet',stackTitle:'Composez le jeu',shuffle:'Mélanger',add:'Ajouter',presets:'Partir de',
       pTagli:'Jeu à fentes',pSettori:'Jeu à segments',remove:'Retirer du jeu',cancel:'Annuler',addThis:'Ajouter au jeu',
       pickPos:n=>`Position ${n} depuis le haut`,pickTitle:'Choisir la meule',addEy:'Nouvelle meule en haut du jeu',
@@ -459,7 +470,7 @@ const UI = {
       sp:{d:'Diamètre',t:'Épaisseur',b:'Alésage',rim:'Couronne',prof:'Profil',fix:'Fixation'},
       gola:d=>`Gorge en V 90°, prof. ${d} mm`,fix:'6 trous Ø 6,5',
       parts:{nut:'Écrou de serrage',washer:'Rondelle',base:'Cône'}, hero:'Cône', heroSub:'ensemble'},
-  pt:{share:'Leve o conjunto consigo',shareHint:'Leia o código com o telemóvel: o conjunto abre lá, pronto a partilhar.',styleMat:'Material',styleDraw:'Desenho',fsBtn:'Ecrã',wheelsBtn:'Mós',removed:'removida do conjunto',up:'Subir',down:'Descer',compose:'Monte o seu conjunto',show:'Show',caps:[['Diamant · desde 1975','Around your Edges'],['Um cone','O seu conjunto à medida'],['Perfis sob desenho','A secção mostra a aresta'],['Made in Italy','Patenteadas'],['Mós de segmentos','Mesmo cone, outro conjunto'],['Precisão','Cada perfil no seu lugar']],empty:'Conjunto vazio · arraste para aqui uma mó do catálogo, ou toque numa',del:'Eliminar',clear:'Esvaziar',name:'Português',seg:' segm.',explode:'Explodir',section:'Secção',spin:'Rodar',reset:'Vista',sectionOn:'Secção pelo perfil',hint:'Arraste para rodar · Toque numa mó para a trocar',
+  pt:{pickReplace:'Toque na mó a substituir',replaced:(a,b)=>`${a} substituída por ${b}`,share:'Leve o conjunto consigo',shareHint:'Leia o código com o telemóvel: o conjunto abre lá, pronto a partilhar.',styleMat:'Material',styleDraw:'Desenho',fsBtn:'Ecrã',wheelsBtn:'Mós',removed:'removida do conjunto',up:'Subir',down:'Descer',compose:'Monte o seu conjunto',show:'Show',caps:[['Diamant · desde 1975','Around your Edges'],['Um cone','O seu conjunto à medida'],['Perfis sob desenho','A secção mostra a aresta'],['Made in Italy','Patenteadas'],['Mós de segmentos','Mesmo cone, outro conjunto'],['Precisão','Cada perfil no seu lugar']],empty:'Conjunto vazio · arraste para aqui uma mó do catálogo, ou toque numa',del:'Eliminar',clear:'Esvaziar',name:'Português',seg:' segm.',explode:'Explodir',section:'Secção',spin:'Rodar',reset:'Vista',sectionOn:'Secção pelo perfil',hint:'Arraste para rodar · Toque numa mó para a trocar',
       stackEy:'Cone completo',stackTitle:'Monte o conjunto',shuffle:'Baralhar',add:'Adicionar',presets:'Começar de',
       pTagli:'Conjunto com ranhuras',pSettori:'Conjunto com segmentos',remove:'Remover do conjunto',cancel:'Cancelar',addThis:'Adicionar ao conjunto',
       pickPos:n=>`Posição ${n} a contar de cima`,pickTitle:'Escolha a mó',addEy:'Nova mó no topo do conjunto',
@@ -470,7 +481,7 @@ const UI = {
       sp:{d:'Diâmetro',t:'Espessura',b:'Furo',rim:'Coroa',prof:'Perfil',fix:'Fixação'},
       gola:d=>`Garganta em V 90°, prof. ${d} mm`,fix:'6 furos Ø 6,5',
       parts:{nut:'Porca de aperto',washer:'Anilha',base:'Cone'}, hero:'Cone', heroSub:'conjunto'},
-  ru:{share:'Забрать набор с собой',shareHint:'Отсканируйте код телефоном: набор откроется там, готовый к отправке.',styleMat:'Материал',styleDraw:'Чертёж',fsBtn:'Экран',wheelsBtn:'Круги',removed:'убран из набора',up:'Вверх',down:'Вниз',compose:'Соберите свой набор',show:'Шоу',caps:[['Diamant · с 1975','Around your Edges'],['Одна оправка','Ваш набор на заказ'],['Профили по чертежу','Разрез показывает кромку'],['Made in Italy','Запатентовано'],['Сегментные круги','Та же оправка, другой набор'],['Точность','Каждый профиль на своём месте']],empty:'Набор пуст · перетащите круг из каталога или коснитесь его',del:'Удалить',clear:'Очистить',name:'Русский',seg:' сегм.',explode:'Разнести',section:'Разрез',spin:'Вращение',reset:'Вид',sectionOn:'Разрез по профилю',hint:'Тяните, чтобы вращать · Коснитесь круга, чтобы заменить',
+  ru:{pickReplace:'Нажмите на круг для замены',replaced:(a,b)=>`${a} заменён на ${b}`,share:'Забрать набор с собой',shareHint:'Отсканируйте код телефоном: набор откроется там, готовый к отправке.',styleMat:'Материал',styleDraw:'Чертёж',fsBtn:'Экран',wheelsBtn:'Круги',removed:'убран из набора',up:'Вверх',down:'Вниз',compose:'Соберите свой набор',show:'Шоу',caps:[['Diamant · с 1975','Around your Edges'],['Одна оправка','Ваш набор на заказ'],['Профили по чертежу','Разрез показывает кромку'],['Made in Italy','Запатентовано'],['Сегментные круги','Та же оправка, другой набор'],['Точность','Каждый профиль на своём месте']],empty:'Набор пуст · перетащите круг из каталога или коснитесь его',del:'Удалить',clear:'Очистить',name:'Русский',seg:' сегм.',explode:'Разнести',section:'Разрез',spin:'Вращение',reset:'Вид',sectionOn:'Разрез по профилю',hint:'Тяните, чтобы вращать · Коснитесь круга, чтобы заменить',
       stackEy:'Оправка в сборе',stackTitle:'Соберите набор',shuffle:'Перемешать',add:'Добавить',presets:'Начать с',
       pTagli:'Набор с прорезями',pSettori:'Набор с сегментами',remove:'Убрать из набора',cancel:'Отмена',addThis:'Добавить в набор',
       pickPos:n=>`Позиция ${n} сверху`,pickTitle:'Выберите круг',addEy:'Новый круг сверху набора',
@@ -481,7 +492,7 @@ const UI = {
       sp:{d:'Диаметр',t:'Толщина',b:'Посадочное отверстие',rim:'Алмазный слой',prof:'Профиль',fix:'Крепление'},
       gola:d=>`V-канавка 90°, глубина ${d} мм`,fix:'6 отверстий Ø 6,5',
       parts:{nut:'Зажимная гайка',washer:'Шайба',base:'Оправка'}, hero:'Оправка', heroSub:'сборка'},
-  tr:{share:'Seti yanına al',shareHint:'Kodu telefonunla tara: set orada açılır, paylaşmaya hazır.',styleMat:'Malzeme',styleDraw:'Çizim',fsBtn:'Ekran',wheelsBtn:'Taşlar',removed:'setten çıkarıldı',up:'Yukarı',down:'Aşağı',compose:'Setinizi oluşturun',show:'Show',caps:[['Diamant · 1975’ten beri','Around your Edges'],['Tek mil','Size özel set'],['Çizime göre profiller','Kesit kenarı anlatır'],['Made in Italy','Patentli'],['Segmentli taşlar','Aynı mil, başka set'],['Hassasiyet','Her profil yerli yerinde']],empty:'Set boş · katalogdan bir taşı buraya sürükleyin veya dokunun',del:'Sil',clear:'Boşalt',name:'Türkçe',seg:' segm.',explode:'Dağıt',section:'Kesit',spin:'Döndür',reset:'Görünüm',sectionOn:'Profil boyunca kesit',hint:'Döndürmek için sürükleyin · Değiştirmek için taşa dokunun',
+  tr:{pickReplace:'Değiştirilecek taşa dokun',replaced:(a,b)=>`${a} yerine ${b}`,share:'Seti yanına al',shareHint:'Kodu telefonunla tara: set orada açılır, paylaşmaya hazır.',styleMat:'Malzeme',styleDraw:'Çizim',fsBtn:'Ekran',wheelsBtn:'Taşlar',removed:'setten çıkarıldı',up:'Yukarı',down:'Aşağı',compose:'Setinizi oluşturun',show:'Show',caps:[['Diamant · 1975’ten beri','Around your Edges'],['Tek mil','Size özel set'],['Çizime göre profiller','Kesit kenarı anlatır'],['Made in Italy','Patentli'],['Segmentli taşlar','Aynı mil, başka set'],['Hassasiyet','Her profil yerli yerinde']],empty:'Set boş · katalogdan bir taşı buraya sürükleyin veya dokunun',del:'Sil',clear:'Boşalt',name:'Türkçe',seg:' segm.',explode:'Dağıt',section:'Kesit',spin:'Döndür',reset:'Görünüm',sectionOn:'Profil boyunca kesit',hint:'Döndürmek için sürükleyin · Değiştirmek için taşa dokunun',
       stackEy:'Komple mili',stackTitle:'Seti oluşturun',shuffle:'Karıştır',add:'Ekle',presets:'Şununla başla',
       pTagli:'Yarıklı set',pSettori:'Segmentli set',remove:'Setten çıkar',cancel:'İptal',addThis:'Sete ekle',
       pickPos:n=>`Üstten ${n}. konum`,pickTitle:'Taşı seçin',addEy:'Setin üstüne yeni taş',
@@ -492,7 +503,7 @@ const UI = {
       sp:{d:'Çap',t:'Kalınlık',b:'Delik',rim:'Taç',prof:'Profil',fix:'Bağlantı'},
       gola:d=>`90° V kanal, ${d} mm derinlik`,fix:'6 delik Ø 6,5',
       parts:{nut:'Sıkma somunu',washer:'Rondela',base:'mili'}, hero:'mili', heroSub:'montaj'},
-  zh:{share:'带走你的套装',shareHint:'用手机扫描二维码：套装将在手机上打开，可直接分享。',styleMat:'材质',styleDraw:'图纸',fsBtn:'全屏',wheelsBtn:'磨轮',removed:'已从组中移除',up:'上移',down:'下移',compose:'组合您的磨轮组',show:'演示',caps:[['Diamant · 始于 1975','Around your Edges'],['一根主轴','您的定制磨轮组'],['按图纸定制轮廓','剖面展现磨边'],['意大利制造','已获专利'],['节块磨轮','同一主轴，另一组'],['精准','每个轮廓各就其位']],empty:'空组 · 从目录拖一片磨轮到这里，或点击一片',del:'删除',clear:'清空',name:'中文',seg:' 节块',explode:'爆炸图',section:'剖面',spin:'旋转',reset:'视图',sectionOn:'沿轮廓剖切',hint:'拖动旋转 · 点击磨轮可更换',
+  zh:{pickReplace:'点击要替换的磨轮',replaced:(a,b)=>`${a} 已替换为 ${b}`,share:'带走你的套装',shareHint:'用手机扫描二维码：套装将在手机上打开，可直接分享。',styleMat:'材质',styleDraw:'图纸',fsBtn:'全屏',wheelsBtn:'磨轮',removed:'已从组中移除',up:'上移',down:'下移',compose:'组合您的磨轮组',show:'演示',caps:[['Diamant · 始于 1975','Around your Edges'],['一根主轴','您的定制磨轮组'],['按图纸定制轮廓','剖面展现磨边'],['意大利制造','已获专利'],['节块磨轮','同一主轴，另一组'],['精准','每个轮廓各就其位']],empty:'空组 · 从目录拖一片磨轮到这里，或点击一片',del:'删除',clear:'清空',name:'中文',seg:' 节块',explode:'爆炸图',section:'剖面',spin:'旋转',reset:'视图',sectionOn:'沿轮廓剖切',hint:'拖动旋转 · 点击磨轮可更换',
       stackEy:'主轴总成',stackTitle:'组合磨轮组',shuffle:'打乱',add:'添加',presets:'从以下开始',
       pTagli:'开槽磨轮组',pSettori:'节块磨轮组',remove:'从组中移除',cancel:'取消',addThis:'加入磨轮组',
       pickPos:n=>`自上而下第 ${n} 位`,pickTitle:'选择磨轮',addEy:'新磨轮置于最上方',
@@ -503,7 +514,7 @@ const UI = {
       sp:{d:'直径',t:'厚度',b:'内孔',rim:'工作层',prof:'轮廓',fix:'固定'},
       gola:d=>`90° V 形槽，深 ${d} mm`,fix:'6 孔 Ø 6.5',
       parts:{nut:'锁紧螺母',washer:'垫圈',base:'主轴'}, hero:'主轴', heroSub:'总成'},
-  ja:{share:'セットを持ち帰る',shareHint:'スマートフォンでコードを読み取ると、セットがそのまま開き、共有できます。',styleMat:'質感',styleDraw:'図面',fsBtn:'全画面',wheelsBtn:'ホイール',removed:'セットから外しました',up:'上へ',down:'下へ',compose:'あなたのセットを組む',show:'ショー',caps:[['Diamant · 1975年創業','Around your Edges'],['ひとつのアーバー','あなただけのセット'],['図面どおりのプロファイル','断面がエッジを語る'],['Made in Italy','特許取得'],['セグメントホイール','同じアーバー、別のセット'],['精密','すべてのプロファイルが定位置に']],empty:'空のセット · カタログからホイールをここへドラッグ、またはタップ',del:'削除',clear:'すべて外す',name:'日本語',seg:' セグ',explode:'分解',section:'断面',spin:'回転',reset:'表示',sectionOn:'プロファイル断面',hint:'ドラッグで回転 · ホイールをタップで変更',
+  ja:{pickReplace:'交換するホイールをタップ',replaced:(a,b)=>`${a} を ${b} に交換`,share:'セットを持ち帰る',shareHint:'スマートフォンでコードを読み取ると、セットがそのまま開き、共有できます。',styleMat:'質感',styleDraw:'図面',fsBtn:'全画面',wheelsBtn:'ホイール',removed:'セットから外しました',up:'上へ',down:'下へ',compose:'あなたのセットを組む',show:'ショー',caps:[['Diamant · 1975年創業','Around your Edges'],['ひとつのアーバー','あなただけのセット'],['図面どおりのプロファイル','断面がエッジを語る'],['Made in Italy','特許取得'],['セグメントホイール','同じアーバー、別のセット'],['精密','すべてのプロファイルが定位置に']],empty:'空のセット · カタログからホイールをここへドラッグ、またはタップ',del:'削除',clear:'すべて外す',name:'日本語',seg:' セグ',explode:'分解',section:'断面',spin:'回転',reset:'表示',sectionOn:'プロファイル断面',hint:'ドラッグで回転 · ホイールをタップで変更',
       stackEy:'アーバー一式',stackTitle:'ホイールを組む',shuffle:'シャッフル',add:'追加',presets:'ここから始める',
       pTagli:'スリット付きセット',pSettori:'セグメントセット',remove:'セットから外す',cancel:'キャンセル',addThis:'セットに追加',
       pickPos:n=>`上から ${n} 番目`,pickTitle:'ホイールを選ぶ',addEy:'新しいホイールを最上段に',
@@ -514,7 +525,7 @@ const UI = {
       sp:{d:'直径',t:'厚さ',b:'穴径',rim:'ダイヤ層',prof:'プロファイル',fix:'固定'},
       gola:d=>`90° V 溝、深さ ${d} mm`,fix:'穴 6 個 Ø 6.5',
       parts:{nut:'締付ナット',washer:'ワッシャー',base:'アーバー'}, hero:'アーバー', heroSub:'一式'},
-  nl:{share:'Neem de set mee',shareHint:'Scan de code met je telefoon: de set opent daar, klaar om te delen.',styleMat:'Materiaal',styleDraw:'Tekening',fsBtn:'Scherm',wheelsBtn:'Schijven',removed:'uit de set gehaald',up:'Omhoog',down:'Omlaag',compose:'Stel je set samen',show:'Show',caps:[['Diamant · sinds 1975','Around your Edges'],['Eén opname','Jouw set op maat'],['Profielen naar tekening','De doorsnede toont de rand'],['Made in Italy','Gepatenteerd'],['Segmentschijven','Zelfde opname, andere set'],['Precisie','Elk profiel op zijn plaats']],empty:'Lege set · sleep hier een schijf uit de catalogus, of tik erop',del:'Verwijderen',clear:'Leegmaken',name:'Nederlands',seg:' segm.',explode:'Exploderen',section:'Doorsnede',spin:'Draaien',reset:'Beeld',sectionOn:'Doorsnede door het profiel',hint:'Tik of sleep een schijf uit de catalogus om te monteren · Dubbel tikken voor de fiche',
+  nl:{pickReplace:'Tik op de schijf die je wilt vervangen',replaced:(a,b)=>`${a} vervangen door ${b}`,share:'Neem de set mee',shareHint:'Scan de code met je telefoon: de set opent daar, klaar om te delen.',styleMat:'Materiaal',styleDraw:'Tekening',fsBtn:'Scherm',wheelsBtn:'Schijven',removed:'uit de set gehaald',up:'Omhoog',down:'Omlaag',compose:'Stel je set samen',show:'Show',caps:[['Diamant · sinds 1975','Around your Edges'],['Eén opname','Jouw set op maat'],['Profielen naar tekening','De doorsnede toont de rand'],['Made in Italy','Gepatenteerd'],['Segmentschijven','Zelfde opname, andere set'],['Precisie','Elk profiel op zijn plaats']],empty:'Lege set · sleep hier een schijf uit de catalogus, of tik erop',del:'Verwijderen',clear:'Leegmaken',name:'Nederlands',seg:' segm.',explode:'Exploderen',section:'Doorsnede',spin:'Draaien',reset:'Beeld',sectionOn:'Doorsnede door het profiel',hint:'Tik of sleep een schijf uit de catalogus om te monteren · Dubbel tikken voor de fiche',
       stackEy:'Complete opname',stackTitle:'Stel de set samen',shuffle:'Schudden',add:'Toevoegen',presets:'Begin met',
       pTagli:'Set met sleuven',pSettori:'Set met segmenten',remove:'Uit de set halen',cancel:'Annuleren',addThis:'Aan de set toevoegen',
       pickPos:n=>`Positie ${n} van boven`,pickTitle:'Kies een schijf',addEy:'Nieuwe schijf bovenop de set',
@@ -525,7 +536,7 @@ const UI = {
       sp:{d:'Diameter',t:'Dikte',b:'Boring',rim:'Rand',prof:'Profiel',fix:'Bevestiging'},
       gola:d=>`V-groef 90°, ${d} mm diep`,fix:'6 gaten Ø 6,5',
       parts:{nut:'Spanmoer',washer:'Sluitring',base:'Opname'}, hero:'Opname', heroSub:'samenstel'},
-  pl:{share:'Zabierz zestaw ze sobą',shareHint:'Zeskanuj kod telefonem: zestaw otworzy się tam, gotowy do udostępnienia.',styleMat:'Materiał',styleDraw:'Rysunek',fsBtn:'Ekran',wheelsBtn:'Tarcze',removed:'usunięta z zestawu',up:'W górę',down:'W dół',compose:'Złóż swój zestaw',show:'Pokaz',caps:[['Diamant · od 1975','Around your Edges'],['Jeden trzpień','Twój zestaw na miarę'],['Profile według rysunku','Przekrój pokazuje krawędź'],['Made in Italy','Opatentowane'],['Tarcze segmentowe','Ten sam trzpień, inny zestaw'],['Precyzja','Każdy profil na swoim miejscu']],empty:'Pusty zestaw · przeciągnij tu tarczę z katalogu albo ją dotknij',del:'Usuń',clear:'Wyczyść',name:'Polski',seg:' segm.',explode:'Rozsuń',section:'Przekrój',spin:'Obroty',reset:'Widok',sectionOn:'Przekrój przez profil',hint:'Dotknij lub przeciągnij tarczę z katalogu, aby ją zamontować · Podwójne dotknięcie: karta',
+  pl:{pickReplace:'Dotknij tarczę do wymiany',replaced:(a,b)=>`${a} zastąpiona przez ${b}`,share:'Zabierz zestaw ze sobą',shareHint:'Zeskanuj kod telefonem: zestaw otworzy się tam, gotowy do udostępnienia.',styleMat:'Materiał',styleDraw:'Rysunek',fsBtn:'Ekran',wheelsBtn:'Tarcze',removed:'usunięta z zestawu',up:'W górę',down:'W dół',compose:'Złóż swój zestaw',show:'Pokaz',caps:[['Diamant · od 1975','Around your Edges'],['Jeden trzpień','Twój zestaw na miarę'],['Profile według rysunku','Przekrój pokazuje krawędź'],['Made in Italy','Opatentowane'],['Tarcze segmentowe','Ten sam trzpień, inny zestaw'],['Precyzja','Każdy profil na swoim miejscu']],empty:'Pusty zestaw · przeciągnij tu tarczę z katalogu albo ją dotknij',del:'Usuń',clear:'Wyczyść',name:'Polski',seg:' segm.',explode:'Rozsuń',section:'Przekrój',spin:'Obroty',reset:'Widok',sectionOn:'Przekrój przez profil',hint:'Dotknij lub przeciągnij tarczę z katalogu, aby ją zamontować · Podwójne dotknięcie: karta',
       stackEy:'Kompletny trzpień',stackTitle:'Złóż zestaw',shuffle:'Przetasuj',add:'Dodaj',presets:'Zacznij od',
       pTagli:'Zestaw nacinany',pSettori:'Zestaw segmentowy',remove:'Usuń z zestawu',cancel:'Anuluj',addThis:'Dodaj do zestawu',
       pickPos:n=>`Pozycja ${n} od góry`,pickTitle:'Wybierz tarczę',addEy:'Nowa tarcza na górze zestawu',
@@ -536,7 +547,7 @@ const UI = {
       sp:{d:'Średnica',t:'Grubość',b:'Otwór',rim:'Wieniec',prof:'Profil',fix:'Mocowanie'},
       gola:d=>`Rowek V 90°, gł. ${d} mm`,fix:'6 otworów Ø 6,5',
       parts:{nut:'Nakrętka mocująca',washer:'Podkładka',base:'Trzpień'}, hero:'Trzpień', heroSub:'zespół'},
-  sv:{share:'Ta med dig setet',shareHint:'Skanna koden med mobilen: setet öppnas där, redo att delas.',styleMat:'Material',styleDraw:'Ritning',fsBtn:'Skärm',wheelsBtn:'Skivor',removed:'borttagen från setet',up:'Upp',down:'Ned',compose:'Bygg ditt set',show:'Show',caps:[['Diamant · sedan 1975','Around your Edges'],['En hållare','Ditt set, på ditt sätt'],['Profiler enligt ritning','Snittet visar kanten'],['Made in Italy','Patenterade'],['Segmentskivor','Samma hållare, annat set'],['Precision','Varje profil på sin plats']],empty:'Tomt set · dra hit en skiva från katalogen eller tryck på en',del:'Ta bort',clear:'Töm',name:'Svenska',seg:' segm.',explode:'Sprängvy',section:'Snitt',spin:'Rotera',reset:'Vy',sectionOn:'Snitt genom profilen',hint:'Tryck eller dra en skiva från katalogen för att montera · Dubbeltryck för bladet',
+  sv:{pickReplace:'Tryck på skivan som ska bytas',replaced:(a,b)=>`${a} ersatt av ${b}`,share:'Ta med dig setet',shareHint:'Skanna koden med mobilen: setet öppnas där, redo att delas.',styleMat:'Material',styleDraw:'Ritning',fsBtn:'Skärm',wheelsBtn:'Skivor',removed:'borttagen från setet',up:'Upp',down:'Ned',compose:'Bygg ditt set',show:'Show',caps:[['Diamant · sedan 1975','Around your Edges'],['En hållare','Ditt set, på ditt sätt'],['Profiler enligt ritning','Snittet visar kanten'],['Made in Italy','Patenterade'],['Segmentskivor','Samma hållare, annat set'],['Precision','Varje profil på sin plats']],empty:'Tomt set · dra hit en skiva från katalogen eller tryck på en',del:'Ta bort',clear:'Töm',name:'Svenska',seg:' segm.',explode:'Sprängvy',section:'Snitt',spin:'Rotera',reset:'Vy',sectionOn:'Snitt genom profilen',hint:'Tryck eller dra en skiva från katalogen för att montera · Dubbeltryck för bladet',
       stackEy:'Komplett hållare',stackTitle:'Bygg setet',shuffle:'Blanda',add:'Lägg till',presets:'Börja från',
       pTagli:'Slitsat set',pSettori:'Segmenterat set',remove:'Ta bort från setet',cancel:'Avbryt',addThis:'Lägg till i setet',
       pickPos:n=>`Position ${n} uppifrån`,pickTitle:'Välj en skiva',addEy:'Ny skiva överst i setet',
@@ -547,7 +558,7 @@ const UI = {
       sp:{d:'Diameter',t:'Tjocklek',b:'Hål',rim:'Krans',prof:'Profil',fix:'Infästning'},
       gola:d=>`V-spår 90°, ${d} mm djupt`,fix:'6 hål Ø 6,5',
       parts:{nut:'Spännmutter',washer:'Bricka',base:'Hållare'}, hero:'Hållare', heroSub:'enhet'},
-  ko:{share:'세트 가져가기',shareHint:'휴대폰으로 코드를 스캔하면 세트가 열리고 바로 공유할 수 있습니다.',styleMat:'재질',styleDraw:'도면',fsBtn:'전체 화면',wheelsBtn:'휠',removed:'세트에서 제거됨',up:'위로',down:'아래로',compose:'나만의 세트 구성',show:'쇼',caps:[['Diamant · 1975년부터','Around your Edges'],['하나의 아버','맞춤 세트'],['도면 그대로의 프로파일','단면이 엣지를 말해줍니다'],['Made in Italy','특허 취득'],['세그먼트 휠','같은 아버, 다른 세트'],['정밀','모든 프로파일이 제자리에']],empty:'빈 세트 · 카탈로그에서 휠을 끌어오거나 탭하세요',del:'삭제',clear:'비우기',name:'한국어',seg:' 세그',explode:'분해',section:'단면',spin:'회전',reset:'보기',sectionOn:'프로파일 단면',hint:'카탈로그의 휠을 탭하거나 끌어서 장착 · 두 번 탭하면 상세',
+  ko:{pickReplace:'교체할 휠을 탭하세요',replaced:(a,b)=>`${a} → ${b} 교체됨`,share:'세트 가져가기',shareHint:'휴대폰으로 코드를 스캔하면 세트가 열리고 바로 공유할 수 있습니다.',styleMat:'재질',styleDraw:'도면',fsBtn:'전체 화면',wheelsBtn:'휠',removed:'세트에서 제거됨',up:'위로',down:'아래로',compose:'나만의 세트 구성',show:'쇼',caps:[['Diamant · 1975년부터','Around your Edges'],['하나의 아버','맞춤 세트'],['도면 그대로의 프로파일','단면이 엣지를 말해줍니다'],['Made in Italy','특허 취득'],['세그먼트 휠','같은 아버, 다른 세트'],['정밀','모든 프로파일이 제자리에']],empty:'빈 세트 · 카탈로그에서 휠을 끌어오거나 탭하세요',del:'삭제',clear:'비우기',name:'한국어',seg:' 세그',explode:'분해',section:'단면',spin:'회전',reset:'보기',sectionOn:'프로파일 단면',hint:'카탈로그의 휠을 탭하거나 끌어서 장착 · 두 번 탭하면 상세',
       stackEy:'완성된 아버',stackTitle:'세트 구성',shuffle:'섞기',add:'추가',presets:'기본 세트',
       pTagli:'슬롯 세트',pSettori:'세그먼트 세트',remove:'세트에서 제거',cancel:'취소',addThis:'세트에 추가',
       pickPos:n=>`위에서 ${n}번째`,pickTitle:'휠 선택',addEy:'세트 맨 위에 새 휠',
@@ -558,7 +569,7 @@ const UI = {
       sp:{d:'직경',t:'두께',b:'내경',rim:'림',prof:'프로파일',fix:'고정'},
       gola:d=>`90° V 홈, 깊이 ${d} mm`,fix:'구멍 6개 Ø 6.5',
       parts:{nut:'클램핑 너트',washer:'와셔',base:'아버'}, hero:'아버', heroSub:'조립'},
-  el:{share:'Πάρε το σετ μαζί σου',shareHint:'Σκάναρε τον κωδικό με το κινητό: το σετ ανοίγει εκεί, έτοιμο για κοινοποίηση.',styleMat:'Υλικό',styleDraw:'Σχέδιο',fsBtn:'Οθόνη',wheelsBtn:'Τροχοί',removed:'αφαιρέθηκε από το σετ',up:'Πάνω',down:'Κάτω',compose:'Φτιάξε το σετ σου',show:'Show',caps:[['Diamant · από το 1975','Around your Edges'],['Ένας άξονας','Το σετ στα μέτρα σου'],['Προφίλ κατά σχέδιο','Η τομή δείχνει την ακμή'],['Made in Italy','Κατοχυρωμένα'],['Τροχοί τμημάτων','Ίδιος άξονας, άλλο σετ'],['Ακρίβεια','Κάθε προφίλ στη θέση του']],empty:'Άδειο σετ · σύρε εδώ έναν τροχό από τον κατάλογο ή άγγιξέ τον',del:'Διαγραφή',clear:'Άδειασμα',name:'Ελληνικά',seg:' τμημ.',explode:'Ανάπτυγμα',section:'Τομή',spin:'Περιστροφή',reset:'Προβολή',sectionOn:'Τομή στο προφίλ',hint:'Άγγιξε ή σύρε έναν τροχό από τον κατάλογο για τοποθέτηση · Διπλό άγγιγμα για την καρτέλα',
+  el:{pickReplace:'Άγγιξε τον τροχό προς αντικατάσταση',replaced:(a,b)=>`${a} αντικαταστάθηκε από ${b}`,share:'Πάρε το σετ μαζί σου',shareHint:'Σκάναρε τον κωδικό με το κινητό: το σετ ανοίγει εκεί, έτοιμο για κοινοποίηση.',styleMat:'Υλικό',styleDraw:'Σχέδιο',fsBtn:'Οθόνη',wheelsBtn:'Τροχοί',removed:'αφαιρέθηκε από το σετ',up:'Πάνω',down:'Κάτω',compose:'Φτιάξε το σετ σου',show:'Show',caps:[['Diamant · από το 1975','Around your Edges'],['Ένας άξονας','Το σετ στα μέτρα σου'],['Προφίλ κατά σχέδιο','Η τομή δείχνει την ακμή'],['Made in Italy','Κατοχυρωμένα'],['Τροχοί τμημάτων','Ίδιος άξονας, άλλο σετ'],['Ακρίβεια','Κάθε προφίλ στη θέση του']],empty:'Άδειο σετ · σύρε εδώ έναν τροχό από τον κατάλογο ή άγγιξέ τον',del:'Διαγραφή',clear:'Άδειασμα',name:'Ελληνικά',seg:' τμημ.',explode:'Ανάπτυγμα',section:'Τομή',spin:'Περιστροφή',reset:'Προβολή',sectionOn:'Τομή στο προφίλ',hint:'Άγγιξε ή σύρε έναν τροχό από τον κατάλογο για τοποθέτηση · Διπλό άγγιγμα για την καρτέλα',
       stackEy:'Πλήρης άξονας',stackTitle:'Φτιάξε το σετ',shuffle:'Ανακάτεμα',add:'Προσθήκη',presets:'Ξεκίνα από',
       pTagli:'Σετ με εγκοπές',pSettori:'Σετ τμημάτων',remove:'Αφαίρεση από το σετ',cancel:'Άκυρο',addThis:'Προσθήκη στο σετ',
       pickPos:n=>`Θέση ${n} από πάνω`,pickTitle:'Διάλεξε τροχό',addEy:'Νέος τροχός στην κορυφή',
@@ -633,7 +644,7 @@ const M = {
   bronze: patch(new THREE.MeshStandardMaterial({color:0xc89d5f, metalness:.85, roughness:.34, bumpMap:tex(gTurn,1,1), bumpScale:.4})),
   brass:  patch(new THREE.MeshStandardMaterial({color:0xd9b866, metalness:1, roughness:.24})),
   bond:   patch(new THREE.MeshStandardMaterial({color:0xb5956a, metalness:.55, roughness:.58, bumpMap:tex(gTurn,1,1), bumpScale:.5})),
-  resin:  patch(new THREE.MeshStandardMaterial({color:0x6a1e2b, metalness:0, roughness:.88, roughnessMap:tex(gCoarse,8,8), bumpMap:tex(gCoarse,8,8), bumpScale:.6})),
+  resin:  patch(new THREE.MeshStandardMaterial({color:0xd49a94, metalness:0, roughness:.97, roughnessMap:tex(gCoarse,14,14), bumpMap:tex(gCoarse,14,14), bumpScale:1.6})),   // polishing wheel: rosy, porous bond
   darkFlat: new THREE.MeshStandardMaterial({color:0x15181d, metalness:.4, roughness:.8, side:THREE.DoubleSide, polygonOffset:true, polygonOffsetFactor:-2})
 };
 const capCache = new Map();
@@ -806,6 +817,11 @@ function buildBase100(){   // ISO 40: pull stud, 7:24 taper, V-flange with groov
   g.add(lathe([[0,-108],[7.8,-108],[8.5,-107],[8.5,-101],[5,-99],[5,-93],[12.4,-93],[22.2,-25],[31.75,-25],[31.75,-18],[28,-15.5],[28,-10],[31.75,-7.5],[31.75,-6],[25,-6],[25,0],[0,0]], M.steel));   // collar Ø50, then the plain Ø22 shaft
   return g;
 }
+function buildBase150(){   // Lisec-style arbor: HSK 50 E hollow taper (1:10, 25 long, Ø38 at the flange), Ø50 flange with gripper groove, collar, then the Ø35 spigot
+  const g = new THREE.Group();
+  g.add(lathe([[0,-22],[13,-22],[13,-41],[16.8,-41],[19,-16],[25,-16],[25,-12.5],[23,-11],[25,-9.5],[25,-6],[22,-6],[22,0],[0,0]], M.steel));
+  return g;
+}
 function buildWasher100(){ return lathe([[11.4,0],[14.5,0],[14.5,3.2],[13.7,4],[11.4,4]], M.steel); }
 function buildNut100(){   // four-lobe clamping nut, as on the real ISO 40 arbor
   const g = new THREE.Group();
@@ -839,7 +855,7 @@ const mk = (type, locked = false) => ({uid: uidSeq++, type, locked});
 const state = {lang:'it', mode:'stack', single:'V33', stack:[], sel:null, explode:false, section:false, spin:false, cone:'200', draw:false};
 try { const c = localStorage.getItem('diamant-cone'); if (CONE[c]) state.cone = c; } catch(e){}
 SPACE = CONE[state.cone].space;
-const stackKey = () => state.cone === '100' ? 'diamant-stack-100' : 'diamant-stack-v2';
+const stackKey = () => state.cone === '200' ? 'diamant-stack-v2' : 'diamant-stack-' + state.cone;
 function loadStack(){
   try { const s = JSON.parse(localStorage.getItem(stackKey()));
     if (Array.isArray(s) && s.length <= MAX_WHEELS && s.every(x => WHEELS[x.type] && (!WHEELS[x.type].only || WHEELS[x.type].only === state.cone))) return s.map(x => mk(x.type, !!x.locked)); } catch(e){}
@@ -885,19 +901,21 @@ const shadowTex = (() => { const c = document.createElement('canvas'); c.width =
 const shadow = new THREE.Mesh(new THREE.PlaneGeometry(1,1), new THREE.MeshBasicMaterial({map:shadowTex, transparent:true, depthWrite:false}));
 shadow.rotation.x = -PI/2; scene.add(shadow);
 const halo = new THREE.Mesh(new THREE.TorusGeometry(107, .9, 8, 180), new THREE.MeshBasicMaterial({color:0x8fb0ee, transparent:true}));
+const ringMat = new THREE.MeshBasicMaterial({color:0xf0b35a, transparent:true}), rings = [];   // swap candidates
+function ringAt(i, y, r, op){ let m = rings[i]; if (!m){ m = new THREE.Mesh(new THREE.TorusGeometry(1, .011, 8, 180), ringMat); m.rotation.x = PI/2; rings[i] = m; spin.add(m); } m.visible = true; m.position.y = y; m.scale.set(r, r, r); ringMat.opacity = op; return m; }
 halo.rotation.x = PI/2;
 
 const W = new Map();           // uid -> {g, type, y, base, kb}
 let base = null, shaft = null, shaftH = -1, washer = null, nut = null, single = null;
 let washerY = 0, viewC = 0, viewR = 1.2, viewHH = .4;
 function disposeTree(o){ o.traverse(c => { if (c.geometry && c.geometry !== halo.geometry) c.geometry.dispose(); }); }
-function clearSpin(){ [...spin.children].forEach(c => { if (c === axisLine) return; spin.remove(c); if (c !== halo) disposeTree(c); }); W.clear(); base = shaft = washer = nut = single = null; shaftH = -1; }
+function clearSpin(){ setRepl(null); rings.length = 0; [...spin.children].forEach(c => { if (c === axisLine) return; spin.remove(c); if (c !== halo && !rings.includes(c)) disposeTree(c); }); W.clear(); base = shaft = washer = nut = single = null; shaftH = -1; }
 
 function enterMode(mode, instant){
   state.mode = mode; clearSpin(); spin.rotation.y = 0;
   if (mode === 'stack'){
     const c100 = state.cone === '100';
-    base = c100 ? buildBase100() : buildBase(); washer = c100 ? buildWasher100() : buildWasher(); nut = c100 ? buildNut100() : buildNut(); spin.add(base, washer, nut, halo);
+    base = c100 ? buildBase100() : state.cone === '150' ? buildBase150() : buildBase(); washer = c100 ? buildWasher100() : buildWasher(); nut = c100 ? buildNut100() : buildNut(); spin.add(base, washer, nut, halo);
     halo.scale.setScalar(cone().R / 100);
     syncStack(instant !== false);
   } else {
@@ -906,7 +924,7 @@ function enterMode(mode, instant){
   }
   $('t-explode').setAttribute('aria-disabled', mode !== 'stack');
   $('p-stack').hidden = mode !== 'stack'; $('p-single').hidden = mode !== 'single';
-  document.querySelectorAll('.card').forEach(c => c.setAttribute('aria-pressed', mode === 'stack' ? c.dataset.k === 'stack' + state.cone : c.dataset.k === state.single));
+  document.querySelectorAll('.card').forEach(c => c.setAttribute('aria-pressed', mode === 'single' && c.dataset.k === state.single));
   renderSingle(); buildLabels();
 }
 function syncStack(instant){
@@ -942,7 +960,7 @@ function renderStack(){
   if (!st.length){ list.innerHTML = `<li class="empty" id="empty">${U.empty}</li>`; }
   else list.innerHTML = st.map((s, i) => {
     const w = WHEELS[s.type];
-    return `<li class="row glass${s.locked ? ' locked' : ''}${state.sel === s.uid ? ' sel' : ''}${drag && drag.uid === s.uid ? ' drag' : ''}" data-uid="${s.uid}">
+    return `<li class="row glass${s.locked ? ' locked' : ''}${state.sel === s.uid ? ' sel' : ''}${drag && drag.uid === s.uid ? ' drag' : ''}${repl ? (canRepl(s.uid, repl.k) ? ' cand' : ' dim') : ''}" data-uid="${s.uid}">
       <span class="grip" aria-label="${U.move}"><span class="num">${String(i+1).padStart(2,'0')}</span>${ICON.grip}</span>
       <img src="${thumbs[state.cone][s.type] || ''}" alt="">
       <span class="nm"><b>${code(s.type)}</b><small>${tOf(s.type)} mm</small></span>
@@ -953,7 +971,7 @@ function renderStack(){
 }
 function renderSingle(){
   const U = T(), w = WHEELS[state.single], el = $('p-single');
-  $('w-kind').textContent = U.kind[w.kind]; $('w-name').textContent = state.lang === 'it' ? w.title : (w.only === '100' ? 'Ø100 · ' + code(state.single) : 'D200 ' + code(state.single));
+  $('w-kind').textContent = U.kind[w.kind]; $('w-name').textContent = state.lang === 'it' ? w.title.replace('D200', 'D' + cone().R*2) : (w.only === '100' ? 'Ø100 · ' + code(state.single) : 'D' + cone().R*2 + ' ' + code(state.single));
   const rows = [[U.sp.d,`Ø ${cone().R*2} mm`],[U.sp.t,`${tOf(state.single)} mm`],[U.sp.b,`Ø ${cone().bore*2} mm`]];
   if (w.kind === 'spacer') rows[0][1] = `Ø ${cone().bore*2 + 12} mm`;
   if (w.prof === 'v') rows.push([U.sp.prof, U.gola(w.d)]); else if (w.prof) rows.push([U.sp.prof, w.code || state.single]);
@@ -968,10 +986,8 @@ function renderUI(){
   $('l-cur').textContent = state.lang.toUpperCase(); renderLangMenu();
   document.querySelectorAll('[data-tt]').forEach(el => el.setAttribute('aria-label', U[el.dataset.tt] || ''));
   document.documentElement.lang = state.lang;
-  document.querySelectorAll('.card').forEach(c => {
-    if (c.dataset.k.startsWith('stack')){ const cc = CONE[c.dataset.k.slice(5)]; c.querySelector('b').textContent = `${U.hero} ${cc.label}`; c.querySelector('small').textContent = cc.sub; }
-    else { c.querySelector('b').textContent = code(c.dataset.k); c.querySelector('small').textContent = `${tOf(c.dataset.k)} mm`; }
-  });
+  document.querySelectorAll('.card').forEach(c => { c.querySelector('b').textContent = code(c.dataset.k); c.querySelector('small').textContent = `${tOf(c.dataset.k)} mm`; });
+  document.querySelectorAll('#cones button').forEach(b => { const cc = CONE[b.dataset.cone]; b.querySelector('b').textContent = cc.label; b.querySelector('small').textContent = cc.sub; b.setAttribute('aria-pressed', b.dataset.cone === state.cone); });
   renderStack(); renderSingle(); buildLabels();
   if (!$('sheet').hidden) openSheet(sheetCtx);
 }
@@ -986,6 +1002,7 @@ const list = $('list');
 list.addEventListener('click', e => {
   if (clickBlock){ clickBlock = false; return; }
   const row = e.target.closest('.row'); if (!row) return; const uid = +row.dataset.uid, s = state.stack.find(x => x.uid === uid);
+  if (repl){ if (canRepl(uid, repl.k)) doReplace(uid, repl.k); return; }
   if (e.target.closest('.lk')){ s.locked = !s.locked; syncStack(); return; }
   if (e.target.closest('.del')){ state.stack = state.stack.filter(x => x.uid !== uid); if (state.sel === uid) state.sel = null; syncStack(); return; }
   if (state.sel === uid){ openSheet({mode:'replace', uid}); return; }
@@ -1171,18 +1188,21 @@ const endStage = e => {
   if (drag3d && e.pointerId === drag3d.id){
     const o = W.get(drag3d.uid);
     if (drag3d.out && e.type !== 'pointercancel' && o){ const s = state.stack.find(x => x.uid === drag3d.uid); o.vanish = true; state.stack = state.stack.filter(x => x.uid !== drag3d.uid); if (state.sel === drag3d.uid) state.sel = null; syncStack(); toast(code(s.type) + ' ' + T().removed); }
-    else if (o) o.outX = 0;
-    drag3d = null; controls.enabled = true; down = null; return; }
+    drag3d = null; controls.enabled = true; down = null; return; }   // not pulled off: o.outX stays and eases back to the axis in the frame loop
   if (!down || e.type === 'pointercancel') { down = null; return; }
   const dx = e.clientX - down.x, dy = e.clientY - down.y, quick = performance.now() - down.t < 450; down = null;
   if (dx*dx + dy*dy > 64 || !quick || state.mode !== 'stack') return;
   const uid = wheelAt(e.clientX, e.clientY);
   const nowT = performance.now(); if (nowT - lastTap < 320){ lastTap = 0; resetView(); return; } lastTap = nowT;
+  if (repl){ if (uid && canRepl(uid, repl.k)) doReplace(uid, repl.k); else if (!uid) setRepl(null); return; }
   if (!uid){ if (state.sel){ state.sel = null; renderStack(); } return; }
   select(uid);
 };
 let lastTap = 0;
 canvas.addEventListener('pointerup', endStage); canvas.addEventListener('pointercancel', endStage);
+canvas.addEventListener('contextmenu', e => e.preventDefault());   // iOS long-press must not cancel the pointer
+const abortGestures = () => { if (drag3d){ const o = W.get(drag3d.uid); drag3d = null; controls.enabled = true; down = null; } clearTimeout(holdT); if (pick){ pick = null; ghost.hidden = true; $('app').classList.remove('dropping'); } };
+addEventListener('blur', abortGestures); document.addEventListener('visibilitychange', () => { if (document.visibilityState !== 'visible') abortGestures(); });
 
 /* ---- drag a wheel from the catalogue strip onto the arbor ---- */
 const ghost = document.createElement('div'); ghost.className = 'dragghost'; ghost.hidden = true; ghost.innerHTML = '<img alt="">'; document.body.appendChild(ghost);
@@ -1197,7 +1217,6 @@ addEventListener('pointermove', e => {
   if (!pick.on){
     const dx = e.clientX - pick.x, dy = e.clientY - pick.y;
     if (Math.abs(dy) < 12 || Math.abs(dy) < Math.abs(dx)) return;          // sideways = scroll the strip
-    if (!fits(tOf(pick.k))){ toast(T().full); pick = null; return; }
     pick.on = true; cardBlock = true; try { pick.el.setPointerCapture(e.pointerId); } catch(x){}
     if (state.mode !== 'stack'){ enterMode('stack', true); flyHome(); }
     setTool('explode', false); setTool('section', false);
@@ -1211,7 +1230,13 @@ addEventListener('pointermove', e => {
   if (overUI){ dropSlot = -1; return; }
   const y = stageY(e.clientX, e.clientY); dropSlot = y == null ? 0 : slotAtY(y);
   if (under.closest('.panel')) dropSlot = 0;
+  pick.repl = fits(tOf(pick.k)) ? null : (y == null ? null : wheelAtHeight(y));   // no room: the wheel under the pointer gets replaced
 }, {passive:true});
+function wheelAtHeight(y){ let best = null, bd = 1e9; for (const s of state.stack){ const o = W.get(s.uid); if (!o) continue; const d = Math.abs(o.base + tOf(s.type)/2 - y); if (d < bd){ bd = d; best = s.uid; } } return best; }
+const canRepl = (uid, k) => { const s = state.stack.find(x => x.uid === uid); return !!s && !s.locked && stackH() - tOf(s.type) + tOf(k) <= SPACE; };
+function doReplace(uid, k){ const s = state.stack.find(x => x.uid === uid); if (!s) return; const old = s.type; s.type = k; state.sel = uid; setRepl(null); syncStack(); toast(T().replaced(code(old), code(k))); stat('replace:' + k); }
+let repl = null;   // tap-to-replace mode: {k}
+function setRepl(k){ repl = k ? {k} : null; $('app').classList.toggle('repl', !!repl); renderStack(); if (repl) toast(T().pickReplace); }
 const endPick = e => {
   if (!pick || e.pointerId !== pick.id) return;
   const was = pick; pick = null;
@@ -1220,6 +1245,7 @@ const endPick = e => {
   const under = document.elementFromPoint(e.clientX, e.clientY) || document.body;
   const overUI = under.closest('.strip') || under.closest('.tools') || under.closest('.top');
   if (e.type === 'pointercancel' || overUI || dropSlot < 0) return;
+  if (!fits(tOf(was.k))){ if (was.repl && canRepl(was.repl, was.k)) doReplace(was.repl, was.k); else toast(T().full); return; }
   const it = mk(was.k); state.stack.splice(Math.min(dropSlot, state.stack.length), 0, it); state.sel = it.uid; syncStack(); toast(T().added(code(was.k)));
 };
 addEventListener('pointerup', endPick); addEventListener('pointercancel', endPick);
@@ -1244,14 +1270,15 @@ function makeThumbs(){
   const shot = (obj, r, dir) => { spin.add(obj); cam.position.copy(dir).normalize().multiplyScalar(r / Math.sin(13*PI/180)); cam.lookAt(0,0,0);
     renderer.render(scene, cam); const u = canvas.toDataURL('image/png'); spin.remove(obj); disposeTree(obj); return u; };
   const keep = state.cone;
-  for (const c of ['200','100']){ state.cone = c; SPACE = CONE[c].space; out[c] = {};
-    orderFor(c).forEach(k => { const g = buildWheel(k); g.position.y = -tOf(k)/2; out[c][k] = shot(g, c === '100' ? .62 : 1.0, new THREE.Vector3(.25, .62, 1)); }); }
-  for (const c of ['200','100']){
+  const RS = {200:1.0, 150:.82, 100:.62};
+  for (const c of CONES){ state.cone = c; SPACE = CONE[c].space; out[c] = {};
+    orderFor(c).forEach(k => { const g = buildWheel(k); g.position.y = -tOf(k)/2; out[c][k] = shot(g, RS[c], new THREE.Vector3(.25, .62, 1)); }); }
+  for (const c of CONES){
     state.cone = c; SPACE = CONE[c].space;
-    const tmp = new THREE.Group(); tmp.add(c === '100' ? buildBase100() : buildBase()); let y = 0;
+    const tmp = new THREE.Group(); tmp.add(c === '100' ? buildBase100() : c === '150' ? buildBase150() : buildBase()); let y = 0;
     [...CONE[c].setA].reverse().forEach(k => { const g = buildWheel(k); g.position.y = y; y += tOf(k); tmp.add(g); });
     tmp.add(buildShaft(y)); const ws = c === '100' ? buildWasher100() : buildWasher(); ws.position.y = y; const nt = c === '100' ? buildNut100() : buildNut(); nt.position.y = y; tmp.add(ws, nt);
-    tmp.position.y = -(y + 17 + CONE[c].yMin)/2; out['stack' + c] = shot(tmp, c === '100' ? 1.15 : 1.25, new THREE.Vector3(.6, .45, .7));
+    tmp.position.y = -(y + 17 + CONE[c].yMin)/2; out['stack' + c] = shot(tmp, c === '100' ? 1.15 : c === '150' ? 1.2 : 1.25, new THREE.Vector3(.6, .45, .7));
   }
   state.cone = keep; SPACE = CONE[keep].space;
   shadow.visible = true; renderer.setPixelRatio(pr);
@@ -1330,10 +1357,10 @@ function chapter(c, set, capIn, capOut){
   EV.push([tt, () => { nutAside = false; caption(-1); }]);
   tt += 1.5;
 }
-function buildScript(){ EV = []; tt = 0; chapter('200', CONE['200'].setA, 1, 0); chapter('100', CONE['100'].setA, 2, 5); chapter('200', CONE['200'].setB, 4, 0); chapter('100', CONE['100'].setB, 2, 5); SHOW_LEN = tt + 1; }
+function buildScript(){ EV = []; tt = 0; chapter('200', CONE['200'].setA, 1, 0); chapter('150', CONE['150'].setA, 2, 5); chapter('100', CONE['100'].setA, 2, 0); chapter('200', CONE['200'].setB, 4, 5); chapter('150', CONE['150'].setB, 1, 0); chapter('100', CONE['100'].setB, 4, 5); SHOW_LEN = tt + 1; }
 
 let glowTarget = 0;
-window.__show = SHOW;
+window.__show = SHOW; window.__dbg = () => ({d: camera.position.distanceTo(controls.target), f: fitDist(), z: zoomRatio, hh: viewHH, R: cone().R, fly: !!camFly, orb: orbiting});
 function glowTo(v){ glowTarget = v; }
 function startShow(auto){
   if (SHOW.on) return;
@@ -1419,7 +1446,7 @@ function frameInner(now){
     const clear = SHOW.on ? (!aside ? false : washerY > H + 260) : nutX > cone().aside * .8;   // show: the nut is lifted clear above the frame
     for (const [uid, o] of W){
       if (o.vanish){ const sc = o.g.scale.x * Math.pow(.0005, dt); o.g.scale.setScalar(sc); o.g.position.y += 40*dt; if (sc < .03){ spin.remove(o.g); disposeTree(o.g); W.delete(uid); } continue; }
-      if (!drag3d || drag3d.uid !== uid){ if (o.outX){ o.outX *= Math.pow(.001, dt); if (Math.abs(o.outX) < .2) o.outX = 0; o.g.position.x = right.x * o.outX; o.g.position.z = right.z * o.outX; } }
+      if (!drag3d || drag3d.uid !== uid){ if (o.outX || o.g.position.x || o.g.position.z){ o.outX *= Math.pow(.001, dt); if (Math.abs(o.outX) < .2) o.outX = 0; o.g.position.x = right.x * o.outX; o.g.position.z = right.z * o.outX; } }
       if (o.leaving){ if (clear || o.y > H + 30){ o.y += (o.base - o.y) * (1 - Math.pow(.003, dt)) + 60*dt; } o.g.position.y = o.y;
         const left = o.base - o.y; if (!SHOW.on && left < 45) o.g.scale.setScalar(Math.max(.001, left / 45));                         // fades out as it goes
         if (o.y > o.base - 3){ spin.remove(o.g); disposeTree(o.g); W.delete(uid); } continue; }
@@ -1438,7 +1465,10 @@ function frameInner(now){
     yMin = cone().yMin; yMax = Math.max(H, shaftH) + 17 + ex*(n + 2.3)*GAP + (SHOW.on ? 0 : hover);
     for (const o of W.values()) if (!o.leaving && o.y > o.base + 1.5) yMax = Math.max(yMax, o.y + tOf(o.type));   // keep a wheel in flight in frame
     const so = state.sel && W.get(state.sel);
-    if (pick && pick.on && dropSlot >= 0){ let hy = 0; for (let i = n - 1; i >= dropSlot; i--) hy += WHEELS[state.stack[i].type].t; halo.visible = true; halo.position.y = hy; halo.material.opacity = .9; }
+    rings.forEach(m => m.visible = false);
+    if (repl){ let i = 0; for (const s of state.stack){ const o = W.get(s.uid); if (!o || !canRepl(s.uid, repl.k)) continue; ringAt(i++, o.g.position.y + tOf(s.type)/2, cone().R + 7, .5 + .4*Math.sin(now/220)); } }
+    else if (pick && pick.on && pick.repl){ const o = W.get(pick.repl); const s = state.stack.find(x => x.uid === pick.repl); if (o && s){ ringMat.color.set(canRepl(pick.repl, pick.k) ? 0xf0b35a : 0xe05555); ringAt(0, o.g.position.y + tOf(s.type)/2, cone().R + 7, .6 + .3*Math.sin(now/200)); } }
+    if (pick && pick.on && dropSlot >= 0 && !pick.repl){ let hy = 0; for (let i = n - 1; i >= dropSlot; i--) hy += WHEELS[state.stack[i].type].t; halo.visible = true; halo.position.y = hy; halo.material.opacity = .9; }
     else { halo.visible = !!so; if (so){ halo.position.y = so.g.position.y + tOf(so.type)/2; halo.material.opacity = .55 + .35*Math.sin(now/260); } }
   } else { yMin = 0; yMax = tOf(state.single); if (single) single.position.y = 0; }
   const c = (yMin + yMax)/2; viewC += (c - viewC) * k;
@@ -1479,18 +1509,20 @@ function frameInner(now){
 try { await Promise.race([Promise.all([document.fonts.load('600 20px Archivo'), document.fonts.load('700 20px Archivo')]), new Promise(r => setTimeout(r, 2500))]); } catch(e){}
 try { const c = JSON.parse(localStorage.getItem('diamant-thumbs')); if (c && c.build === BUILD) thumbs = c.thumbs; } catch(e){}
 if (!thumbs['200']){ thumbs = makeThumbs(); try { localStorage.setItem('diamant-thumbs', JSON.stringify({build: BUILD, thumbs})); } catch(e){} }
-$('strip').innerHTML = ['200','100'].map(c => `<button class="card hero" data-k="stack${c}"><img src="${thumbs['stack' + c]}" alt="" draggable="false"><b></b><small></small></button>`).join('') + ORDER.map(k => `<button class="card" data-k="${k}"><img src="${thumbs[state.cone][k] || ''}" alt="" draggable="false"><b></b><small></small></button>`).join('');
+$('cones').innerHTML = CONES.map(c => `<button class="glass" data-cone="${c}" aria-pressed="${c === state.cone}"><img src="${thumbs['stack' + c]}" alt="" draggable="false"><span><b></b><small></small></span></button>`).join('');
+$('cones').addEventListener('click', e => { const b = e.target.closest('[data-cone]'); if (!b) return; if (b.dataset.cone !== state.cone) switchCone(b.dataset.cone); else if (state.mode !== 'stack'){ enterMode('stack', true); flyHome(); } });
+$('strip').innerHTML = '' + ORDER.map(k => `<button class="card" data-k="${k}"><img src="${thumbs[state.cone][k] || ''}" alt="" draggable="false"><b></b><small></small></button>`).join('');
 refreshCatalogue();
 /* catalogue cards: one tap drops the wheel onto the arbor, a double tap opens its sheet, a drag carries it to the arbor */
 let tapT = 0, tapK = null;
 function addFromCatalogue(k){
   if (state.mode !== 'stack'){ enterMode('stack', true); flyHome(); }
-  if (!fits(tOf(k))){ toast(T().full); return; }
-  setTool('explode', false); setTool('section', false);
+  if (!fits(tOf(k))){ if (repl && repl.k === k) setRepl(null); else if (state.stack.some(s => canRepl(s.uid, k))) setRepl(k); else toast(T().full); return; }   // full arbor: pick a wheel to swap instead
+  setRepl(null); setTool('explode', false); setTool('section', false);
   const it = mk(k); state.stack.unshift(it); state.sel = it.uid; syncStack(false); toast(T().added(code(k))); stat('add:' + k);
 }
 function switchCone(c){   // the other arbor: each arbor keeps its own set; the catalogue shows its own wheels
-  if (SHOW.on) stopShow();
+  if (SHOW.on) stopShow(); setRepl(null);
   saveStack(); state.cone = c; SPACE = CONE[c].space; stat('cone:' + c); try { localStorage.setItem('diamant-cone', c); } catch(e){}
   state.stack = loadStack(); state.sel = null;
   setTool('explode', false); setTool('section', false);
