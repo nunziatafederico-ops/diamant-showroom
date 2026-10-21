@@ -323,7 +323,7 @@ dl.specs dd{font-size:15px;font-weight:500;font-variant-numeric:tabular-nums}
   padding:12px 18px;border-radius:24px;font-size:13.5px;color:#c2cbdb;z-index:4;transition:opacity .6s;pointer-events:none;white-space:nowrap}
 .hint svg{width:22px;height:22px;stroke:var(--blue-hi);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;animation:sway 2.2s ease-in-out infinite}
 @keyframes sway{0%,100%{transform:translateX(-5px)}50%{transform:translateX(5px)}}
-.hint.off{opacity:0}
+.hint.off,#app:has(.toast.on) .hint{opacity:0}
 .capwrap{position:absolute;left:28px;top:50%;transform:translateY(-50%);width:min(40vw,620px);height:220px;z-index:8;pointer-events:none}
 .cap{position:absolute;left:0;top:50%;width:100%;text-align:left;pointer-events:none;opacity:0;transition:opacity .9s,transform .9s;transform:translateY(calc(-50% + 14px))}
 .cap.on{opacity:1;transform:translateY(-50%)}
@@ -412,6 +412,15 @@ dl.specs dd{font-size:15px;font-weight:500;font-variant-numeric:tabular-nums}
 @media (min-aspect-ratio:1/1) and (max-height:620px){ .panel{top:calc(env(safe-area-inset-top,0px) + 80px)} .panel h1{font-size:24px} .row{height:40px;flex:0 0 40px} .desc{display:none} }
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 .card[hidden],[data-preset][hidden]{display:none !important}
+/* action puck beside the selected wheel on the arbor: up / down / remove */
+.wact{position:absolute;left:0;top:0;display:flex;flex-direction:column;gap:6px;padding:6px;border-radius:30px;z-index:5;transform:translate(0,-50%);transition:opacity .18s;pointer-events:auto}
+.wact[hidden]{display:none}
+.wact button{all:unset;width:46px;height:46px;border-radius:50%;display:grid;place-items:center;cursor:pointer;color:#fff;background:rgba(255,255,255,.06);border:1px solid var(--line);touch-action:manipulation}
+.wact button:active{background:var(--blue);border-color:var(--blue-hi)}
+.wact button:disabled{opacity:.3;pointer-events:none}
+.wact button svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.wact .wx{color:#ff9a9a}
+.wact.lift{transform:translate(0,-50%) scale(1.06)}
 </style>
 
 <div id="app">
@@ -477,6 +486,7 @@ dl.specs dd{font-size:15px;font-weight:500;font-variant-numeric:tabular-nums}
   </div>
   <div class="langbar glass" id="langbar" hidden><button data-l="it">🇮🇹</button><button data-l="en">🇬🇧</button><button data-l="de">🇩🇪</button><button data-l="fr">🇫🇷</button><button data-l="es">🇪🇸</button><button data-more="1">…</button></div>
   <div class="toast" id="toast"></div>
+  <div class="wact glass" id="wact" hidden><button id="wa-up"><svg viewBox="0 0 24 24"><path d="M12 19V5m-7 7 7-7 7 7"/></svg></button><button id="wa-dn"><svg viewBox="0 0 24 24"><path d="M12 5v14m7-7-7 7-7-7"/></svg></button><button class="wx" id="wa-x"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
 
   <div class="sheet" id="sheet" hidden>
     <div class="sheet-card" role="dialog" aria-modal="true" aria-labelledby="sh-title">
@@ -505,7 +515,7 @@ dl.specs dd{font-size:15px;font-weight:500;font-variant-numeric:tabular-nums}
 import * as THREE from 'three';
 import { OrbitControls } from './vendor/OrbitControls.js';
 import { RoomEnvironment } from './vendor/RoomEnvironment.js';
-const BUILD = '20261021-131933';           // stamped by build.py
+const BUILD = '20261021-132821';           // stamped by build.py
 const CAT = {"wheels": {"V3.6": {"t": 12, "kind": "cont", "prof": "v", "d": 4, "rim": "bronze", "title": "Mola D200 V3.6"}, "V3.12": {"t": 16, "kind": "cont", "prof": "v", "d": 6, "rim": "bronze", "title": "Mola D200 V3.12"}, "V4P.2": {"t": 12, "kind": "tagli", "prof": "p", "title": "Mola D200 V4P.2"}, "V33": {"t": 12, "kind": "tagli", "prof": "pencil", "L": 1, "title": "Mola D200 V33", "tw": 1.2, "fw": 1.4}, "V44": {"t": 14, "kind": "tagli", "prof": "pencil", "L": 1, "title": "Mola D200 V44", "tw": 2, "fw": 2}, "V55": {"t": 14, "kind": "tagli", "prof": "pencil", "L": 0.5, "title": "Mola D200 V55", "tw": 2, "fw": 3}, "V66": {"t": 18, "kind": "tagli", "prof": "pencil", "L": 0.5, "title": "Mola D200 V66", "tw": 2, "fw": 3}, "V33S": {"t": 12, "kind": "settori", "prof": "pencil", "L": 1, "code": "V33", "title": "Mola V33 a settori", "tw": 1.2, "fw": 1.4}, "V44S": {"t": 14, "kind": "settori", "prof": "pencil", "L": 1, "code": "V44", "title": "Mola V44 a settori", "tw": 2, "fw": 2}, "V55S": {"t": 14, "kind": "settori", "prof": "pencil", "L": 0.5, "code": "V55", "title": "Mola V55 a settori", "tw": 2, "fw": 3}, "V66S": {"t": 18, "kind": "settori", "prof": "pencil", "L": 0.5, "code": "V66", "title": "Mola V66 a settori", "tw": 2, "fw": 3}, "SPACER": {"t": 10, "kind": "spacer", "name": "Spacer", "title": "Spacer 10 mm", "only": "100"}, "POLISH": {"t": 20, "kind": "polish", "name": "Lucidante", "title": "Mola lucidante", "only": "100"}}, "order": ["V3.6", "V3.12", "V4P.2", "V33", "V44", "V55", "V66", "V33S", "V44S", "V55S", "V66S", "SPACER", "POLISH"], "presets": {"tagli": ["V3.6", "V3.12", "V4P.2", "V33", "V44", "V55"], "settori": ["V3.6", "V3.12", "V4P.2", "V33S", "V44S", "V55S"], "iso": ["POLISH", "SPACER", "V33S", "V3.6"]}, "maxWheels": 8, "cone": {"200": {"R": 100, "space": 80, "bore": 17.5, "tk": 1, "shaftR": 17.25, "threadR": 17.25, "yMin": -67, "aside": 185, "nutR": 37, "washerR": 47.5, "teeth": 57, "label": "Ø 200", "sub": "80 mm", "setA": ["V3.6", "V3.12", "V4P.2", "V33", "V44"], "setB": ["V3.6", "V4P.2", "V33S", "V44S", "V55S"], "tech": "HSK 80 B"}, "150": {"R": 75, "space": 70, "bore": 17.5, "tk": 1, "shaftR": 17.25, "threadR": 17.25, "yMin": -44, "aside": 160, "nutR": 37, "washerR": 47.5, "teeth": 43, "label": "Ø 150", "sub": "HSK 50 · 70 mm", "setA": ["V3.6", "V3.12", "V33", "V44"], "setB": ["V3.6", "V4P.2", "V33S", "V44S", "V55S"], "tech": "HSK 50 E"}, "100": {"R": 50, "space": 62, "bore": 11, "tk": 1, "shaftR": 10.8, "threadR": 10.8, "yMin": -110, "aside": 120, "nutR": 17, "washerR": 14.5, "teeth": 36, "label": "Ø 100", "sub": "ISO 40 · 62 mm", "setA": ["POLISH", "SPACER", "V33S", "V3.6"], "setB": ["POLISH", "V44S", "V3.12"], "tech": "ISO 40"}}, "families": [{"id": "pencil", "versions": {"tagli": ["V33", "V44", "V55", "V66"], "settori": ["V33S", "V44S", "V55S", "V66S"]}}, {"id": "v", "versions": {"cont": ["V3.6", "V3.12"]}}, {"id": "p", "versions": {"tagli": ["V4P.2"]}}, {"id": "acc", "versions": {"all": ["SPACER", "POLISH"]}, "only": "100"}]};             // catalog.json, injected by build.py — edit the JSON, not this file
 
 /* ==================================================================
@@ -1317,23 +1327,23 @@ canvas.addEventListener('pointerdown', e => {
   if (state.mode !== 'stack' || state.explode) return;
   const uid = wheelAt(e.clientX, e.clientY); if (!uid) return;
   const s = state.stack.find(x => x.uid === uid); if (!s || s.locked) return;
-  if (true) return;   // reordering happens in the list only (one gesture per action)
-  holdT = setTimeout(() => {
-    drag3d = {uid, id:e.pointerId, x0:e.clientX, out:false}; controls.enabled = false; try { canvas.setPointerCapture(e.pointerId); } catch(x){}
-    select(uid); setTool('spin', false); toast(T().move + ' · ' + code(uid && s.type));
-  }, 320);
+  const start = () => { holdT = 0; drag3d = {uid, id:e.pointerId, x0:e.clientX, y0:e.clientY, out:false, fy:null, warned:false}; controls.enabled = false; try { canvas.setPointerCapture(e.pointerId); } catch(x){}
+    const o = W.get(uid); if (o) o.g.scale.setScalar(1.04); select(uid); setTool('spin', false); };
+  if (state.sel === uid){ start(); return; }                  // already selected: the finger carries it at once
+  holdT = setTimeout(() => { start(); toast(T().move + ' · ' + code(s.type)); }, 200);   // otherwise a short press picks it up, a flick still orbits
 });
 canvas.addEventListener('pointermove', e => {
-  if (down && !drag3d && Math.hypot(e.clientX - down.x, e.clientY - down.y) > 8) clearTimeout(holdT);
+  if (down && !drag3d && Math.hypot(e.clientX - down.x, e.clientY - down.y) > 14) clearTimeout(holdT);
   if (!drag3d || e.pointerId !== drag3d.id) return;
-  // sideways = pull it off the arbor; up/down = new slot
+  // sideways = pull it off the arbor; up/down = the wheel follows the finger and takes the slot it hovers
   const o = W.get(drag3d.uid); if (!o) return;
   const dx = e.clientX - drag3d.x0, mmPx = (2 * camera.position.length() * Math.tan(camera.fov * PI / 360)) / MM / innerHeight;
-  const outX = Math.abs(dx) > 40 ? (dx - Math.sign(dx)*40) * mmPx : 0;
-  o.outX = outX; drag3d.out = Math.abs(outX) > cone().R + 10;
+  const outX = Math.abs(dx) > 48 ? (dx - Math.sign(dx)*48) * mmPx : 0;
+  o.outX = outX; drag3d.out = Math.abs(outX) > cone().R * .9;
   o.g.position.x = right.x * outX; o.g.position.z = right.z * outX;
-  if (drag3d.out) return;
+  if (drag3d.out){ if (!drag3d.warned){ drag3d.warned = true; toast(T().remove); } return; }
   const y = stageY(e.clientX, e.clientY); if (y == null) return;
+  const H = stackH(); drag3d.fy = Math.max(-tOf(o.type)/2, Math.min(H + 20, y - tOf(o.type)/2));   // the wheel rides under the finger, inside the stack's reach
   const slot = slotAtY(y, drag3d.uid), from = state.stack.findIndex(x => x.uid === drag3d.uid);
   const target = Math.min(slot, state.stack.length - 1);
   if (target !== from && !state.stack[target].locked && moveTo(drag3d.uid, target)) syncStack();
@@ -1343,6 +1353,7 @@ const endStage = e => {
   if (drag3d && e.pointerId === drag3d.id){
     const o = W.get(drag3d.uid);
     if (drag3d.out && e.type !== 'pointercancel' && o){ const s = state.stack.find(x => x.uid === drag3d.uid); o.vanish = true; state.stack = state.stack.filter(x => x.uid !== drag3d.uid); if (state.sel === drag3d.uid) state.sel = null; syncStack(); toast(code(s.type) + ' ' + T().removed); }
+    if (o) o.g.scale.setScalar(1);
     drag3d = null; controls.enabled = true; down = null; return; }   // not pulled off: o.outX stays and eases back to the axis in the frame loop
   if (!down || e.type === 'pointercancel') { down = null; return; }
   const dx = e.clientX - down.x, dy = e.clientY - down.y, quick = performance.now() - down.t < 450; down = null;
@@ -1354,6 +1365,35 @@ const endStage = e => {
   select(uid);
 };
 let lastTap = 0;
+/* the puck: three big buttons that float beside the selected wheel (up / down / remove) */
+const puck = $('wact'), puckV = new THREE.Vector3(), puckR = new THREE.Vector3();
+function placePuck(so){
+  const show = !!so && state.mode === 'stack' && !SHOW.on && !state.ro && !drag3d && !pick && !sw && !repl && !camFly;
+  if (!show){ if (!puck.hidden) puck.hidden = true; return; }
+  const s = state.stack.find(x => x.uid === state.sel); if (!s){ puck.hidden = true; return; }
+  so.g.getWorldPosition(puckV); puckV.y += tOf(s.type)/2 * MM * so.g.scale.y;
+  puckR.setFromMatrixColumn(camera.matrixWorld, 0); puckR.y = 0; puckR.normalize(); puckV.addScaledVector(puckR, -(cone().R + 6) * MM);   // left of the rim: the callouts sit on the right
+  puckV.project(camera); const r = canvas.getBoundingClientRect();
+  const pw = puck.offsetWidth || 62, ph = puck.offsetHeight || 170, top = 80, bot = r.height - dockH - 10;
+  let x = (puckV.x + 1)/2 * r.width - 14 - pw, y = (1 - puckV.y)/2 * r.height;
+  y = Math.max(top + ph/2, Math.min(bot - ph/2, y)); x = Math.max(isOpen('l') ? 300 : 44, x);
+  puck.style.transform = `translate(${x}px, ${y - ph/2}px)`;
+  const i = state.stack.indexOf(s), n = state.stack.length;
+  $('wa-up').disabled = s.locked || i <= 0 || !state.stack.slice(0, i).some(z => !z.locked);
+  $('wa-dn').disabled = s.locked || i >= n - 1 || !state.stack.slice(i + 1).some(z => !z.locked);
+  $('wa-up').setAttribute('aria-label', T().up); $('wa-dn').setAttribute('aria-label', T().down); $('wa-x').setAttribute('aria-label', T().remove);
+  if (puck.hidden) puck.hidden = false;
+}
+function nudge(dir){
+  const i = state.stack.findIndex(x => x.uid === state.sel); if (i < 0) return;
+  let j = i + dir; while (j >= 0 && j < state.stack.length && state.stack[j].locked) j += dir;
+  if (j < 0 || j >= state.stack.length) return;
+  if (moveTo(state.sel, j)) syncStack();
+}
+$('wa-up').addEventListener('click', () => nudge(-1));
+$('wa-dn').addEventListener('click', () => nudge(1));
+$('wa-x').addEventListener('click', () => { const uid = state.sel, o = W.get(uid), s = state.stack.find(x => x.uid === uid); if (!s) return; if (o) o.vanish = true; state.stack = state.stack.filter(x => x.uid !== uid); state.sel = null; syncStack(); toast(code(s.type) + ' ' + T().removed); });
+puck.addEventListener('pointerdown', e => e.stopPropagation());
 canvas.addEventListener('pointerup', endStage); canvas.addEventListener('pointercancel', endStage);
 canvas.addEventListener('contextmenu', e => e.preventDefault());
 /* three fingers on the stage: swipe left → the next arbor slides in from the right (100 → 150 → 200 → 100…), swipe right → the other way */
@@ -1405,7 +1445,7 @@ function cycleCone(dir){   // programmatic: dir -1 = next in the loop 100 → 15
   const i = CONES.indexOf(state.cone), n = CONES.length, c = CONES[(i - dir + n) % n];   // CONES = 200,150,100: left swipe moves toward index-1
   switchCone(c); lay.x = lay.tx - dir * innerWidth * .6;   // start off-screen on the side it comes from, then ease into place
 }   // iOS long-press must not cancel the pointer
-const abortGestures = () => { if (drag3d){ const o = W.get(drag3d.uid); drag3d = null; controls.enabled = true; down = null; } clearTimeout(holdT); if (pick){ pick = null; ghost.hidden = true; $('app').classList.remove('dropping'); } };
+const abortGestures = () => { if (drag3d){ const o = W.get(drag3d.uid); if (o) o.g.scale.setScalar(1); drag3d = null; controls.enabled = true; down = null; } clearTimeout(holdT); if (pick){ pick = null; ghost.hidden = true; $('app').classList.remove('dropping'); } };
 addEventListener('blur', abortGestures); document.addEventListener('visibilitychange', () => { if (document.visibilityState !== 'visible') abortGestures(); });
 
 /* ---- drag a wheel from the catalogue strip onto the arbor ---- */
@@ -1681,6 +1721,7 @@ function frameInner(now){
         const left = o.base - o.y; if (!SHOW.on && left < 45) o.g.scale.setScalar(Math.max(.001, left / 45));                         // fades out as it goes
         if (o.y > o.base - 3){ spin.remove(o.g); disposeTree(o.g); W.delete(uid); } continue; }
       if (SHOW.on && o.entering){ if (clear){ o.et = (o.et || 0) + dt; const u = Math.min(1, o.et / 1.3), ease = u*u*(3 - 2*u); o.y = o.base + 600 * (1 - ease); if (u >= 1) o.entering = false; } }
+      else if (drag3d && drag3d.uid === uid && drag3d.fy != null) o.y += (drag3d.fy - o.y) * (1 - Math.pow(.00001, dt));
       else if (!o.entering || clear) o.y += (o.base - o.y) * (1 - Math.pow(.0008, dt));
       if (o.entering){ const sc = o.g.scale.x + (1 - o.g.scale.x) * (1 - Math.pow(.0005, dt)); o.g.scale.setScalar(sc > .995 ? 1 : sc); }   // materialises on its way down
       o.g.position.y = o.y + ex*(o.kb + 1)*GAP;
@@ -1701,7 +1742,8 @@ function frameInner(now){
     else if (pick && pick.on && pick.repl){ const o = W.get(pick.repl); const s = state.stack.find(x => x.uid === pick.repl); if (o && s){ ringMat.color.set(canRepl(pick.repl, pick.k) ? 0xf0b35a : 0xe05555); ringAt(0, o.g.position.y + tOf(s.type)/2, cone().R + 7, .6 + .3*Math.sin(now/200)); } }
     if (pick && pick.on && dropSlot >= 0 && !pick.repl){ let hy = 0; for (let i = n - 1; i >= dropSlot; i--) hy += WHEELS[state.stack[i].type].t; halo.visible = true; halo.position.y = hy; halo.material.opacity = .9; }
     else { halo.visible = !!so; if (so){ halo.position.y = so.g.position.y + tOf(so.type)/2; halo.material.opacity = .55 + .35*Math.sin(now/260); } }
-  } else { yMin = 0; yMax = tOf(state.single); if (single) single.position.y = 0;
+    placePuck(so);
+  } else { placePuck(null); yMin = 0; yMax = tOf(state.single); if (single) single.position.y = 0;
     if (gal){ gal.t += dt; const u = Math.min(1, gal.t / gal.dur), e = u < .5 ? 4*u*u*u : 1 - Math.pow(-2*u + 2, 3)/2;   // ease in-out
       gal.neu.position.x = gal.dir * gal.D * (1 - e); gal.neu.scale.setScalar((gal.D ? .7 : .92) + ((gal.D ? .3 : .08)) * e); gal.neu.rotation.y = gal.dir * .9 * (1 - e);
       gal.old.position.x = -gal.dir * gal.D * e; gal.old.scale.setScalar(1 - (gal.D ? .4 : .08) * e); gal.old.rotation.y = -gal.dir * .9 * e; gal.old.position.y = gal.D ? -40 * e : 0;
