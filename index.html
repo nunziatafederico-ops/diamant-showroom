@@ -214,25 +214,26 @@ dl.specs dd{font-size:15px;font-weight:500;font-variant-numeric:tabular-nums}
 .lab .tag em{font:500 11px/1 var(--f-mono);font-style:normal;color:var(--mute);margin-left:8px;letter-spacing:.04em}
 
 /* catalogue strip */
-.dock{position:absolute;left:50%;bottom:0;transform:translateX(-50%);width:min(calc(100% - 32px),1100px);padding:0 10px calc(env(safe-area-inset-bottom,0px) + 10px);border-radius:24px 24px 0 0;border-bottom:0;display:flex;flex-direction:column;gap:6px;z-index:5;transition:opacity .3s}
+.dock{position:absolute;left:50%;bottom:0;transform:translateX(-50%);width:auto;min-width:min(420px,calc(100% - 32px));max-width:calc(100% - 32px);padding:0 12px calc(env(safe-area-inset-bottom,0px) + 8px);border-radius:24px 24px 0 0;border-bottom:0;display:flex;flex-direction:column;gap:6px;z-index:5;transition:opacity .3s}
 #app.show .dock,#app.ro .dock{display:none}
-#app:not(.open-b) .dock{transform:translate(-50%,calc(100% - 36px))}
+#app:not(.open-b) .dock{transform:translate(-50%,calc(100% - 32px))}
 #app:not(.open-b) .dock .famrow,#app:not(.open-b) .dock .sizes{pointer-events:none}
-.railb{height:36px;display:flex;align-items:center;justify-content:center;gap:10px;font:600 12px/1 var(--f-mono);letter-spacing:.24em;text-transform:uppercase;color:#dfe4ec;cursor:pointer;touch-action:none;margin:0 -10px}
+.railb{height:32px;display:flex;align-items:center;justify-content:center;gap:10px;font:600 12px/1 var(--f-mono);letter-spacing:.24em;text-transform:uppercase;color:#dfe4ec;cursor:pointer;touch-action:none;margin:0 -10px}
 .railb svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:transform .3s}
 #app.open-b .railb svg{transform:rotate(180deg)}
 .dock{transition:transform .45s cubic-bezier(.2,.7,.2,1),opacity .3s}
 #app.open-b .handle{bottom:calc(env(safe-area-inset-bottom,0px) + 194px)}
 .handle[hidden]{display:none}
 #app:not(.open-b) .panel{bottom:calc(env(safe-area-inset-bottom,0px) + 54px)}
-.dock .body{display:flex;align-items:stretch;gap:10px;padding:4px 0 0}
-.dock .strip{flex:0 0 auto;flex-direction:column;gap:4px;justify-content:center;padding-right:10px;border-right:1px solid var(--line)}
-.dock .card.famc{flex-direction:row;width:auto;padding:4px 12px 4px 6px;gap:8px;border-radius:12px;align-items:center;justify-content:flex-start}
-.dock .card.famc img{width:38px;height:28px}
+.dock .body{display:flex;align-items:stretch;gap:10px;padding:0}
+.dock .strip{flex:0 0 auto;flex-direction:column;gap:2px;justify-content:center;padding-right:10px;border-right:1px solid var(--line)}
+.dock .card.famc{flex-direction:row;width:auto;padding:3px 12px 3px 6px;gap:8px;border-radius:12px;align-items:center;justify-content:flex-start}
+.dock .card.famc img{width:34px;height:25px}
 .dock .card.famc b{font-size:12.5px;white-space:nowrap}.dock .card.famc small{display:none}
-.sizes{flex:1 1 auto;min-width:0;display:flex;align-items:center;gap:10px}
-.sizes .vrow{flex:1 1 auto;justify-content:flex-start;min-width:0;gap:8px;align-items:center}
+.sizes{flex:0 1 auto;min-width:0;display:flex;align-items:center;gap:12px}
+.sizes .vrow{flex:0 1 auto;justify-content:flex-start;min-width:0;gap:4px;align-items:center}
 .sizes .seg{flex:0 0 auto}
+.sizes .seg:empty{display:none}
 .strip{display:flex;gap:6px}
 .strip::-webkit-scrollbar{display:none}
 
@@ -251,8 +252,8 @@ dl.specs dd{font-size:15px;font-weight:500;font-variant-numeric:tabular-nums}
 .seg button[aria-pressed="true"]{background:rgba(58,104,198,.4);color:#fff}
 .vrow{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
 .vrow::-webkit-scrollbar{display:none}
-.vrow .card{width:124px;padding:4px 4px 8px}
-.vrow .card img{width:104px;height:72px}
+.vrow .card{width:112px;padding:2px 4px 6px;gap:1px}
+.vrow .card img{width:96px;height:66px}
 .vrow .card b{font-size:14px}.vrow .card small{font-size:12px}
 .card .info{position:absolute;top:4px;right:6px;width:20px;height:20px;border-radius:50%;display:grid;place-items:center;font:600 12px/1 var(--f-display);font-style:normal;color:#c2cbdb;background:rgba(143,176,238,.16);border:1px solid var(--line);cursor:pointer;z-index:2}
 .card{all:unset;flex:0 0 auto;width:100px;touch-action:pan-x;border-radius:17px;padding:5px 4px 9px;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;transition:background .25s;touch-action:manipulation;position:relative}
@@ -503,7 +504,7 @@ dl.specs dd{font-size:15px;font-weight:500;font-variant-numeric:tabular-nums}
 import * as THREE from 'three';
 import { OrbitControls } from './vendor/OrbitControls.js';
 import { RoomEnvironment } from './vendor/RoomEnvironment.js';
-const BUILD = '20261021-131232';           // stamped by build.py
+const BUILD = '20261021-131353';           // stamped by build.py
 const CAT = {"wheels": {"V3.6": {"t": 12, "kind": "cont", "prof": "v", "d": 4, "rim": "bronze", "title": "Mola D200 V3.6"}, "V3.12": {"t": 16, "kind": "cont", "prof": "v", "d": 6, "rim": "bronze", "title": "Mola D200 V3.12"}, "V4P.2": {"t": 12, "kind": "tagli", "prof": "p", "title": "Mola D200 V4P.2"}, "V33": {"t": 12, "kind": "tagli", "prof": "pencil", "L": 1, "title": "Mola D200 V33", "tw": 1.2, "fw": 1.4}, "V44": {"t": 14, "kind": "tagli", "prof": "pencil", "L": 1, "title": "Mola D200 V44", "tw": 2, "fw": 2}, "V55": {"t": 14, "kind": "tagli", "prof": "pencil", "L": 0.5, "title": "Mola D200 V55", "tw": 2, "fw": 3}, "V66": {"t": 18, "kind": "tagli", "prof": "pencil", "L": 0.5, "title": "Mola D200 V66", "tw": 2, "fw": 3}, "V33S": {"t": 12, "kind": "settori", "prof": "pencil", "L": 1, "code": "V33", "title": "Mola V33 a settori", "tw": 1.2, "fw": 1.4}, "V44S": {"t": 14, "kind": "settori", "prof": "pencil", "L": 1, "code": "V44", "title": "Mola V44 a settori", "tw": 2, "fw": 2}, "V55S": {"t": 14, "kind": "settori", "prof": "pencil", "L": 0.5, "code": "V55", "title": "Mola V55 a settori", "tw": 2, "fw": 3}, "V66S": {"t": 18, "kind": "settori", "prof": "pencil", "L": 0.5, "code": "V66", "title": "Mola V66 a settori", "tw": 2, "fw": 3}, "SPACER": {"t": 10, "kind": "spacer", "name": "Spacer", "title": "Spacer 10 mm", "only": "100"}, "POLISH": {"t": 20, "kind": "polish", "name": "Lucidante", "title": "Mola lucidante", "only": "100"}}, "order": ["V3.6", "V3.12", "V4P.2", "V33", "V44", "V55", "V66", "V33S", "V44S", "V55S", "V66S", "SPACER", "POLISH"], "presets": {"tagli": ["V3.6", "V3.12", "V4P.2", "V33", "V44", "V55"], "settori": ["V3.6", "V3.12", "V4P.2", "V33S", "V44S", "V55S"], "iso": ["POLISH", "SPACER", "V33S", "V3.6"]}, "maxWheels": 8, "cone": {"200": {"R": 100, "space": 80, "bore": 17.5, "tk": 1, "shaftR": 17.25, "threadR": 17.25, "yMin": -67, "aside": 185, "nutR": 37, "washerR": 47.5, "teeth": 57, "label": "Ø 200", "sub": "80 mm", "setA": ["V3.6", "V3.12", "V4P.2", "V33", "V44"], "setB": ["V3.6", "V4P.2", "V33S", "V44S", "V55S"], "tech": "HSK 80 B"}, "150": {"R": 75, "space": 70, "bore": 17.5, "tk": 1, "shaftR": 17.25, "threadR": 17.25, "yMin": -44, "aside": 160, "nutR": 37, "washerR": 47.5, "teeth": 43, "label": "Ø 150", "sub": "HSK 50 · 70 mm", "setA": ["V3.6", "V3.12", "V33", "V44"], "setB": ["V3.6", "V4P.2", "V33S", "V44S", "V55S"], "tech": "HSK 50 E"}, "100": {"R": 50, "space": 62, "bore": 11, "tk": 1, "shaftR": 10.8, "threadR": 10.8, "yMin": -110, "aside": 120, "nutR": 17, "washerR": 14.5, "teeth": 36, "label": "Ø 100", "sub": "ISO 40 · 62 mm", "setA": ["POLISH", "SPACER", "V33S", "V3.6"], "setB": ["POLISH", "V44S", "V3.12"], "tech": "ISO 40"}}, "families": [{"id": "pencil", "versions": {"tagli": ["V33", "V44", "V55", "V66"], "settori": ["V33S", "V44S", "V55S", "V66S"]}}, {"id": "v", "versions": {"cont": ["V3.6", "V3.12"]}}, {"id": "p", "versions": {"tagli": ["V4P.2"]}}, {"id": "acc", "versions": {"all": ["SPACER", "POLISH"]}, "only": "100"}]};             // catalog.json, injected by build.py — edit the JSON, not this file
 
 /* ==================================================================
@@ -1206,7 +1207,7 @@ function railDrag(rail, side){
     const d = side === 'l' ? e.clientX - st.x : e.clientY - st.y; if (!st.moved && Math.abs(d) < 6) return; st.moved = true;
     if (side === 'l'){ const W = $('p-stack').offsetWidth, base = st.open ? 0 : -W, x = Math.max(-W, Math.min(0, base + d));
       $('p-stack').classList.add('drag'); rail.classList.add('drag'); $('p-stack').style.transform = `translateX(${x}px)`; rail.style.left = (W + x) + 'px'; st.pos = (W + x) / W; }
-    else { const dk = $('dock'), H = dk.offsetHeight - 36, base = st.open ? 0 : H, y = Math.max(0, Math.min(H, base + d));
+    else { const dk = $('dock'), H = dk.offsetHeight - 32, base = st.open ? 0 : H, y = Math.max(0, Math.min(H, base + d));
       dk.classList.add('drag'); dk.style.transform = `translate(-50%, ${y}px)`; st.pos = 1 - y / H; }
   });
   const end = e => {
