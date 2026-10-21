@@ -156,6 +156,12 @@ h1{font-family:var(--f-display);font-variation-settings:"wdth" 108;font-weight:7
 .btn:not(:disabled):active{transform:scale(.97)}
 .presets{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .presets span{font:500 11px/1 var(--f-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--mute);margin-right:2px}
+.gctl{display:flex;flex-direction:column;gap:8px;margin:2px 0 4px}
+.gctl .seg{align-self:flex-start}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip[aria-pressed="true"]{background:rgba(58,104,198,.4);border-color:var(--blue-hi);color:#fff}
+.chip small{font:500 11px/1 var(--f-mono);color:var(--mute);margin-left:6px}
+.chip[aria-pressed="true"] small{color:#dfe4ec}
 .chip{all:unset;height:36px;padding:0 14px;border-radius:18px;border:1px solid var(--line);font-size:13px;font-weight:500;cursor:pointer;display:inline-flex;align-items:center;touch-action:manipulation}
 .chip:active{background:rgba(143,176,238,.15)}
 
@@ -448,6 +454,7 @@ dl.specs dd{font-size:15px;font-weight:500;font-variant-numeric:tabular-nums}
       <div class="eyebrow" id="w-kind"></div>
       <h1 id="w-name"></h1>
     </div>
+    <div class="gctl"><div class="seg" id="g-ver"></div><div class="chips" id="g-size"></div></div>
     <div class="draw" id="w-draw"></div>
     <dl class="specs" id="w-specs"></dl>
     <div class="actions"><button class="btn primary" id="b-addthis"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg><span data-t="addThis"></span></button></div>
@@ -496,7 +503,7 @@ dl.specs dd{font-size:15px;font-weight:500;font-variant-numeric:tabular-nums}
 import * as THREE from 'three';
 import { OrbitControls } from './vendor/OrbitControls.js';
 import { RoomEnvironment } from './vendor/RoomEnvironment.js';
-const BUILD = '20261021-130810';           // stamped by build.py
+const BUILD = '20261021-131232';           // stamped by build.py
 const CAT = {"wheels": {"V3.6": {"t": 12, "kind": "cont", "prof": "v", "d": 4, "rim": "bronze", "title": "Mola D200 V3.6"}, "V3.12": {"t": 16, "kind": "cont", "prof": "v", "d": 6, "rim": "bronze", "title": "Mola D200 V3.12"}, "V4P.2": {"t": 12, "kind": "tagli", "prof": "p", "title": "Mola D200 V4P.2"}, "V33": {"t": 12, "kind": "tagli", "prof": "pencil", "L": 1, "title": "Mola D200 V33", "tw": 1.2, "fw": 1.4}, "V44": {"t": 14, "kind": "tagli", "prof": "pencil", "L": 1, "title": "Mola D200 V44", "tw": 2, "fw": 2}, "V55": {"t": 14, "kind": "tagli", "prof": "pencil", "L": 0.5, "title": "Mola D200 V55", "tw": 2, "fw": 3}, "V66": {"t": 18, "kind": "tagli", "prof": "pencil", "L": 0.5, "title": "Mola D200 V66", "tw": 2, "fw": 3}, "V33S": {"t": 12, "kind": "settori", "prof": "pencil", "L": 1, "code": "V33", "title": "Mola V33 a settori", "tw": 1.2, "fw": 1.4}, "V44S": {"t": 14, "kind": "settori", "prof": "pencil", "L": 1, "code": "V44", "title": "Mola V44 a settori", "tw": 2, "fw": 2}, "V55S": {"t": 14, "kind": "settori", "prof": "pencil", "L": 0.5, "code": "V55", "title": "Mola V55 a settori", "tw": 2, "fw": 3}, "V66S": {"t": 18, "kind": "settori", "prof": "pencil", "L": 0.5, "code": "V66", "title": "Mola V66 a settori", "tw": 2, "fw": 3}, "SPACER": {"t": 10, "kind": "spacer", "name": "Spacer", "title": "Spacer 10 mm", "only": "100"}, "POLISH": {"t": 20, "kind": "polish", "name": "Lucidante", "title": "Mola lucidante", "only": "100"}}, "order": ["V3.6", "V3.12", "V4P.2", "V33", "V44", "V55", "V66", "V33S", "V44S", "V55S", "V66S", "SPACER", "POLISH"], "presets": {"tagli": ["V3.6", "V3.12", "V4P.2", "V33", "V44", "V55"], "settori": ["V3.6", "V3.12", "V4P.2", "V33S", "V44S", "V55S"], "iso": ["POLISH", "SPACER", "V33S", "V3.6"]}, "maxWheels": 8, "cone": {"200": {"R": 100, "space": 80, "bore": 17.5, "tk": 1, "shaftR": 17.25, "threadR": 17.25, "yMin": -67, "aside": 185, "nutR": 37, "washerR": 47.5, "teeth": 57, "label": "Ø 200", "sub": "80 mm", "setA": ["V3.6", "V3.12", "V4P.2", "V33", "V44"], "setB": ["V3.6", "V4P.2", "V33S", "V44S", "V55S"], "tech": "HSK 80 B"}, "150": {"R": 75, "space": 70, "bore": 17.5, "tk": 1, "shaftR": 17.25, "threadR": 17.25, "yMin": -44, "aside": 160, "nutR": 37, "washerR": 47.5, "teeth": 43, "label": "Ø 150", "sub": "HSK 50 · 70 mm", "setA": ["V3.6", "V3.12", "V33", "V44"], "setB": ["V3.6", "V4P.2", "V33S", "V44S", "V55S"], "tech": "HSK 50 E"}, "100": {"R": 50, "space": 62, "bore": 11, "tk": 1, "shaftR": 10.8, "threadR": 10.8, "yMin": -110, "aside": 120, "nutR": 17, "washerR": 14.5, "teeth": 36, "label": "Ø 100", "sub": "ISO 40 · 62 mm", "setA": ["POLISH", "SPACER", "V33S", "V3.6"], "setB": ["POLISH", "V44S", "V3.12"], "tech": "ISO 40"}}, "families": [{"id": "pencil", "versions": {"tagli": ["V33", "V44", "V55", "V66"], "settori": ["V33S", "V44S", "V55S", "V66S"]}}, {"id": "v", "versions": {"cont": ["V3.6", "V3.12"]}}, {"id": "p", "versions": {"tagli": ["V4P.2"]}}, {"id": "acc", "versions": {"all": ["SPACER", "POLISH"]}, "only": "100"}]};             // catalog.json, injected by build.py — edit the JSON, not this file
 
 /* ==================================================================
@@ -1008,7 +1015,7 @@ const W = new Map();           // uid -> {g, type, y, base, kb}
 let base = null, shaft = null, shaftH = -1, washer = null, nut = null, single = null;
 let washerY = 0, viewC = 0, viewR = 1.2, viewHH = .4;
 function disposeTree(o){ o.traverse(c => { if (c.geometry && c.geometry !== halo.geometry) c.geometry.dispose(); }); }
-function clearSpin(){ setRepl(null); rings.length = 0; [...spin.children].forEach(c => { if (c === axisLine) return; spin.remove(c); if (c !== halo && !rings.includes(c)) disposeTree(c); }); W.clear(); base = shaft = washer = nut = single = null; shaftH = -1; }
+function clearSpin(){ setRepl(null); rings.length = 0; gal = null; [...spin.children].forEach(c => { if (c === axisLine) return; spin.remove(c); if (c !== halo && !rings.includes(c)) disposeTree(c); }); W.clear(); base = shaft = washer = nut = single = null; shaftH = -1; }
 
 function enterMode(mode, instant){
   state.mode = mode; clearSpin(); spin.rotation.y = 0;
@@ -1070,8 +1077,18 @@ function renderStack(){
   const sp = $('space'); sp.querySelector('i').style.width = Math.min(100, H / SPACE * 100) + '%'; sp.classList.toggle('warn', H <= SPACE && H > SPACE * .85); sp.classList.toggle('over', H > SPACE);
   document.querySelectorAll('.card[data-k]').forEach(c => c.classList.toggle('nofit', !fits(tOf(c.dataset.k)) && !st.some(x => canRepl(x.uid, c.dataset.k))));
 }
+function famOfType(k){ return CAT.families.find(f => Object.values(f.versions).some(l => l.includes(k))); }
+function verOfType(k){ const f = famOfType(k); return Object.keys(f.versions).find(v => f.versions[v].includes(k)); }
+function renderGalleryCtl(){
+  const U = T(), f = famOfType(state.single), ver = verOfType(state.single), vs = Object.keys(f.versions);
+  $('g-ver').innerHTML = vs.length > 1 ? vs.map(v => `<button data-gver="${v}" aria-pressed="${v === ver}">${U.ver[v] || v}</button>`).join('') : '';
+  $('g-size').innerHTML = f.versions[ver].filter(k => !WHEELS[k].only || WHEELS[k].only === state.cone).map(k => `<button class="chip" data-gsize="${k}" aria-pressed="${k === state.single}">${code(k).replace(U.seg, '')}<small>${tOf(k)} mm</small></button>`).join('');
+}
+$('g-ver').addEventListener('click', e => { const b = e.target.closest('[data-gver]'); if (!b) return; const f = famOfType(state.single), i = f.versions[verOfType(state.single)].indexOf(state.single); FAM.ver[f.id] = b.dataset.gver; morphTo(f.versions[b.dataset.gver][Math.min(i, f.versions[b.dataset.gver].length - 1)]); });
+$('g-size').addEventListener('click', e => { const b = e.target.closest('[data-gsize]'); if (!b) return; morphTo(b.dataset.gsize); });
 function renderSingle(){
   const U = T(), w = WHEELS[state.single], el = $('p-single');
+  if (state.mode === 'single') renderGalleryCtl();
   $('w-kind').textContent = U.kind[w.kind]; $('w-name').textContent = state.lang === 'it' ? w.title.replace('D200', 'D' + cone().R*2) : (w.only === '100' ? 'Ø100 · ' + code(state.single) : 'D' + cone().R*2 + ' ' + code(state.single));
   const rows = [[U.sp.d,`Ø ${cone().R*2} mm`],[U.sp.t,`${tOf(state.single)} mm`],[U.sp.b,`Ø ${cone().bore*2} mm`]];
   if (w.kind === 'spacer') rows[0][1] = `Ø ${cone().bore*2 + 12} mm`;
@@ -1105,7 +1122,7 @@ const list = $('list');
 list.addEventListener('click', e => {
   if (clickBlock){ clickBlock = false; return; }
   if (state.ro) return;
-  if (e.target.closest('.empty')){ openSingle(orderFor(state.cone)[0]); return; }   // empty set: pick the first wheel in the gallery
+  if (e.target.closest('.empty')){ openSingle(famPick(galFams()[0])); return; }   // empty set: pick the first family in the gallery
   const row = e.target.closest('.row'); if (!row) return; const uid = +row.dataset.uid, s = state.stack.find(x => x.uid === uid);
   if (repl){ if (canRepl(uid, repl.k)) doReplace(uid, repl.k); return; }
   if (e.target.closest('.lk')){ s.locked = !s.locked; syncStack(); return; }
@@ -1675,7 +1692,11 @@ function frameInner(now){
     else if (pick && pick.on && pick.repl){ const o = W.get(pick.repl); const s = state.stack.find(x => x.uid === pick.repl); if (o && s){ ringMat.color.set(canRepl(pick.repl, pick.k) ? 0xf0b35a : 0xe05555); ringAt(0, o.g.position.y + tOf(s.type)/2, cone().R + 7, .6 + .3*Math.sin(now/200)); } }
     if (pick && pick.on && dropSlot >= 0 && !pick.repl){ let hy = 0; for (let i = n - 1; i >= dropSlot; i--) hy += WHEELS[state.stack[i].type].t; halo.visible = true; halo.position.y = hy; halo.material.opacity = .9; }
     else { halo.visible = !!so; if (so){ halo.position.y = so.g.position.y + tOf(so.type)/2; halo.material.opacity = .55 + .35*Math.sin(now/260); } }
-  } else { yMin = 0; yMax = tOf(state.single); if (single) single.position.y = 0; }
+  } else { yMin = 0; yMax = tOf(state.single); if (single) single.position.y = 0;
+    if (gal){ gal.t += dt; const u = Math.min(1, gal.t / gal.dur), e = u < .5 ? 4*u*u*u : 1 - Math.pow(-2*u + 2, 3)/2;   // ease in-out
+      gal.neu.position.x = gal.dir * gal.D * (1 - e); gal.neu.scale.setScalar((gal.D ? .7 : .92) + ((gal.D ? .3 : .08)) * e); gal.neu.rotation.y = gal.dir * .9 * (1 - e);
+      gal.old.position.x = -gal.dir * gal.D * e; gal.old.scale.setScalar(1 - (gal.D ? .4 : .08) * e); gal.old.rotation.y = -gal.dir * .9 * e; gal.old.position.y = gal.D ? -40 * e : 0;
+      if (u >= 1){ spin.remove(gal.old); disposeTree(gal.old); gal = null; } } }
   const c = (yMin + yMax)/2; viewC += (c - viewC) * k;
   spin.position.y = -viewC; root.rotation.z = tiltV * PI/2;   // root tilts about the model centre (show: horizontal arbor)
   viewR = Math.hypot(cone().R, (yMax - yMin)/2) * MM; viewHH = (yMax - yMin)/2 * MM;
@@ -1721,7 +1742,7 @@ $('fam-row').innerHTML = ORDER.map(k => `<button class="card" data-k="${k}"><i c
 $('fam-row').addEventListener('pointerdown', e => { if (e.target.closest('.info')) e.stopPropagation(); }, true);
 $('fam-row').addEventListener('click', e => { const i = e.target.closest('.info'); if (!i) return; e.stopPropagation(); e.preventDefault(); cardBlock = false; closeSheet(); openSingle(i.dataset.info); }, true);
 /* families: a shape, then its version (slotted / segmented) and size */
-const FAM = {open:null, ver:{}};
+const FAM = {open:null, ver:{}, size:{}};
 const famOf = id => CAT.families.find(f => f.id === id);
 const famVer = f => { const vs = Object.keys(f.versions); return vs.includes(FAM.ver[f.id]) ? FAM.ver[f.id] : vs[0]; };
 function openFam(id){
@@ -1762,13 +1783,23 @@ function refreshCatalogue(){   // thumbnails and visibility follow the active ar
   document.querySelectorAll('[data-preset]').forEach(b => b.hidden = (b.dataset.preset === 'iso') !== (state.cone === '100'));
 }
 /* focus on one wheel = a gallery: arrows, cards or a one-finger flick move through every wheel of the arbor; "back" returns to exactly the screen you left */
-let galleryFrom = null;
+let galleryFrom = null, gal = null;   // gal = {old, neu, t, dur, dir, D}
+function swapSingle(k, dir, D, dur){   // build the new wheel beside the current one and let the loop animate the exchange
+  const old = single; state.single = k; single = buildWheel(k); spin.add(single); FAM.size[famOfType(k).id] = k;
+  if (old && old.parent){ gal = {old, neu: single, t: 0, dur, dir, D}; single.position.x = dir * D; single.scale.setScalar(D ? .7 : .92); single.rotation.y = dir * .9; }
+  $('t-explode').setAttribute('aria-disabled', true);
+  document.querySelectorAll('.card[data-k]').forEach(c => c.setAttribute('aria-pressed', c.dataset.k === state.single));
+  const f = famOfType(k); if (FAM.open !== f.id) openFam(f.id); FAM.ver[f.id] = verOfType(k); refreshCatalogue(); renderSingle(); stat('gallery');
+}
+function morphTo(k){ if (k === state.single || state.mode !== 'single') return; swapSingle(k, 1, 0, .4); }
 function openSingle(k){
   if (state.mode !== 'single'){ galleryFrom = {l: isOpen('l'), b: isOpen('b'), sel: state.sel}; }
   state.single = k; setTool('explode', false); setTool('section', false); enterMode('single'); if (!isOpen('l')) setOpen('l', true); flyHome();
 }
-function galleryTo(k, dir){ if (k === state.single) return; state.single = k; enterMode('single'); lay.x = lay.tx - dir * innerWidth * .5; stat('gallery'); }
-function galleryStep(dir){ const list = orderFor(state.cone), i = list.indexOf(state.single), n = list.length; galleryTo(list[(i + dir + n) % n], dir); }
+function galleryTo(k, dir){ if (k === state.single || state.mode !== 'single') return; swapSingle(k, dir, cone().R * 3.2, .85); }
+function galFams(){ return CAT.families.filter(f => !f.only || f.only === state.cone); }
+function famPick(f){ const ver = famVer(f), list = f.versions[ver].filter(k => !WHEELS[k].only || WHEELS[k].only === state.cone); const last = FAM.size && FAM.size[f.id]; return list.includes(last) ? last : list[0]; }
+function galleryStep(dir){ const fs = galFams(), i = fs.findIndex(f => f.id === famOfType(state.single).id), n = fs.length; galleryTo(famPick(fs[(i + dir + n) % n]), dir); }
 function galleryBack(){ if (state.mode !== 'single') return; const f = galleryFrom || {l:false, b:true}; enterMode('stack', true); state.sel = f.sel && state.stack.some(x => x.uid === f.sel) ? f.sel : null; renderStack(); setOpen('l', f.l); setOpen('b', f.b); flyHome(); }
 $('b-back').onclick = galleryBack; $('garr-l').onclick = () => galleryStep(-1); $('garr-r').onclick = () => galleryStep(1);
 let flick = null;
@@ -1778,7 +1809,7 @@ document.querySelectorAll('.card[data-k]').forEach(c => c.onclick = () => {
   if (cardBlock){ cardBlock = false; return; }
   closeSheet();
   const k = c.dataset.k;
-  if (state.mode === 'single'){ const list = orderFor(state.cone); galleryTo(k, list.indexOf(k) >= list.indexOf(state.single) ? 1 : -1); return; }   // in the gallery a card shows that wheel
+  if (state.mode === 'single'){ const fs = galFams(), a = fs.findIndex(f => f.id === famOfType(k).id), b = fs.findIndex(f => f.id === famOfType(state.single).id); if (a === b) morphTo(k); else galleryTo(k, a > b ? 1 : -1); return; }   // in the gallery a card shows that wheel
   addFromCatalogue(k);   // one tap = mounted; the "i" opens the sheet
 });
 resize();
