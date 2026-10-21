@@ -48,7 +48,13 @@ button:focus-visible{outline:2px solid var(--blue-hi);outline-offset:2px}
   padding:calc(env(safe-area-inset-top,0px) + 16px) 28px 0 22px;pointer-events:none;z-index:6}
 .logo{color:#fff;transition:padding .3s}
 #app.fs .logo{padding-left:84px}
+.logo{display:flex;align-items:center;gap:16px}
 .logo svg.lockup{height:40px;width:auto;display:block}
+.logo .mii{display:flex;align-items:center;gap:9px;padding-left:16px;border-left:1px solid rgba(255,255,255,.18);height:30px;font:600 11px/1 var(--f-mono);letter-spacing:.3em;text-transform:uppercase;color:#cfd6e3;white-space:nowrap}
+.logo .tri{display:inline-flex;gap:2px;height:16px}
+.logo .tri b{display:block;width:5px;height:100%;border-radius:2px;background:linear-gradient(180deg,#19b36a,#0a8f52)}
+.logo .tri b:nth-child(2){background:linear-gradient(180deg,#ffffff,#d8dce3)}
+.logo .tri b:nth-child(3){background:linear-gradient(180deg,#e8384a,#b8232f)}
 .topr{display:flex;gap:10px;pointer-events:auto}
 .pill{height:44px;min-width:44px;border-radius:22px;color:var(--fg);font:500 13px/1 var(--f-mono);letter-spacing:.08em;
   display:inline-flex;align-items:center;justify-content:center;padding:0 4px;cursor:pointer;touch-action:manipulation}
@@ -74,7 +80,7 @@ button:focus-visible{outline:2px solid var(--blue-hi);outline-offset:2px}
 .pill svg{width:20px;height:20px}
 
 /* left panel */
-.panel{position:absolute;left:0;top:calc(env(safe-area-inset-top,0px) + 96px);bottom:calc(env(safe-area-inset-bottom,0px) + 196px);box-sizing:border-box;padding:16px 14px 16px 18px;
+.panel{position:absolute;left:0;top:calc(env(safe-area-inset-top,0px) + 96px);bottom:calc(env(safe-area-inset-bottom,0px) + var(--dockh,176px) + 18px);box-sizing:border-box;padding:16px 14px 16px 18px;
   width:var(--pw);display:flex;flex-direction:column;gap:10px;z-index:4;background:var(--glass);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border:1px solid var(--line);border-left:0;border-right:0;border-radius:0;overflow:hidden;transition:transform .45s cubic-bezier(.2,.7,.2,1)}
 #app:not(.open-l) .panel{transform:translateX(-100%);pointer-events:none}
 .panel.drag,.tab.drag,.dock.drag{transition:none !important}
@@ -120,7 +126,7 @@ h1{font-family:var(--f-display);font-variation-settings:"wdth" 108;font-weight:7
 .actions{display:flex;flex-wrap:nowrap;gap:6px}
 .actions .btn{padding:0 8px;font-size:12.5px;height:40px;flex:1 1 0;min-width:0;justify-content:center;gap:6px;white-space:nowrap}
 .actions .btn svg{flex:none;width:16px;height:16px}
-.cones{display:flex;gap:7px;margin-top:12px}
+.cones{display:flex;gap:7px;margin-top:2px}
 .cones button{all:unset;box-sizing:border-box;flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 4px 11px;border-radius:15px;cursor:pointer;touch-action:manipulation;border:1px solid var(--line);background:rgba(143,176,238,.05);transition:background .25s,border-color .25s,transform .25s}
 .cones button:active{transform:scale(.97)}
 .cones img{width:80px;height:62px;object-fit:contain;flex:0 0 auto;filter:drop-shadow(0 6px 10px rgba(0,0,0,.5))}
@@ -212,7 +218,7 @@ dl.specs dd{font-size:15px;font-weight:500;font-variant-numeric:tabular-nums}
 .dock{transition:transform .45s cubic-bezier(.2,.7,.2,1),opacity .3s}
 #app.open-b .handle{bottom:calc(env(safe-area-inset-bottom,0px) + 194px)}
 .handle[hidden]{display:none}
-#app:not(.open-b) .panel{bottom:calc(env(safe-area-inset-bottom,0px) + 60px)}
+#app:not(.open-b) .panel{bottom:calc(env(safe-area-inset-bottom,0px) + 54px)}
 .dock .body{display:flex;align-items:stretch;gap:10px;padding:4px 0 0}
 .dock .strip{flex:0 0 auto;flex-direction:column;gap:4px;justify-content:center;padding-right:10px;border-right:1px solid var(--line)}
 .dock .card.famc{flex-direction:row;width:auto;padding:4px 12px 4px 6px;gap:8px;border-radius:12px;align-items:center;justify-content:flex-start}
@@ -252,20 +258,20 @@ dl.specs dd{font-size:15px;font-weight:500;font-variant-numeric:tabular-nums}
 .card[aria-pressed="true"]{background:rgba(58,104,198,.24)}
 .card[aria-pressed="true"] img{transform:scale(1.1)}
 
-.tab{position:absolute;top:calc(env(safe-area-inset-top,0px) + 96px);bottom:calc(env(safe-area-inset-bottom,0px) + 196px);width:38px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;z-index:7;cursor:pointer;color:#c2cbdb;touch-action:none;transition:left .45s cubic-bezier(.2,.7,.2,1),right .45s cubic-bezier(.2,.7,.2,1);touch-action:manipulation;border:1px solid var(--line);padding:0}
+.tab{position:absolute;top:calc(env(safe-area-inset-top,0px) + 96px);bottom:calc(env(safe-area-inset-bottom,0px) + var(--dockh,176px) + 18px);width:38px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;z-index:7;cursor:pointer;color:#c2cbdb;touch-action:none;transition:left .45s cubic-bezier(.2,.7,.2,1),right .45s cubic-bezier(.2,.7,.2,1);touch-action:manipulation;border:1px solid var(--line);padding:0}
 .tab svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:transform .3s}
 .tab-l{left:0;border-radius:0 16px 16px 0;border-left:0}
 #app.open-l .tab-l{left:var(--pw);border-radius:0 22px 22px 0;border-left:0}
 .tab{outline:none}.tab:focus-visible{outline:none}
-#app:not(.open-b) .tab{bottom:calc(env(safe-area-inset-bottom,0px) + 60px)}
+#app:not(.open-b) .tab{bottom:calc(env(safe-area-inset-bottom,0px) + 54px)}
 .tab .lbl{writing-mode:vertical-rl;transform:rotate(180deg);font:600 12px/1 var(--f-mono);letter-spacing:.24em;text-transform:uppercase;color:#dfe4ec}
 #app.open-l .tab-l svg{transform:rotate(180deg)}
 #app.show .tab,#app.show .handle{opacity:0;pointer-events:none;transition:opacity .6s}
 .tab,.handle{transition:opacity .6s}
 .handle{position:absolute;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 10px);transform:translateX(-50%);height:30px;padding:0 18px;border-radius:15px;display:flex;align-items:center;gap:8px;z-index:7;cursor:pointer;color:#c2cbdb;font:500 11px/1 var(--f-mono);letter-spacing:.1em;text-transform:uppercase;touch-action:manipulation;transition:bottom .45s cubic-bezier(.2,.7,.2,1),opacity .6s}
 .handle svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:transform .3s}
-#app.open-b .sect{bottom:calc(env(safe-area-inset-bottom,0px) + 242px)}
-#app.open-b .sstyle{bottom:calc(env(safe-area-inset-bottom,0px) + 192px)}
+#app.open-b .sect{bottom:calc(env(safe-area-inset-bottom,0px) + var(--dockh,176px) + 66px)}
+#app.open-b .sstyle{bottom:calc(env(safe-area-inset-bottom,0px) + var(--dockh,176px) + 16px)}
 #app:not(.open-b) .sect{bottom:calc(env(safe-area-inset-bottom,0px) + 126px)}
 #app:not(.open-b) .sstyle{bottom:calc(env(safe-area-inset-bottom,0px) + 76px)}
 #app.open-b .handle svg{transform:rotate(180deg)}
@@ -357,7 +363,7 @@ dl.specs dd{font-size:15px;font-weight:500;font-variant-numeric:tabular-nums}
   #app{background:radial-gradient(ellipse 80% 40% at 50% 62%, #182640 0%, transparent 75%),var(--ink)}
   #app::before{display:none}
   .top{padding-left:12px;padding-right:12px}
-  .logo svg.lockup{height:30px}
+  .logo svg.lockup{height:30px}.logo .mii{display:none}
   .panel{left:0;right:auto;width:min(80vw,340px);top:calc(env(safe-area-inset-top,0px) + 66px);bottom:auto;max-height:46%;gap:8px}
   #app.open-l .tab-l{left:auto;right:10px;top:calc(env(safe-area-inset-top,0px) + 70px);transform:none;width:44px;height:44px;border-radius:14px}
   .tab-l{top:calc(env(safe-area-inset-top,0px) + 70px);transform:none}
@@ -404,7 +410,7 @@ dl.specs dd{font-size:15px;font-weight:500;font-variant-numeric:tabular-nums}
   <canvas id="c" aria-label="Modello 3D"></canvas>
 
   <header class="top">
-    <div class="logo"><svg class="lockup" viewBox="0 0 632.93 114.39" fill="currentColor" role="img" aria-label="Diamant"> <g> <path d="M124.06,12.14h20.42v101.26h-20.42V12.14Z"/> <path d="M215.24,12.14l26.8,101.26h-21.27l-4.68-21.41h-26.94l-4.68,21.41h-21.27l26.8-101.26h25.24ZM212.55,75.25l-9.78-45.52h-.28l-9.79,45.52h19.85Z"/> <path d="M290.55,12.14l14.47,71.47h.28l14.61-71.47h30.21v101.26h-18.72V32.56h-.28l-18.01,80.84h-15.88l-18.01-80.84h-.28v80.84h-18.72V12.14h30.35Z"/> <path d="M420.31,12.14l26.8,101.26h-21.27l-4.68-21.41h-26.94l-4.68,21.41h-21.27l26.8-101.26h25.24ZM417.61,75.25l-9.78-45.52h-.28l-9.79,45.52h19.85Z"/> <path d="M513.05,81.49h.28V12.14h18.72v101.26h-23.26l-24.96-70.91h-.28v70.91h-18.72V12.14h23.54l24.68,69.35Z"/> <path d="M616.15,28.87h-22.12v84.52h-20.42V28.87h-22.12V12.14h64.67v16.73Z"/> <g> <rect x="16.78" y="12.14" width="18.3" height="18.3"/> <rect x="39.95" y="12.14" width="36.61" height="18.3"/> <rect x="16.78" y="35.31" width="18.3" height="54.91"/> <rect x="81.43" y="35.31" width="18.3" height="54.91"/> <rect x="39.95" y="35.31" width="36.88" height="54.91"/> <polygon points="81.43 12.14 81.43 30.44 99.73 30.44 81.43 12.14"/> <rect x="16.78" y="95.09" width="18.3" height="18.3"/> <rect x="39.95" y="95.09" width="36.61" height="18.3"/> <polygon points="81.43 113.4 99.73 95.09 81.43 95.09 81.43 113.4"/> </g> </g></svg></div>
+    <div class="logo"><svg class="lockup" viewBox="0 0 632.93 114.39" fill="currentColor" role="img" aria-label="Diamant"> <g> <path d="M124.06,12.14h20.42v101.26h-20.42V12.14Z"/> <path d="M215.24,12.14l26.8,101.26h-21.27l-4.68-21.41h-26.94l-4.68,21.41h-21.27l26.8-101.26h25.24ZM212.55,75.25l-9.78-45.52h-.28l-9.79,45.52h19.85Z"/> <path d="M290.55,12.14l14.47,71.47h.28l14.61-71.47h30.21v101.26h-18.72V32.56h-.28l-18.01,80.84h-15.88l-18.01-80.84h-.28v80.84h-18.72V12.14h30.35Z"/> <path d="M420.31,12.14l26.8,101.26h-21.27l-4.68-21.41h-26.94l-4.68,21.41h-21.27l26.8-101.26h25.24ZM417.61,75.25l-9.78-45.52h-.28l-9.79,45.52h19.85Z"/> <path d="M513.05,81.49h.28V12.14h18.72v101.26h-23.26l-24.96-70.91h-.28v70.91h-18.72V12.14h23.54l24.68,69.35Z"/> <path d="M616.15,28.87h-22.12v84.52h-20.42V28.87h-22.12V12.14h64.67v16.73Z"/> <g> <rect x="16.78" y="12.14" width="18.3" height="18.3"/> <rect x="39.95" y="12.14" width="36.61" height="18.3"/> <rect x="16.78" y="35.31" width="18.3" height="54.91"/> <rect x="81.43" y="35.31" width="18.3" height="54.91"/> <rect x="39.95" y="35.31" width="36.88" height="54.91"/> <polygon points="81.43 12.14 81.43 30.44 99.73 30.44 81.43 12.14"/> <rect x="16.78" y="95.09" width="18.3" height="18.3"/> <rect x="39.95" y="95.09" width="36.61" height="18.3"/> <polygon points="81.43 113.4 99.73 95.09 81.43 95.09 81.43 113.4"/> </g> </g></svg><span class="mii"><i class="tri"><b></b><b></b><b></b></i><span>Made in Italy</span></span></div>
     <div class="topr">
       <nav class="tools" aria-label="Strumenti">
         <button class="tool glass" id="t-explode" aria-pressed="false"><svg viewBox="0 0 28 28"><rect x="6" y="11" width="16" height="6" rx="1.5"/><path d="M8 7h12M8 21h12M14 3v1.5M14 23.5V25M11.5 4.5 14 2l2.5 2.5M11.5 23.5 14 26l2.5-2.5"/></svg><span data-t="explode"></span></button>
@@ -422,7 +428,6 @@ dl.specs dd{font-size:15px;font-weight:500;font-variant-numeric:tabular-nums}
   <!-- stack editor -->
   <section class="panel" id="p-stack">
     <div>
-      <h1 data-t="stackTitle"></h1>
       <div class="cones" id="cones"></div>
       <div class="space" id="space"><i></i></div>
       <div class="hdr"><div class="meta" id="s-meta"></div></div>
@@ -491,7 +496,7 @@ dl.specs dd{font-size:15px;font-weight:500;font-variant-numeric:tabular-nums}
 import * as THREE from 'three';
 import { OrbitControls } from './vendor/OrbitControls.js';
 import { RoomEnvironment } from './vendor/RoomEnvironment.js';
-const BUILD = '20261021-130057';           // stamped by build.py
+const BUILD = '20261021-130810';           // stamped by build.py
 const CAT = {"wheels": {"V3.6": {"t": 12, "kind": "cont", "prof": "v", "d": 4, "rim": "bronze", "title": "Mola D200 V3.6"}, "V3.12": {"t": 16, "kind": "cont", "prof": "v", "d": 6, "rim": "bronze", "title": "Mola D200 V3.12"}, "V4P.2": {"t": 12, "kind": "tagli", "prof": "p", "title": "Mola D200 V4P.2"}, "V33": {"t": 12, "kind": "tagli", "prof": "pencil", "L": 1, "title": "Mola D200 V33", "tw": 1.2, "fw": 1.4}, "V44": {"t": 14, "kind": "tagli", "prof": "pencil", "L": 1, "title": "Mola D200 V44", "tw": 2, "fw": 2}, "V55": {"t": 14, "kind": "tagli", "prof": "pencil", "L": 0.5, "title": "Mola D200 V55", "tw": 2, "fw": 3}, "V66": {"t": 18, "kind": "tagli", "prof": "pencil", "L": 0.5, "title": "Mola D200 V66", "tw": 2, "fw": 3}, "V33S": {"t": 12, "kind": "settori", "prof": "pencil", "L": 1, "code": "V33", "title": "Mola V33 a settori", "tw": 1.2, "fw": 1.4}, "V44S": {"t": 14, "kind": "settori", "prof": "pencil", "L": 1, "code": "V44", "title": "Mola V44 a settori", "tw": 2, "fw": 2}, "V55S": {"t": 14, "kind": "settori", "prof": "pencil", "L": 0.5, "code": "V55", "title": "Mola V55 a settori", "tw": 2, "fw": 3}, "V66S": {"t": 18, "kind": "settori", "prof": "pencil", "L": 0.5, "code": "V66", "title": "Mola V66 a settori", "tw": 2, "fw": 3}, "SPACER": {"t": 10, "kind": "spacer", "name": "Spacer", "title": "Spacer 10 mm", "only": "100"}, "POLISH": {"t": 20, "kind": "polish", "name": "Lucidante", "title": "Mola lucidante", "only": "100"}}, "order": ["V3.6", "V3.12", "V4P.2", "V33", "V44", "V55", "V66", "V33S", "V44S", "V55S", "V66S", "SPACER", "POLISH"], "presets": {"tagli": ["V3.6", "V3.12", "V4P.2", "V33", "V44", "V55"], "settori": ["V3.6", "V3.12", "V4P.2", "V33S", "V44S", "V55S"], "iso": ["POLISH", "SPACER", "V33S", "V3.6"]}, "maxWheels": 8, "cone": {"200": {"R": 100, "space": 80, "bore": 17.5, "tk": 1, "shaftR": 17.25, "threadR": 17.25, "yMin": -67, "aside": 185, "nutR": 37, "washerR": 47.5, "teeth": 57, "label": "Ø 200", "sub": "80 mm", "setA": ["V3.6", "V3.12", "V4P.2", "V33", "V44"], "setB": ["V3.6", "V4P.2", "V33S", "V44S", "V55S"], "tech": "HSK 80 B"}, "150": {"R": 75, "space": 70, "bore": 17.5, "tk": 1, "shaftR": 17.25, "threadR": 17.25, "yMin": -44, "aside": 160, "nutR": 37, "washerR": 47.5, "teeth": 43, "label": "Ø 150", "sub": "HSK 50 · 70 mm", "setA": ["V3.6", "V3.12", "V33", "V44"], "setB": ["V3.6", "V4P.2", "V33S", "V44S", "V55S"], "tech": "HSK 50 E"}, "100": {"R": 50, "space": 62, "bore": 11, "tk": 1, "shaftR": 10.8, "threadR": 10.8, "yMin": -110, "aside": 120, "nutR": 17, "washerR": 14.5, "teeth": 36, "label": "Ø 100", "sub": "ISO 40 · 62 mm", "setA": ["POLISH", "SPACER", "V33S", "V3.6"], "setB": ["POLISH", "V44S", "V3.12"], "tech": "ISO 40"}}, "families": [{"id": "pencil", "versions": {"tagli": ["V33", "V44", "V55", "V66"], "settori": ["V33S", "V44S", "V55S", "V66S"]}}, {"id": "v", "versions": {"cont": ["V3.6", "V3.12"]}}, {"id": "p", "versions": {"tagli": ["V4P.2"]}}, {"id": "acc", "versions": {"all": ["SPACER", "POLISH"]}, "only": "100"}]};             // catalog.json, injected by build.py — edit the JSON, not this file
 
 /* ==================================================================
@@ -1195,6 +1200,8 @@ function railDrag(rail, side){
   rail.addEventListener('pointerup', end); rail.addEventListener('pointercancel', end);
 }
 railDrag($('tab-l'), 'l'); railDrag($('rail-b'), 'b');
+let dockH = 176, booted = false; const measureDock = () => { dockH = $('dock').offsetHeight || 176; app.style.setProperty('--dockh', dockH + 'px'); if (booted) layoutTargets(); };
+new ResizeObserver(measureDock).observe($('dock')); measureDock();
 try { if (localStorage.getItem('diamant-open-l') === '1') app.classList.add('open-l'); if (localStorage.getItem('diamant-open-b') !== '0') app.classList.add('open-b'); } catch(e){}
 
 /* tools */
@@ -1471,7 +1478,7 @@ function layoutTargets(){
   const w = innerWidth, h = innerHeight, L = app.classList.contains('open-l'), B = app.classList.contains('open-b');
   if (SHOW.on){ lay.tx = wide() ? -w*.13 : 0; lay.ty = wide() ? 30 : -h*.1; lay.tz = 1; return; }   // CTA sits at the bottom centre
   const E = state.explode && state.mode === 'stack';   // exploded: taller and labelled on the right, so sit it lower and nearer the centre, away from the top-right tools
-  if (wide()){ lay.tx = (L ? -150 : 0) + (E ? 95 : 0); lay.ty = (B ? 58 : -36) + (state.section ? 48 : 0); lay.tz = 1; }   // centre of the free band: panel 300 px left, labels 190 px right, strip 196 px / pill 56 px bottom, bar 76 px top
+  if (wide()){ lay.tx = (L ? -150 : 0) + (E ? 95 : 0); lay.ty = (B ? (dockH + 18 - 56) / 2 - 10 : -36) + (state.section ? 48 : 0); lay.tz = 1; }   // centre of the free band: panel 300 px left, labels 190 px right, strip 196 px / pill 56 px bottom, bar 76 px top
   else { lay.tx = 0; lay.ty = -h*.08 + (L ? h*.14 : 0) + (B ? -h*.02 : 0); lay.tz = 1 + (L ? .3 : 0) + (B ? .18 : 0); }
 }
 function applyLayout(dt){
@@ -1489,7 +1496,7 @@ addEventListener('resize', resize);
 /* camera distance that fills the free stage: projected extents of the cylinder (not its bounding sphere) against the area left by the open panels */
 function fitDist(){
   const w = innerWidth, h = innerHeight, S = SHOW.on, L = !S && app.classList.contains('open-l'), B = !S && app.classList.contains('open-b'), E = !S && state.explode && state.mode === 'stack';
-  const availH = Math.max(200, h - (S ? 40 : 76) - (S ? 110 : B ? (wide() ? 194 : 180) : 56) - (!S && state.section ? 96 : 0)),   // section: label + style pill sit under the model
+  const availH = Math.max(200, h - (S ? 40 : 76) - (S ? 110 : B ? dockH + 18 : 56) - (!S && state.section ? 96 : 0)),   // section: label + style pill sit under the model
         availW = Math.max(200, w - (L && wide() ? 300 : 24) - (E && wide() ? 190 : 0));
   const vfov = camera.fov * PI / 180, hfov = 2*Math.atan(Math.tan(vfov/2)*camera.aspect);
   const d = camFly ? camFly.dir : tmpDir.copy(camera.position).sub(controls.target).normalize();
@@ -1498,7 +1505,7 @@ function fitDist(){
 function fitFor(R, HH, d, availH, availW, vfov, hfov){
   const w = innerWidth, h = innerHeight;
   if (availH == null){ const S = SHOW.on, L = !S && app.classList.contains('open-l'), B = !S && app.classList.contains('open-b');
-    availH = Math.max(200, h - 76 - (B ? (wide() ? 194 : 180) : 56)); availW = Math.max(200, w - (L && wide() ? 300 : 24));
+    availH = Math.max(200, h - 76 - (B ? dockH + 18 : 56)); availW = Math.max(200, w - (L && wide() ? 300 : 24));
     vfov = camera.fov * PI / 180; hfov = 2*Math.atan(Math.tan(vfov/2)*camera.aspect); }
   const sph = Math.min(1, Math.abs(d.y)), cph = Math.sqrt(1 - sph*sph);
   const hv0 = R*sph + HH*cph, big = Math.max(HH, R) * 1.06, hv = hv0 + (big - hv0) * tiltV, hh = R + (big - R) * tiltV;      // half extents on screen (horizontal arbor: its length, whichever way it points)
@@ -1785,7 +1792,7 @@ setInterval(() => { if (document.visibilityState === 'visible' && document.hasFo
 document.addEventListener('visibilitychange', () => { lastRaw = performance.now(); });
 let errT = []; addEventListener('error', () => { const n = performance.now(); errT = errT.filter(t => n - t < 60000); errT.push(n); if (errT.length > 12) location.reload(); });
 if ('serviceWorker' in navigator && location.hostname !== 'localhost' && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(() => {});
-stat('session');
+stat('session'); booted = true; measureDock();
 $('langbar').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; $('langbar').hidden = true; try { localStorage.setItem('diamant-langpicked', '1'); } catch(x){} if (b.dataset.more){ setMenu(true); } else { state.lang = b.dataset.l; try { localStorage.setItem('diamant-lang', state.lang); } catch(x){} renderUI(); } if (!guided) $('hint').classList.remove('off'); });
 if (state.ro){ $('app').classList.add('ro','open-l'); $('app').classList.remove('open-b'); $('robadge').hidden = false; layoutTargets(); stat('ro-view'); }
 </script>
