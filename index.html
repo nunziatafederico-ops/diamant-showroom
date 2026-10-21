@@ -26,7 +26,7 @@
   --f-body:"Archivo","Helvetica Neue",Arial,sans-serif;
   --f-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
   --glass:rgba(13,20,34,.66);
-  --pw:min(272px,30vw);
+  --pw:min(304px,32vw);
   color-scheme:dark;
 }
 html,body{height:100%;margin:0;background:var(--ink);color:var(--fg);overflow:hidden}
@@ -48,10 +48,7 @@ button:focus-visible{outline:2px solid var(--blue-hi);outline-offset:2px}
   padding:calc(env(safe-area-inset-top,0px) + 16px) 28px 0 22px;pointer-events:none;z-index:6}
 .logo{color:#fff;transition:padding .3s}
 #app.fs .logo{padding-left:84px}
-.logo{display:flex;flex-direction:column;align-items:flex-start;gap:3px;line-height:1}
-.logo .word{font-family:var(--f-display);font-variation-settings:"wdth" 118;font-weight:800;font-size:34px;letter-spacing:.06em}
-.logo .mii{display:flex;align-items:center;gap:7px;font:600 11px/1 var(--f-mono);letter-spacing:.24em;color:#dfe4ec;padding-left:2px}
-.logo .flag{width:18px;height:12px;border-radius:2px;background:linear-gradient(90deg,#009246 0 33.3%,#f4f5f0 33.3% 66.6%,#ce2b37 66.6%);box-shadow:0 0 0 1px rgba(255,255,255,.12)}
+.logo svg.lockup{height:40px;width:auto;display:block}
 .topr{display:flex;gap:10px;pointer-events:auto}
 .pill{height:44px;min-width:44px;border-radius:22px;color:var(--fg);font:500 13px/1 var(--f-mono);letter-spacing:.08em;
   display:inline-flex;align-items:center;justify-content:center;padding:0 4px;cursor:pointer;touch-action:manipulation}
@@ -120,11 +117,11 @@ h1{font-family:var(--f-display);font-variation-settings:"wdth" 108;font-weight:7
 .actions .btn{padding:0 8px;font-size:12.5px;height:40px;flex:1 1 0;min-width:0;justify-content:center;gap:6px;white-space:nowrap}
 .actions .btn svg{flex:none;width:16px;height:16px}
 .cones{display:flex;gap:7px;margin-top:12px}
-.cones button{all:unset;box-sizing:border-box;flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 6px 7px;border-radius:15px;cursor:pointer;touch-action:manipulation;border:1px solid var(--line);background:rgba(143,176,238,.05);transition:background .25s,border-color .25s,transform .25s}
+.cones button{all:unset;box-sizing:border-box;flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:center;gap:5px;padding:10px 4px 9px;border-radius:15px;cursor:pointer;touch-action:manipulation;border:1px solid var(--line);background:rgba(143,176,238,.05);transition:background .25s,border-color .25s,transform .25s}
 .cones button:active{transform:scale(.97)}
-.cones img{width:52px;height:40px;object-fit:contain;flex:0 0 auto;filter:drop-shadow(0 6px 10px rgba(0,0,0,.5))}
+.cones img{width:58px;height:44px;object-fit:contain;flex:0 0 auto;filter:drop-shadow(0 6px 10px rgba(0,0,0,.5))}
 .cones span{display:flex;flex-direction:column;align-items:center;min-width:0;line-height:1.15;text-align:center}
-.cones b{font-size:11.5px;line-height:1.1;white-space:normal;text-align:center;max-width:100%}.cones small{font:500 11px/1.2 var(--f-mono);color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.cones b{font-size:12px;line-height:1.15;white-space:normal;text-align:center;max-width:100%;min-height:28px;display:flex;align-items:center}.cones small{font:500 11px/1.2 var(--f-mono);color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
 .cones button[aria-pressed="true"]{border-color:var(--blue-hi);background:linear-gradient(180deg,rgba(58,104,198,.38),rgba(58,104,198,.22));box-shadow:0 0 0 1px rgba(143,176,238,.25) inset,0 10px 24px -14px rgba(58,104,198,.9)}
 .cones button[aria-pressed="true"] small{color:var(--blue-hi)}
 .space{height:4px;border-radius:2px;background:rgba(143,176,238,.14);margin-top:10px;overflow:hidden}
@@ -160,7 +157,7 @@ dl.specs dd{font-size:15px;font-weight:500;font-variant-numeric:tabular-nums}
 
 /* tool rail */
 .tools{display:flex;gap:8px;pointer-events:auto}
-.tool{all:unset;box-sizing:border-box;width:84px;height:56px;border-radius:18px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;
+.tool{all:unset;box-sizing:border-box;width:64px;height:56px;border-radius:18px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;
   font:500 11px/1 var(--f-mono);letter-spacing:.01em;text-transform:uppercase;color:#c2cbdb;transition:background .25s,border-color .25s,transform .15s,opacity .25s;touch-action:manipulation}
 .tool svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
 .tool:active{transform:scale(.95)}
@@ -168,6 +165,8 @@ dl.specs dd{font-size:15px;font-weight:500;font-variant-numeric:tabular-nums}
 .tool[aria-disabled="true"]{opacity:.28;pointer-events:none}
 
 /* explode labels */
+#snap{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;pointer-events:none;z-index:2}
+#snap[hidden]{display:none}
 #labels{position:absolute;inset:0;pointer-events:none;z-index:3}
 .lab.w .tag{pointer-events:auto;cursor:pointer}
 #app.ro .lab.w .tag{pointer-events:none}
@@ -188,7 +187,11 @@ dl.specs dd{font-size:15px;font-weight:500;font-variant-numeric:tabular-nums}
 
 /* catalogue strip */
 .dock{position:absolute;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 12px);transform:translateX(-50%);width:min(calc(100% - 32px),980px);padding:8px 10px 10px;border-radius:24px;display:flex;flex-direction:column;gap:6px;z-index:5;transition:opacity .3s}
-#app.show .dock,#app.ro .dock,.handle[hidden]{display:none}
+#app.show .dock,#app.ro .dock{display:none}
+#app:not(.open-b) .dock{transform:translate(-50%,calc(100% + 60px));opacity:0;pointer-events:none}
+.dock{transition:transform .45s cubic-bezier(.2,.7,.2,1),opacity .3s}
+#app.open-b .handle{bottom:calc(env(safe-area-inset-bottom,0px) + 194px)}
+#app:not(.open-b) .panel{bottom:calc(env(safe-area-inset-bottom,0px) + 60px)}
 .famrow{display:flex;gap:6px;justify-content:center;overflow-x:auto;scrollbar-width:none}
 .famrow .card.famc{flex-direction:row;width:auto;padding:5px 12px 5px 6px;gap:8px;border-radius:14px;align-items:center}
 .famrow .card.famc img{width:44px;height:32px}
@@ -286,7 +289,7 @@ dl.specs dd{font-size:15px;font-weight:500;font-variant-numeric:tabular-nums}
 #app.show .panel,#app.show .strip,#app.show .tools,#app.show .hint,#app.show #labels,#app.show .sect{opacity:0;pointer-events:none;transition:opacity .6s}
 .panel,.strip,.tools{transition:opacity .6s}
 #w-draw svg{width:100%;height:auto;display:block;margin:4px 0 10px}
-#t-spin,#t-show,#app.ro .strip,#app.ro .handle,#app.ro .tab,#app.ro #cones,#app.ro .hdr button,#app.ro .pre,#app.ro .row .grip,#app.ro .row .lk,#app.ro .row .del,#app.ro #t-show,#app.ro #b-qr,#app.ro .hint{display:none !important}
+#app.ro .strip,#app.ro .handle,#app.ro .tab,#app.ro #cones,#app.ro .hdr button,#app.ro .pre,#app.ro .row .grip,#app.ro .row .lk,#app.ro .row .del,#app.ro #t-show,#app.ro #b-qr,#app.ro .hint{display:none !important}
 #app.ro .row{grid-template-columns:40px 34px minmax(0,1fr);cursor:default}
 #app.ro #p-stack{pointer-events:none}
 .robadge{position:absolute;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 18px);transform:translateX(-50%);z-index:8;display:flex;align-items:center;gap:12px;padding:10px 16px;border-radius:18px;font-size:13px;white-space:nowrap}
@@ -324,7 +327,7 @@ dl.specs dd{font-size:15px;font-weight:500;font-variant-numeric:tabular-nums}
   #app{background:radial-gradient(ellipse 80% 40% at 50% 62%, #182640 0%, transparent 75%),var(--ink)}
   #app::before{display:none}
   .top{padding-left:12px;padding-right:12px}
-  .logo .word{font-size:26px}.logo .mii{font-size:11px;letter-spacing:.16em}
+  .logo svg.lockup{height:30px}
   .panel{left:10px;right:10px;width:auto;top:calc(env(safe-area-inset-top,0px) + 66px);bottom:auto;max-height:46%;gap:8px}
   #app.open-l .tab-l{left:auto;right:10px;top:calc(env(safe-area-inset-top,0px) + 70px);transform:none;width:44px;height:44px;border-radius:14px}
   .tab-l{top:calc(env(safe-area-inset-top,0px) + 70px);transform:none}
@@ -371,7 +374,7 @@ dl.specs dd{font-size:15px;font-weight:500;font-variant-numeric:tabular-nums}
   <canvas id="c" aria-label="Modello 3D"></canvas>
 
   <header class="top">
-    <div class="logo"><span class="word">DIAMANT</span><span class="mii"><i class="flag"></i>MADE IN ITALY</span></div>
+    <div class="logo"><svg class="lockup" viewBox="0 0 632.93 114.39" fill="currentColor" role="img" aria-label="Diamant"> <g> <path d="M124.06,12.14h20.42v101.26h-20.42V12.14Z"/> <path d="M215.24,12.14l26.8,101.26h-21.27l-4.68-21.41h-26.94l-4.68,21.41h-21.27l26.8-101.26h25.24ZM212.55,75.25l-9.78-45.52h-.28l-9.79,45.52h19.85Z"/> <path d="M290.55,12.14l14.47,71.47h.28l14.61-71.47h30.21v101.26h-18.72V32.56h-.28l-18.01,80.84h-15.88l-18.01-80.84h-.28v80.84h-18.72V12.14h30.35Z"/> <path d="M420.31,12.14l26.8,101.26h-21.27l-4.68-21.41h-26.94l-4.68,21.41h-21.27l26.8-101.26h25.24ZM417.61,75.25l-9.78-45.52h-.28l-9.79,45.52h19.85Z"/> <path d="M513.05,81.49h.28V12.14h18.72v101.26h-23.26l-24.96-70.91h-.28v70.91h-18.72V12.14h23.54l24.68,69.35Z"/> <path d="M616.15,28.87h-22.12v84.52h-20.42V28.87h-22.12V12.14h64.67v16.73Z"/> <g> <rect x="16.78" y="12.14" width="18.3" height="18.3"/> <rect x="39.95" y="12.14" width="36.61" height="18.3"/> <rect x="16.78" y="35.31" width="18.3" height="54.91"/> <rect x="81.43" y="35.31" width="18.3" height="54.91"/> <rect x="39.95" y="35.31" width="36.88" height="54.91"/> <polygon points="81.43 12.14 81.43 30.44 99.73 30.44 81.43 12.14"/> <rect x="16.78" y="95.09" width="18.3" height="18.3"/> <rect x="39.95" y="95.09" width="36.61" height="18.3"/> <polygon points="81.43 113.4 99.73 95.09 81.43 95.09 81.43 113.4"/> </g> </g></svg></div>
     <div class="topr">
       <nav class="tools" aria-label="Strumenti">
         <button class="tool glass" id="t-explode" aria-pressed="false"><svg viewBox="0 0 28 28"><rect x="6" y="11" width="16" height="6" rx="1.5"/><path d="M8 7h12M8 21h12M14 3v1.5M14 23.5V25M11.5 4.5 14 2l2.5 2.5M11.5 23.5 14 26l2.5-2.5"/></svg><span data-t="explode"></span></button>
@@ -417,12 +420,11 @@ dl.specs dd{font-size:15px;font-weight:500;font-variant-numeric:tabular-nums}
   </section>
 
   <div id="labels"></div>
-  <button class="arrow glass arrow-l" id="arrow-l" aria-label="Cono precedente"><svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg></button><button class="arrow glass arrow-r" id="arrow-r" aria-label="Cono successivo"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button>
   <div class="sect" id="sect"><i></i><span data-t="sectionOn"></span></div>
   <div class="sstyle glass" id="sstyle" hidden><button data-s="mat" data-t="styleMat" aria-pressed="true"></button><button data-s="draw" data-t="styleDraw" aria-pressed="false"></button></div>
   <nav class="dock glass" id="dock" aria-label="Catalogo"><div class="famrow strip" id="strip"></div><div class="sizes"><div class="vrow" id="fam-row"></div><div class="seg" id="fam-ver"></div></div></nav>
   <button class="tab tab-l glass" id="tab-l" aria-label="Set"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button>
-  <button class="handle glass" id="handle" hidden><svg viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></svg><span data-t="wheelsBtn"></span></button>
+  <button class="handle glass" id="handle"><svg viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></svg><span data-t="wheelsBtn"></span></button>
 
   <div class="hint glass" id="hint">
     <svg viewBox="0 0 24 24"><path d="M9 11V5.5a1.5 1.5 0 0 1 3 0V11m0-1.5a1.5 1.5 0 0 1 3 0V11m0-.5a1.5 1.5 0 0 1 3 0V15a6 6 0 0 1-6 6h-1a6 6 0 0 1-5-2.7L3.3 15a1.5 1.5 0 0 1 2.4-1.8L9 16"/></svg>
@@ -442,7 +444,6 @@ dl.specs dd{font-size:15px;font-weight:500;font-variant-numeric:tabular-nums}
   <div class="capwrap" id="capwrap">
     <div class="cap" id="cap"><em id="cap-e"></em><b id="cap-t"></b></div>
   </div>
-  <button class="take glass" id="b-take" hidden><svg viewBox="0 0 24 24"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h2v2h-2zM18 14h2v2h-2zM14 18h2v2h-2zM18 18h2v2h-2z"/></svg><span></span></button>
   <div class="attract" id="attract"><div id="attract-t"></div></div>
   <div class="robadge glass" id="robadge" hidden><b data-t="roTitle"></b><span data-t="roHint"></span><a href="https://www.diamantools.com" target="_blank" rel="noopener">diamantools.com →</a></div>
   <div class="modal glass" id="qr" hidden><button class="x" id="qr-x" aria-label="Chiudi">×</button><div class="qrbox" id="qr-svg"></div><b data-t="share"></b><p data-t="shareHint"></p></div>
@@ -458,7 +459,7 @@ dl.specs dd{font-size:15px;font-weight:500;font-variant-numeric:tabular-nums}
 import * as THREE from 'three';
 import { OrbitControls } from './vendor/OrbitControls.js';
 import { RoomEnvironment } from './vendor/RoomEnvironment.js';
-const BUILD = '20261021-113051';           // stamped by build.py
+const BUILD = '20261021-121553';           // stamped by build.py
 const CAT = {"wheels": {"V3.6": {"t": 12, "kind": "cont", "prof": "v", "d": 4, "rim": "bronze", "title": "Mola D200 V3.6"}, "V3.12": {"t": 16, "kind": "cont", "prof": "v", "d": 6, "rim": "bronze", "title": "Mola D200 V3.12"}, "V4P.2": {"t": 12, "kind": "tagli", "prof": "p", "title": "Mola D200 V4P.2"}, "V33": {"t": 12, "kind": "tagli", "prof": "pencil", "L": 1, "title": "Mola D200 V33", "tw": 1.2, "fw": 1.4}, "V44": {"t": 14, "kind": "tagli", "prof": "pencil", "L": 1, "title": "Mola D200 V44", "tw": 2, "fw": 2}, "V55": {"t": 14, "kind": "tagli", "prof": "pencil", "L": 0.5, "title": "Mola D200 V55", "tw": 2, "fw": 3}, "V66": {"t": 18, "kind": "tagli", "prof": "pencil", "L": 0.5, "title": "Mola D200 V66", "tw": 2, "fw": 3}, "V33S": {"t": 12, "kind": "settori", "prof": "pencil", "L": 1, "code": "V33", "title": "Mola V33 a settori", "tw": 1.2, "fw": 1.4}, "V44S": {"t": 14, "kind": "settori", "prof": "pencil", "L": 1, "code": "V44", "title": "Mola V44 a settori", "tw": 2, "fw": 2}, "V55S": {"t": 14, "kind": "settori", "prof": "pencil", "L": 0.5, "code": "V55", "title": "Mola V55 a settori", "tw": 2, "fw": 3}, "V66S": {"t": 18, "kind": "settori", "prof": "pencil", "L": 0.5, "code": "V66", "title": "Mola V66 a settori", "tw": 2, "fw": 3}, "SPACER": {"t": 10, "kind": "spacer", "name": "Spacer", "title": "Spacer 10 mm", "only": "100"}, "POLISH": {"t": 20, "kind": "polish", "name": "Lucidante", "title": "Mola lucidante", "only": "100"}}, "order": ["V3.6", "V3.12", "V4P.2", "V33", "V44", "V55", "V66", "V33S", "V44S", "V55S", "V66S", "SPACER", "POLISH"], "presets": {"tagli": ["V3.6", "V3.12", "V4P.2", "V33", "V44", "V55"], "settori": ["V3.6", "V3.12", "V4P.2", "V33S", "V44S", "V55S"], "iso": ["POLISH", "SPACER", "V33S", "V3.6"]}, "maxWheels": 8, "cone": {"200": {"R": 100, "space": 80, "bore": 17.5, "tk": 1, "shaftR": 17.25, "threadR": 17.25, "yMin": -67, "aside": 185, "nutR": 37, "washerR": 47.5, "teeth": 57, "label": "Ø 200", "sub": "80 mm", "setA": ["V3.6", "V3.12", "V4P.2", "V33", "V44"], "setB": ["V3.6", "V4P.2", "V33S", "V44S", "V55S"]}, "150": {"R": 75, "space": 70, "bore": 17.5, "tk": 1, "shaftR": 17.25, "threadR": 17.25, "yMin": -44, "aside": 160, "nutR": 37, "washerR": 47.5, "teeth": 43, "label": "Ø 150", "sub": "HSK 50 · 70 mm", "setA": ["V3.6", "V3.12", "V33", "V44"], "setB": ["V3.6", "V4P.2", "V33S", "V44S", "V55S"]}, "100": {"R": 50, "space": 62, "bore": 11, "tk": 1, "shaftR": 10.8, "threadR": 10.8, "yMin": -110, "aside": 120, "nutR": 17, "washerR": 14.5, "teeth": 36, "label": "Ø 100", "sub": "ISO 40 · 62 mm", "setA": ["POLISH", "SPACER", "V33S", "V3.6"], "setB": ["POLISH", "V44S", "V3.12"]}}, "families": [{"id": "pencil", "versions": {"tagli": ["V33", "V44", "V55", "V66"], "settori": ["V33S", "V44S", "V55S", "V66S"]}}, {"id": "v", "versions": {"cont": ["V3.6", "V3.12"]}}, {"id": "p", "versions": {"tagli": ["V4P.2"]}}, {"id": "acc", "versions": {"all": ["SPACER", "POLISH"]}, "only": "100"}]};             // catalog.json, injected by build.py — edit the JSON, not this file
 
 /* ==================================================================
@@ -1031,7 +1032,6 @@ function renderStack(){
   $('b-shuffle').disabled = st.length < 2; $('b-clear').disabled = !st.length;
   const sp = $('space'); sp.querySelector('i').style.width = Math.min(100, H / SPACE * 100) + '%'; sp.classList.toggle('warn', H <= SPACE && H > SPACE * .85); sp.classList.toggle('over', H > SPACE);
   document.querySelectorAll('.card[data-k]').forEach(c => c.classList.toggle('nofit', !fits(tOf(c.dataset.k)) && !st.some(x => canRepl(x.uid, c.dataset.k))));
-  const tk = $('b-take'); tk.hidden = !st.length || state.ro; tk.classList.toggle('big', complete()); tk.querySelector('span').textContent = complete() ? T().complete + ' · ' + T().take : T().take;
 }
 function renderSingle(){
   const U = T(), w = WHEELS[state.single], el = $('p-single');
@@ -1097,7 +1097,6 @@ const endDrag = e => { clearTimeout(pressT); if (pend && pend.id === e.pointerId
 list.addEventListener('pointerup', endDrag); list.addEventListener('pointercancel', endDrag);
 
 $('b-shuffle').onclick = shuffle;
-$('b-take').onclick = () => $('b-qr').click();
 $('b-qr').onclick = () => { const url = location.origin + location.pathname + '?c=' + state.cone + '&s=' + state.stack.map(x => x.type).join(',') + '&ro=1'; const qr = qrcode(0, 'M'); qr.addData(url); qr.make(); $('qr-svg').innerHTML = qr.createSvgTag({cellSize:4, margin:0, scalable:true}); $('qr').hidden = false; stat('qr'); };
 $('qr-x').onclick = () => { $('qr').hidden = true; };
 let logoTaps = 0, logoT = 0;
@@ -1145,7 +1144,7 @@ function setOpen(side, on){ app.classList.toggle('open-' + side, on); $(side ===
 const isOpen = side => app.classList.contains('open-' + side);
 $('tab-l').onclick = () => setOpen('l', !isOpen('l'));
 $('handle').onclick = () => setOpen('b', !isOpen('b'));
-app.classList.add('open-b'); try { if (localStorage.getItem('diamant-open-l') === '1') app.classList.add('open-l'); } catch(e){}
+try { if (localStorage.getItem('diamant-open-l') === '1') app.classList.add('open-l'); if (localStorage.getItem('diamant-open-b') !== '0') app.classList.add('open-b'); } catch(e){}
 
 /* tools */
 const VIEW_DIR = new THREE.Vector3(.62, .42, .66).normalize();
@@ -1182,7 +1181,7 @@ $('t-spin').onclick = () => setTool('spin', !state.spin);
 $('t-show').onclick = e => { e.stopPropagation(); startShow(false); };
 function resetView(){ setTool('explode', false); setTool('section', false); setTool('spin', false); flyHome(); };
 try { state.draw = localStorage.getItem('diamant-draw') === '1'; } catch(e){}
-function renderLangMenu(){ $('l-menu').innerHTML = `<div class="scroll">` + LANGS.map(l => `<button role="menuitemradio" aria-checked="${l === state.lang}" data-l="${l}">${UI[l].name}<small>${l.toUpperCase()}</small></button>`).join('') + `</div><div class="fixed"><hr><button data-act="spin" aria-pressed="${state.spin}">${T().spin}</button><button data-act="show">${T().show}</button><button data-act="reset">${T().reset}</button>` + (fsAvailable ? `<button data-act="fs">${T().fsBtn}</button>` : '') + `</div>`; }
+function renderLangMenu(){ $('l-menu').innerHTML = `<div class="scroll">` + LANGS.map(l => `<button role="menuitemradio" aria-checked="${l === state.lang}" data-l="${l}">${UI[l].name}<small>${l.toUpperCase()}</small></button>`).join('') + `</div><div class="fixed"><hr><button data-act="reset">${T().reset}</button>` + (fsAvailable ? `<button data-act="fs">${T().fsBtn}</button>` : '') + `</div>`; }
 function setMenu(open){ $('l-menu').hidden = !open; $('l-btn').setAttribute('aria-expanded', open); }
 $('l-btn').onclick = e => { e.stopPropagation(); setMenu($('l-menu').hidden); };
 $('l-menu').addEventListener('click', e => { const a = e.target.closest('[data-act]'); if (a){ setMenu(false); if (a.dataset.act === 'fs') toggleFs(); else if (a.dataset.act === 'spin') setTool('spin', !state.spin); else if (a.dataset.act === 'show'){ if (!state.ro) startShow(false); } else resetView(); return; }
@@ -1272,18 +1271,53 @@ let lastTap = 0;
 canvas.addEventListener('pointerup', endStage); canvas.addEventListener('pointercancel', endStage);
 canvas.addEventListener('contextmenu', e => e.preventDefault());
 /* three fingers on the stage: swipe left → the next arbor slides in from the right (100 → 150 → 200 → 100…), swipe right → the other way */
-let tri = null;
-canvas.addEventListener('touchstart', e => { if (e.touches.length === 3){ tri = {x: [...e.touches].reduce((a, t) => a + t.clientX, 0)/3, t: performance.now()}; } else tri = null; }, {passive:true});
-canvas.addEventListener('touchmove', e => { if (!tri || e.touches.length !== 3) return; const x = [...e.touches].reduce((a, t) => a + t.clientX, 0)/3, dx = x - tri.x;
-  if (Math.abs(dx) > 70){ const dir = dx < 0 ? -1 : 1; tri = null; cycleCone(dir); } }, {passive:true});
-canvas.addEventListener('touchend', () => { tri = null; }, {passive:true});
+let sw = null;   // three-finger swipe in progress
+const snapEl = document.createElement('img'); snapEl.id = 'snap'; snapEl.alt = ''; snapEl.hidden = true; canvas.parentNode.appendChild(snapEl);
+const avgX = e => [...e.touches].reduce((a, t) => a + t.clientX, 0) / e.touches.length;
+function stackOf(c){ try { const s = JSON.parse(localStorage.getItem(c === '200' ? 'diamant-stack-v2' : 'diamant-stack-' + c)); if (Array.isArray(s) && s.length) return s.map(x => x.type).filter(k => WHEELS[k]); } catch(e){} return CONE[c].setA; }
+function snapStack(c){   // render the other arbor, with its own set, through the live camera → one frame as an image
+  const keepC = state.cone, keepS = SPACE; state.cone = c; SPACE = CONE[c].space;
+  const tmp = new THREE.Group(); tmp.add(c === '100' ? buildBase100() : c === '150' ? buildBase150() : buildBase()); let y = 0;
+  [...stackOf(c)].reverse().forEach(k => { const g = buildWheel(k); g.position.y = y; y += tOf(k); tmp.add(g); });
+  tmp.add(buildShaft(y)); const ws = c === '100' ? buildWasher100() : buildWasher(); ws.position.y = y; const nt = c === '100' ? buildNut100() : buildNut(); nt.position.y = y; tmp.add(ws, nt);
+  const hh = (y + 17 - CONE[c].yMin)/2 * MM; tmp.position.y = -(y + 17 + CONE[c].yMin)/2 + viewC;
+  const hidden = spin.children.filter(o => o.visible && o !== axisLine); hidden.forEach(o => o.visible = false); spin.add(tmp);
+  const dir = camera.position.clone().sub(controls.target).normalize(), pos = camera.position.clone(), sh = shadow.visible; shadow.visible = false;
+  const d = fitFor(CONE[c].R * MM, hh, dir) * zoomRatio; camera.position.copy(controls.target).add(dir.multiplyScalar(d));
+  camera.setViewOffset(innerWidth, innerHeight, lay.tx, lay.ty, innerWidth, innerHeight); camera.updateProjectionMatrix();
+  renderer.render(scene, camera); const url = canvas.toDataURL('image/png');
+  camera.position.copy(pos); camera.setViewOffset(innerWidth, innerHeight, lay.x, lay.y, innerWidth, innerHeight); camera.updateProjectionMatrix();
+  spin.remove(tmp); disposeTree(tmp); hidden.forEach(o => o.visible = true); shadow.visible = sh;
+  state.cone = keepC; SPACE = keepS; return url;
+}
+canvas.addEventListener('touchstart', e => {
+  if (e.touches.length === 3 && !SHOW.on && !state.ro && state.mode === 'stack'){ sw = {x0: avgX(e), dx: 0, c: null, sign: 0}; controls.enabled = false; }
+  else if (sw && e.touches.length !== 3) endSwipe();
+}, {passive:true});
+canvas.addEventListener('touchmove', e => {
+  if (!sw || e.touches.length !== 3) return;
+  const dx = avgX(e) - sw.x0; sw.dx = dx;
+  if (!sw.c && Math.abs(dx) > 6){   // direction chosen: left = the next arbor comes in from the right
+    sw.sign = dx < 0 ? -1 : 1; const i = CONES.indexOf(state.cone), n = CONES.length; sw.c = CONES[(i - sw.sign + n) % n];
+    snapEl.src = snapStack(sw.c); snapEl.hidden = false; snapEl.style.transition = 'none';
+  }
+  lay.x = lay.tx - dx; camera.setViewOffset(innerWidth, innerHeight, lay.x, lay.y, innerWidth, innerHeight); camera.updateProjectionMatrix();   // a positive view offset moves the scene left, so the arbor follows the fingers
+  if (sw.c) snapEl.style.transform = `translateX(${dx - sw.sign * innerWidth}px)`;
+}, {passive:true});
+function endSwipe(){
+  if (!sw) return; const {dx, c, sign} = sw; sw = null; controls.enabled = true;
+  if (c && Math.abs(dx) > innerWidth * .3){   // past the point of no return: the new arbor takes over where its picture is
+    switchCone(c); lay.x = lay.tx - (dx - sign * innerWidth); snapEl.hidden = true; stat('swipe:' + c);
+  } else { snapEl.style.transition = 'transform .35s cubic-bezier(.2,.7,.2,1)'; snapEl.style.transform = `translateX(${-sign * innerWidth}px)`; setTimeout(() => { snapEl.hidden = true; }, 380); }
+}
+canvas.addEventListener('touchend', e => { if (sw && e.touches.length < 3) endSwipe(); }, {passive:true});
+canvas.addEventListener('touchcancel', () => endSwipe(), {passive:true});
 window.__cycle = dir => cycleCone(dir);
-$('arrow-l').onclick = () => cycleCone(1); $('arrow-r').onclick = () => cycleCone(-1);
-setTimeout(() => document.querySelectorAll('.arrow').forEach(a => a.classList.add('pulse')), 2500);
-function cycleCone(dir){   // dir -1 = swipe left = next in the loop 100 → 150 → 200
+
+function cycleCone(dir){   // programmatic: dir -1 = next in the loop 100 → 150 → 200
   if (SHOW.on || state.ro) return;
   const i = CONES.indexOf(state.cone), n = CONES.length, c = CONES[(i - dir + n) % n];   // CONES = 200,150,100: left swipe moves toward index-1
-  switchCone(c); lay.x = lay.tx + dir * -innerWidth * .6;   // start off-screen on the side it comes from, then ease into place
+  switchCone(c); lay.x = lay.tx - dir * innerWidth * .6;   // start off-screen on the side it comes from, then ease into place
 }   // iOS long-press must not cancel the pointer
 const abortGestures = () => { if (drag3d){ const o = W.get(drag3d.uid); drag3d = null; controls.enabled = true; down = null; } clearTimeout(holdT); if (pick){ pick = null; ghost.hidden = true; $('app').classList.remove('dropping'); } };
 addEventListener('blur', abortGestures); document.addEventListener('visibilitychange', () => { if (document.visibilityState !== 'visible') abortGestures(); });
@@ -1321,7 +1355,7 @@ const canRepl = (uid, k) => { const s = state.stack.find(x => x.uid === uid); re
 function doReplace(uid, k){ const s = state.stack.find(x => x.uid === uid); if (!s) return; const old = s.type; s.type = k; state.sel = uid; setRepl(null); syncStack(); toast(T().replaced(code(old), code(k))); stat('replace:' + k); guideDone(); celebrate(); }
 const complete = () => state.stack.length >= 3 && !ORDER.some(k => (!WHEELS[k].only || WHEELS[k].only === state.cone) && fits(tOf(k)));   // nothing more fits: the arbor is done
 let celebrated = '';
-function celebrate(){ const sig = state.cone + ':' + state.stack.map(x => x.type).join(','); if (!complete() || celebrated === sig) return; celebrated = sig; setTool('spin', true); setTimeout(() => setTool('spin', false), 4500); toast(T().complete); }
+function celebrate(){}
 let repl = null;   // tap-to-replace mode: {k}
 function setRepl(k){ repl = k ? {k} : null; $('app').classList.toggle('repl', !!repl); renderStack(); if (repl) toast(T().pickReplace); }
 const endPick = e => {
@@ -1386,7 +1420,7 @@ function layoutTargets(){
 }
 function applyLayout(dt){
   const k = 1 - Math.pow(.004, dt), w = innerWidth, h = innerHeight;
-  const nx = lay.x + (lay.tx - lay.x)*k, ny = lay.y + (lay.ty - lay.y)*k, nz = lay.z + (lay.tz - lay.z)*k;
+  const nx = sw ? lay.x : lay.x + (lay.tx - lay.x)*k, ny = lay.y + (lay.ty - lay.y)*k, nz = lay.z + (lay.tz - lay.z)*k;
   if (Math.abs(nx - lay.x) > .01 || Math.abs(ny - lay.y) > .01){ lay.x = nx; lay.y = ny; camera.setViewOffset(w, h, lay.x, lay.y, w, h); camera.updateProjectionMatrix(); }
   if (Math.abs(nz - lay.z) > 1e-4){ if (!SHOW.on && !camFly) camera.position.sub(controls.target).multiplyScalar(nz / lay.z).add(controls.target); lay.z = nz; }
 }
@@ -1403,8 +1437,15 @@ function fitDist(){
         availW = Math.max(200, w - (L && wide() ? 300 : 24) - (E && wide() ? 190 : 0));
   const vfov = camera.fov * PI / 180, hfov = 2*Math.atan(Math.tan(vfov/2)*camera.aspect);
   const d = camFly ? camFly.dir : tmpDir.copy(camera.position).sub(controls.target).normalize();
+  return fitFor(cone().R * MM, viewHH, d, availH, availW, vfov, hfov);
+}
+function fitFor(R, HH, d, availH, availW, vfov, hfov){
+  const w = innerWidth, h = innerHeight;
+  if (availH == null){ const S = SHOW.on, L = !S && app.classList.contains('open-l'), B = !S && app.classList.contains('open-b');
+    availH = Math.max(200, h - 76 - (B ? (wide() ? 208 : 180) : 56)); availW = Math.max(200, w - (L && wide() ? 300 : 24));
+    vfov = camera.fov * PI / 180; hfov = 2*Math.atan(Math.tan(vfov/2)*camera.aspect); }
   const sph = Math.min(1, Math.abs(d.y)), cph = Math.sqrt(1 - sph*sph);
-  const R = cone().R * MM, hv0 = R*sph + viewHH*cph, big = Math.max(viewHH, R) * 1.06, hv = hv0 + (big - hv0) * tiltV, hh = R + (big - R) * tiltV;      // half extents on screen (horizontal arbor: its length, whichever way it points)
+  const hv0 = R*sph + HH*cph, big = Math.max(HH, R) * 1.06, hv = hv0 + (big - hv0) * tiltV, hh = R + (big - R) * tiltV;      // half extents on screen (horizontal arbor: its length, whichever way it points)
   const dv = hv / Math.tan(vfov/2) * (h / availH), dh = hh / Math.tan(hfov/2) * (w / availW);
   return Math.max(dv, dh) * (wide() ? 1.06 : 1.18) * lay.tz;
 }
