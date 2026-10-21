@@ -504,7 +504,7 @@ dl.specs dd{font-size:15px;font-weight:500;font-variant-numeric:tabular-nums}
 import * as THREE from 'three';
 import { OrbitControls } from './vendor/OrbitControls.js';
 import { RoomEnvironment } from './vendor/RoomEnvironment.js';
-const BUILD = '20261021-131353';           // stamped by build.py
+const BUILD = '20261021-131715';           // stamped by build.py
 const CAT = {"wheels": {"V3.6": {"t": 12, "kind": "cont", "prof": "v", "d": 4, "rim": "bronze", "title": "Mola D200 V3.6"}, "V3.12": {"t": 16, "kind": "cont", "prof": "v", "d": 6, "rim": "bronze", "title": "Mola D200 V3.12"}, "V4P.2": {"t": 12, "kind": "tagli", "prof": "p", "title": "Mola D200 V4P.2"}, "V33": {"t": 12, "kind": "tagli", "prof": "pencil", "L": 1, "title": "Mola D200 V33", "tw": 1.2, "fw": 1.4}, "V44": {"t": 14, "kind": "tagli", "prof": "pencil", "L": 1, "title": "Mola D200 V44", "tw": 2, "fw": 2}, "V55": {"t": 14, "kind": "tagli", "prof": "pencil", "L": 0.5, "title": "Mola D200 V55", "tw": 2, "fw": 3}, "V66": {"t": 18, "kind": "tagli", "prof": "pencil", "L": 0.5, "title": "Mola D200 V66", "tw": 2, "fw": 3}, "V33S": {"t": 12, "kind": "settori", "prof": "pencil", "L": 1, "code": "V33", "title": "Mola V33 a settori", "tw": 1.2, "fw": 1.4}, "V44S": {"t": 14, "kind": "settori", "prof": "pencil", "L": 1, "code": "V44", "title": "Mola V44 a settori", "tw": 2, "fw": 2}, "V55S": {"t": 14, "kind": "settori", "prof": "pencil", "L": 0.5, "code": "V55", "title": "Mola V55 a settori", "tw": 2, "fw": 3}, "V66S": {"t": 18, "kind": "settori", "prof": "pencil", "L": 0.5, "code": "V66", "title": "Mola V66 a settori", "tw": 2, "fw": 3}, "SPACER": {"t": 10, "kind": "spacer", "name": "Spacer", "title": "Spacer 10 mm", "only": "100"}, "POLISH": {"t": 20, "kind": "polish", "name": "Lucidante", "title": "Mola lucidante", "only": "100"}}, "order": ["V3.6", "V3.12", "V4P.2", "V33", "V44", "V55", "V66", "V33S", "V44S", "V55S", "V66S", "SPACER", "POLISH"], "presets": {"tagli": ["V3.6", "V3.12", "V4P.2", "V33", "V44", "V55"], "settori": ["V3.6", "V3.12", "V4P.2", "V33S", "V44S", "V55S"], "iso": ["POLISH", "SPACER", "V33S", "V3.6"]}, "maxWheels": 8, "cone": {"200": {"R": 100, "space": 80, "bore": 17.5, "tk": 1, "shaftR": 17.25, "threadR": 17.25, "yMin": -67, "aside": 185, "nutR": 37, "washerR": 47.5, "teeth": 57, "label": "Ø 200", "sub": "80 mm", "setA": ["V3.6", "V3.12", "V4P.2", "V33", "V44"], "setB": ["V3.6", "V4P.2", "V33S", "V44S", "V55S"], "tech": "HSK 80 B"}, "150": {"R": 75, "space": 70, "bore": 17.5, "tk": 1, "shaftR": 17.25, "threadR": 17.25, "yMin": -44, "aside": 160, "nutR": 37, "washerR": 47.5, "teeth": 43, "label": "Ø 150", "sub": "HSK 50 · 70 mm", "setA": ["V3.6", "V3.12", "V33", "V44"], "setB": ["V3.6", "V4P.2", "V33S", "V44S", "V55S"], "tech": "HSK 50 E"}, "100": {"R": 50, "space": 62, "bore": 11, "tk": 1, "shaftR": 10.8, "threadR": 10.8, "yMin": -110, "aside": 120, "nutR": 17, "washerR": 14.5, "teeth": 36, "label": "Ø 100", "sub": "ISO 40 · 62 mm", "setA": ["POLISH", "SPACER", "V33S", "V3.6"], "setB": ["POLISH", "V44S", "V3.12"], "tech": "ISO 40"}}, "families": [{"id": "pencil", "versions": {"tagli": ["V33", "V44", "V55", "V66"], "settori": ["V33S", "V44S", "V55S", "V66S"]}}, {"id": "v", "versions": {"cont": ["V3.6", "V3.12"]}}, {"id": "p", "versions": {"tagli": ["V4P.2"]}}, {"id": "acc", "versions": {"all": ["SPACER", "POLISH"]}, "only": "100"}]};             // catalog.json, injected by build.py — edit the JSON, not this file
 
 /* ==================================================================
@@ -1111,6 +1111,7 @@ function renderUI(){
   document.querySelectorAll('#cones button').forEach(b => { const cc = CONE[b.dataset.cone]; b.querySelector('b').textContent = cc.tech; b.querySelector('small').textContent = cc.label; b.setAttribute('aria-pressed', b.dataset.cone === state.cone); });
   renderStack(); renderSingle(); buildLabels();
   if (!$('sheet').hidden) openSheet(sheetCtx);
+  if (booted) fixDockWidth();
 }
 let toastT = 0;
 function toast(msg){ const t = $('toast'); t.textContent = msg; t.classList.add('on'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('on'), 2400); }
@@ -1219,6 +1220,12 @@ function railDrag(rail, side){
 }
 railDrag($('tab-l'), 'l'); railDrag($('rail-b'), 'b');
 let dockH = 176, booted = false; const measureDock = () => { dockH = $('dock').offsetHeight || 176; app.style.setProperty('--dockh', dockH + 'px'); if (booted) layoutTargets(); };
+/* the dock keeps one fixed width: the widest family of the active arbor, so the family column never shifts */
+let fixT = 0;
+function fixDockWidth(){ cancelAnimationFrame(fixT); fixT = requestAnimationFrame(() => {
+  const dk = $('dock'), cur = FAM.open, keepVer = {...FAM.ver}; dk.style.width = ''; let w = 0;
+  for (const f of galFams()){ for (const v of Object.keys(f.versions)){ FAM.ver[f.id] = v; openFam(f.id); w = Math.max(w, dk.scrollWidth); } }
+  for (const k of Object.keys(FAM.ver)) delete FAM.ver[k]; Object.assign(FAM.ver, keepVer); openFam(cur && galFams().some(f => f.id === cur) ? cur : galFams()[0].id); dk.style.width = Math.ceil(w) + 'px'; measureDock(); }); }
 new ResizeObserver(measureDock).observe($('dock')); measureDock();
 try { if (localStorage.getItem('diamant-open-l') === '1') app.classList.add('open-l'); if (localStorage.getItem('diamant-open-b') !== '0') app.classList.add('open-b'); } catch(e){}
 
@@ -1781,6 +1788,7 @@ function refreshCatalogue(){   // thumbnails and visibility follow the active ar
   document.querySelectorAll('.card[data-k]').forEach(c => { const k = c.dataset.k, w = WHEELS[k]; if (!FAM.open) c.hidden = !!w.only && w.only !== state.cone; c.querySelector('img').src = thumbs[state.cone][k] || ''; });
   document.querySelectorAll('.card.famc').forEach(c => { const f = famOf(c.dataset.fam), ver = famVer(f), ks = f.versions[ver].filter(k => !WHEELS[k].only || WHEELS[k].only === state.cone); c.hidden = !!f.only && f.only !== state.cone; c.querySelector('img').src = thumbs[state.cone][ks[0] || f.versions[ver][0]] || ''; c.querySelector('small').textContent = ks.length === 1 ? `${code(ks[0])} · ${tOf(ks[0])} mm` : `${ks.length} ${T().sizes}`; });
   if (FAM.open && famOf(FAM.open).only && famOf(FAM.open).only !== state.cone) closeFam(); else if (FAM.open) openFam(FAM.open);
+  if (booted) fixDockWidth();
   document.querySelectorAll('[data-preset]').forEach(b => b.hidden = (b.dataset.preset === 'iso') !== (state.cone === '100'));
 }
 /* focus on one wheel = a gallery: arrows, cards or a one-finger flick move through every wheel of the arbor; "back" returns to exactly the screen you left */
@@ -1824,7 +1832,7 @@ setInterval(() => { if (document.visibilityState === 'visible' && document.hasFo
 document.addEventListener('visibilitychange', () => { lastRaw = performance.now(); });
 let errT = []; addEventListener('error', () => { const n = performance.now(); errT = errT.filter(t => n - t < 60000); errT.push(n); if (errT.length > 12) location.reload(); });
 if ('serviceWorker' in navigator && location.hostname !== 'localhost' && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(() => {});
-stat('session'); booted = true; measureDock();
+stat('session'); booted = true; measureDock(); fixDockWidth();
 $('langbar').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; $('langbar').hidden = true; try { localStorage.setItem('diamant-langpicked', '1'); } catch(x){} if (b.dataset.more){ setMenu(true); } else { state.lang = b.dataset.l; try { localStorage.setItem('diamant-lang', state.lang); } catch(x){} renderUI(); } if (!guided) $('hint').classList.remove('off'); });
 if (state.ro){ $('app').classList.add('ro','open-l'); $('app').classList.remove('open-b'); $('robadge').hidden = false; layoutTargets(); stat('ro-view'); }
 </script>
