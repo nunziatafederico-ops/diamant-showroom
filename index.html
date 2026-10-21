@@ -26,7 +26,7 @@
   --f-body:"Archivo","Helvetica Neue",Arial,sans-serif;
   --f-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
   --glass:rgba(13,20,34,.66);
-  --pw:min(304px,32vw);
+  --pw:min(330px,34vw);
   color-scheme:dark;
 }
 html,body{height:100%;margin:0;background:var(--ink);color:var(--fg);overflow:hidden}
@@ -64,15 +64,18 @@ button:focus-visible{outline:2px solid var(--blue-hi);outline-offset:2px}
 #app.open-b #l-menu{max-height:calc(100vh - 272px);max-height:calc(100dvh - 272px)}
 .menu hr{border:0;border-top:1px solid var(--line);margin:4px 8px}
 .menu button{all:unset;display:flex;align-items:center;justify-content:space-between;gap:16px;height:44px;padding:0 14px;border-radius:14px;font-size:15px;cursor:pointer;touch-action:manipulation}
-.menu button small{font:500 11px/1 var(--f-mono);letter-spacing:.1em;color:var(--mute)}
+.menu button small{font:500 11px/1 var(--f-mono);letter-spacing:.1em;color:var(--mute);margin-left:auto}
+.menu button .fl{font-size:19px;line-height:1;margin-right:10px;width:24px;text-align:center}
+.menu button .ico{width:24px;margin-right:10px;display:grid;place-items:center}.menu button .ico svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.menu button{justify-content:flex-start}
 .menu button[aria-checked="true"]{background:rgba(58,104,198,.3)}
 .menu button[aria-checked="true"] small{color:var(--blue-hi)}
 .menu button:active{background:rgba(143,176,238,.15)}
 .pill svg{width:20px;height:20px}
 
 /* left panel */
-.panel{position:absolute;left:0;top:calc(env(safe-area-inset-top,0px) + 96px);bottom:calc(env(safe-area-inset-bottom,0px) + 212px);box-sizing:border-box;padding:16px 14px 16px 18px;
-  width:var(--pw);display:flex;flex-direction:column;gap:10px;z-index:4;background:var(--glass);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border:1px solid var(--line);border-left:0;border-radius:0 22px 22px 0;transition:transform .45s cubic-bezier(.2,.7,.2,1)}
+.panel{position:absolute;left:0;top:calc(env(safe-area-inset-top,0px) + 96px);bottom:calc(env(safe-area-inset-bottom,0px) + 248px);box-sizing:border-box;padding:16px 14px 16px 18px;
+  width:var(--pw);display:flex;flex-direction:column;gap:10px;z-index:4;background:var(--glass);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border:1px solid var(--line);border-left:0;border-right:0;border-radius:0;overflow:hidden;transition:transform .45s cubic-bezier(.2,.7,.2,1)}
 #app:not(.open-l) .panel{transform:translateX(-100%);pointer-events:none}
 .panel.drag,.tab.drag,.dock.drag{transition:none !important}
 .panel>*{pointer-events:auto}
@@ -84,7 +87,7 @@ h1{font-family:var(--f-display);font-variation-settings:"wdth" 108;font-weight:7
 .meta b{color:var(--fg);font-weight:500}
 .meta b.over{color:#f3b3b3}
 
-.list{list-style:none;margin:0;padding:2px;display:flex;flex-direction:column;gap:5px;overflow-y:auto;min-height:98px;flex:1 1 0;scrollbar-width:none;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+.list{list-style:none;margin:0;padding:2px;display:flex;flex-direction:column;gap:5px;overflow-y:auto;min-height:56px;flex:1 1 0;scrollbar-width:none;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
 .panel>:not(.list){flex:none}
 .list::after{content:"";flex:none;height:2px}
 .row{display:grid;grid-template-columns:40px 34px minmax(0,1fr) 40px 40px;column-gap:4px;align-items:center;height:44px;flex:0 0 44px;border-radius:14px;padding-right:2px;cursor:grab;touch-action:pan-y;
@@ -118,11 +121,11 @@ h1{font-family:var(--f-display);font-variation-settings:"wdth" 108;font-weight:7
 .actions .btn{padding:0 8px;font-size:12.5px;height:40px;flex:1 1 0;min-width:0;justify-content:center;gap:6px;white-space:nowrap}
 .actions .btn svg{flex:none;width:16px;height:16px}
 .cones{display:flex;gap:7px;margin-top:12px}
-.cones button{all:unset;box-sizing:border-box;flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:center;gap:5px;padding:10px 4px 9px;border-radius:15px;cursor:pointer;touch-action:manipulation;border:1px solid var(--line);background:rgba(143,176,238,.05);transition:background .25s,border-color .25s,transform .25s}
+.cones button{all:unset;box-sizing:border-box;flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 4px 11px;border-radius:15px;cursor:pointer;touch-action:manipulation;border:1px solid var(--line);background:rgba(143,176,238,.05);transition:background .25s,border-color .25s,transform .25s}
 .cones button:active{transform:scale(.97)}
-.cones img{width:58px;height:44px;object-fit:contain;flex:0 0 auto;filter:drop-shadow(0 6px 10px rgba(0,0,0,.5))}
+.cones img{width:80px;height:62px;object-fit:contain;flex:0 0 auto;filter:drop-shadow(0 6px 10px rgba(0,0,0,.5))}
 .cones span{display:flex;flex-direction:column;align-items:center;min-width:0;line-height:1.15;text-align:center}
-.cones b{font-size:12px;line-height:1.15;white-space:normal;text-align:center;max-width:100%;min-height:28px;display:flex;align-items:center}.cones small{font:500 11px/1.2 var(--f-mono);color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.cones b{font-size:14px;line-height:1.15;white-space:nowrap;text-align:center;max-width:100%}.cones small{font:500 12px/1.2 var(--f-mono);color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
 .cones button[aria-pressed="true"]{border-color:var(--blue-hi);background:linear-gradient(180deg,rgba(58,104,198,.38),rgba(58,104,198,.22));box-shadow:0 0 0 1px rgba(143,176,238,.25) inset,0 10px 24px -14px rgba(58,104,198,.9)}
 .cones button[aria-pressed="true"] small{color:var(--blue-hi)}
 .space{height:4px;border-radius:2px;background:rgba(143,176,238,.14);margin-top:10px;overflow:hidden}
@@ -130,6 +133,8 @@ h1{font-family:var(--f-display);font-variation-settings:"wdth" 108;font-weight:7
 .space.warn i{background:#f0b35a}.space.over i{background:#e05555}
 .card.nofit{opacity:.3}
 .hdr{display:flex;align-items:center;gap:6px;margin-top:10px}
+.hdr.foot{margin-top:auto;justify-content:space-between;padding-top:8px;border-top:1px solid var(--line)}
+.hdr.foot .pre .menu{top:auto;bottom:46px}
 .hdr .meta{margin:0;flex:1 1 auto;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:11px}
 .hdr button{all:unset;box-sizing:border-box;width:40px;height:40px;border-radius:12px;display:grid;place-items:center;color:#c2cbdb;cursor:pointer;touch-action:manipulation;position:relative}
 .hdr button svg{width:19px;height:19px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
@@ -198,12 +203,14 @@ dl.specs dd{font-size:15px;font-weight:500;font-variant-numeric:tabular-nums}
 #app.open-b .handle{bottom:calc(env(safe-area-inset-bottom,0px) + 194px)}
 .handle[hidden]{display:none}
 #app:not(.open-b) .panel{bottom:calc(env(safe-area-inset-bottom,0px) + 60px)}
-.famrow{display:flex;gap:6px;justify-content:center;overflow-x:auto;scrollbar-width:none}
+.famrow{display:flex;gap:8px;align-items:center;padding:2px 2px 0}
+.famrow .strip{flex:1 1 auto;justify-content:flex-start;overflow-x:auto;scrollbar-width:none}
+.famrow .seg{flex:0 0 auto;margin-left:auto}
 .famrow .card.famc{flex-direction:row;width:auto;padding:5px 12px 5px 6px;gap:8px;border-radius:14px;align-items:center}
 .famrow .card.famc img{width:44px;height:32px}
 .famrow .card.famc b{font-size:12.5px;white-space:nowrap}.famrow .card.famc small{display:none}
 .sizes{display:flex;align-items:center;gap:8px}
-.sizes .vrow{flex:1 1 auto;justify-content:center;min-width:0}
+.sizes .vrow{flex:1 1 auto;justify-content:center;min-width:0;gap:10px}
 .strip{display:flex;gap:6px}
 .strip::-webkit-scrollbar{display:none}
 
@@ -222,7 +229,9 @@ dl.specs dd{font-size:15px;font-weight:500;font-variant-numeric:tabular-nums}
 .seg button[aria-pressed="true"]{background:rgba(58,104,198,.4);color:#fff}
 .vrow{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
 .vrow::-webkit-scrollbar{display:none}
-.vrow .card{width:96px}
+.vrow .card{width:136px;padding:6px 4px 10px}
+.vrow .card img{width:112px;height:80px}
+.vrow .card b{font-size:14px}.vrow .card small{font-size:12px}
 .card .info{position:absolute;top:4px;right:6px;width:20px;height:20px;border-radius:50%;display:grid;place-items:center;font:600 12px/1 var(--f-display);font-style:normal;color:#c2cbdb;background:rgba(143,176,238,.16);border:1px solid var(--line);cursor:pointer;z-index:2}
 .card{all:unset;flex:0 0 auto;width:100px;touch-action:pan-x;border-radius:17px;padding:5px 4px 9px;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;transition:background .25s;touch-action:manipulation;position:relative}
 .card img{-webkit-user-drag:none;user-drag:none;width:76px;height:56px;object-fit:contain;display:block;filter:drop-shadow(0 8px 10px rgba(0,0,0,.5));transition:transform .4s cubic-bezier(.2,.7,.2,1)}
@@ -233,10 +242,11 @@ dl.specs dd{font-size:15px;font-weight:500;font-variant-numeric:tabular-nums}
 .card[aria-pressed="true"]{background:rgba(58,104,198,.24)}
 .card[aria-pressed="true"] img{transform:scale(1.1)}
 
-.tab{position:absolute;top:calc(env(safe-area-inset-top,0px) + 96px);bottom:calc(env(safe-area-inset-bottom,0px) + 212px);width:38px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;z-index:7;cursor:pointer;color:#c2cbdb;touch-action:none;transition:left .45s cubic-bezier(.2,.7,.2,1),right .45s cubic-bezier(.2,.7,.2,1);touch-action:manipulation;border:1px solid var(--line);padding:0}
+.tab{position:absolute;top:calc(env(safe-area-inset-top,0px) + 96px);bottom:calc(env(safe-area-inset-bottom,0px) + 248px);width:38px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;z-index:7;cursor:pointer;color:#c2cbdb;touch-action:none;transition:left .45s cubic-bezier(.2,.7,.2,1),right .45s cubic-bezier(.2,.7,.2,1);touch-action:manipulation;border:1px solid var(--line);padding:0}
 .tab svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:transform .3s}
 .tab-l{left:0;border-radius:0 16px 16px 0;border-left:0}
-#app.open-l .tab-l{left:var(--pw);border-radius:0 16px 16px 0;border-left:0}
+#app.open-l .tab-l{left:var(--pw);border-radius:0 22px 22px 0;border-left:0}
+.tab{outline:none}.tab:focus-visible{outline:none}
 #app:not(.open-b) .tab{bottom:calc(env(safe-area-inset-bottom,0px) + 60px)}
 .tab .lbl{writing-mode:vertical-rl;transform:rotate(180deg);font:600 12px/1 var(--f-mono);letter-spacing:.24em;text-transform:uppercase;color:#dfe4ec}
 #app.open-l .tab-l svg{transform:rotate(180deg)}
@@ -244,8 +254,8 @@ dl.specs dd{font-size:15px;font-weight:500;font-variant-numeric:tabular-nums}
 .tab,.handle{transition:opacity .6s}
 .handle{position:absolute;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 10px);transform:translateX(-50%);height:30px;padding:0 18px;border-radius:15px;display:flex;align-items:center;gap:8px;z-index:7;cursor:pointer;color:#c2cbdb;font:500 11px/1 var(--f-mono);letter-spacing:.1em;text-transform:uppercase;touch-action:manipulation;transition:bottom .45s cubic-bezier(.2,.7,.2,1),opacity .6s}
 .handle svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:transform .3s}
-#app.open-b .sect{bottom:calc(env(safe-area-inset-bottom,0px) + 256px)}
-#app.open-b .sstyle{bottom:calc(env(safe-area-inset-bottom,0px) + 206px)}
+#app.open-b .sect{bottom:calc(env(safe-area-inset-bottom,0px) + 294px)}
+#app.open-b .sstyle{bottom:calc(env(safe-area-inset-bottom,0px) + 244px)}
 #app:not(.open-b) .sect{bottom:calc(env(safe-area-inset-bottom,0px) + 126px)}
 #app:not(.open-b) .sstyle{bottom:calc(env(safe-area-inset-bottom,0px) + 76px)}
 #app.open-b .handle svg{transform:rotate(180deg)}
@@ -406,16 +416,16 @@ dl.specs dd{font-size:15px;font-weight:500;font-variant-numeric:tabular-nums}
       <h1 data-t="stackTitle"></h1>
       <div class="cones" id="cones"></div>
       <div class="space" id="space"><i></i></div>
-      <div class="hdr">
-        <div class="meta" id="s-meta"></div>
+      <div class="hdr"><div class="meta" id="s-meta"></div></div>
+    </div>
+    <ul class="list" id="list"></ul>
+    <div class="hdr foot">
         <button class="glass" id="b-shuffle" data-tt="shuffle"><svg viewBox="0 0 24 24"><path d="M3 7h3.5c2 0 3.2 1 4.2 2.6l2.6 4.8c1 1.6 2.2 2.6 4.2 2.6H21M3 17h3.5c1.4 0 2.4-.5 3.2-1.3M14.3 8.3c.8-.8 1.8-1.3 3.2-1.3H21M18 4l3 3-3 3M18 14l3 3-3 3"/></svg></button>
         <button class="glass" id="b-qr" data-tt="share"><svg viewBox="0 0 24 24"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h2v2h-2zM18 14h2v2h-2zM14 18h2v2h-2zM18 18h2v2h-2z"/></svg></button>
         <button class="glass" id="b-clear" data-tt="clear"><svg viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg></button>
         <div class="pre"><button class="glass" id="b-pre" data-tt="presets" aria-haspopup="menu" aria-expanded="false"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="4" rx="1.5"/><rect x="4" y="12" width="16" height="4" rx="1.5"/><path d="M8 19h8"/></svg></button>
           <div class="menu glass" id="pre-menu" role="menu" hidden><button data-preset="tagli" data-t="pTagli"></button><button data-preset="settori" data-t="pSettori"></button><button data-preset="iso">Set ISO 40</button></div></div>
-      </div>
     </div>
-    <ul class="list" id="list"></ul>
   </section>
 
   <!-- single wheel -->
@@ -432,7 +442,7 @@ dl.specs dd{font-size:15px;font-weight:500;font-variant-numeric:tabular-nums}
   <div id="labels"></div>
   <div class="sect" id="sect"><i></i><span data-t="sectionOn"></span></div>
   <div class="sstyle glass" id="sstyle" hidden><button data-s="mat" data-t="styleMat" aria-pressed="true"></button><button data-s="draw" data-t="styleDraw" aria-pressed="false"></button></div>
-  <nav class="dock glass" id="dock" aria-label="Catalogo"><div class="railb" id="rail-b"><span data-t="wheelsBtn"></span><svg viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></svg></div><div class="famrow strip" id="strip"></div><div class="sizes"><div class="vrow" id="fam-row"></div><div class="seg" id="fam-ver"></div></div></nav>
+  <nav class="dock glass" id="dock" aria-label="Catalogo"><div class="railb" id="rail-b"><span data-t="wheelsBtn"></span><svg viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></svg></div><div class="famrow"><div class="strip" id="strip"></div><div class="seg" id="fam-ver"></div></div><div class="sizes"><div class="vrow" id="fam-row"></div></div></nav>
   <button class="tab tab-l glass" id="tab-l" aria-label="Coni"><span class="lbl" data-t="conesLbl"></span><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button>
   <button class="handle glass" id="handle" hidden><svg viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></svg><span data-t="wheelsBtn"></span></button>
 
@@ -470,8 +480,8 @@ dl.specs dd{font-size:15px;font-weight:500;font-variant-numeric:tabular-nums}
 import * as THREE from 'three';
 import { OrbitControls } from './vendor/OrbitControls.js';
 import { RoomEnvironment } from './vendor/RoomEnvironment.js';
-const BUILD = '20261021-122211';           // stamped by build.py
-const CAT = {"wheels": {"V3.6": {"t": 12, "kind": "cont", "prof": "v", "d": 4, "rim": "bronze", "title": "Mola D200 V3.6"}, "V3.12": {"t": 16, "kind": "cont", "prof": "v", "d": 6, "rim": "bronze", "title": "Mola D200 V3.12"}, "V4P.2": {"t": 12, "kind": "tagli", "prof": "p", "title": "Mola D200 V4P.2"}, "V33": {"t": 12, "kind": "tagli", "prof": "pencil", "L": 1, "title": "Mola D200 V33", "tw": 1.2, "fw": 1.4}, "V44": {"t": 14, "kind": "tagli", "prof": "pencil", "L": 1, "title": "Mola D200 V44", "tw": 2, "fw": 2}, "V55": {"t": 14, "kind": "tagli", "prof": "pencil", "L": 0.5, "title": "Mola D200 V55", "tw": 2, "fw": 3}, "V66": {"t": 18, "kind": "tagli", "prof": "pencil", "L": 0.5, "title": "Mola D200 V66", "tw": 2, "fw": 3}, "V33S": {"t": 12, "kind": "settori", "prof": "pencil", "L": 1, "code": "V33", "title": "Mola V33 a settori", "tw": 1.2, "fw": 1.4}, "V44S": {"t": 14, "kind": "settori", "prof": "pencil", "L": 1, "code": "V44", "title": "Mola V44 a settori", "tw": 2, "fw": 2}, "V55S": {"t": 14, "kind": "settori", "prof": "pencil", "L": 0.5, "code": "V55", "title": "Mola V55 a settori", "tw": 2, "fw": 3}, "V66S": {"t": 18, "kind": "settori", "prof": "pencil", "L": 0.5, "code": "V66", "title": "Mola V66 a settori", "tw": 2, "fw": 3}, "SPACER": {"t": 10, "kind": "spacer", "name": "Spacer", "title": "Spacer 10 mm", "only": "100"}, "POLISH": {"t": 20, "kind": "polish", "name": "Lucidante", "title": "Mola lucidante", "only": "100"}}, "order": ["V3.6", "V3.12", "V4P.2", "V33", "V44", "V55", "V66", "V33S", "V44S", "V55S", "V66S", "SPACER", "POLISH"], "presets": {"tagli": ["V3.6", "V3.12", "V4P.2", "V33", "V44", "V55"], "settori": ["V3.6", "V3.12", "V4P.2", "V33S", "V44S", "V55S"], "iso": ["POLISH", "SPACER", "V33S", "V3.6"]}, "maxWheels": 8, "cone": {"200": {"R": 100, "space": 80, "bore": 17.5, "tk": 1, "shaftR": 17.25, "threadR": 17.25, "yMin": -67, "aside": 185, "nutR": 37, "washerR": 47.5, "teeth": 57, "label": "Ø 200", "sub": "80 mm", "setA": ["V3.6", "V3.12", "V4P.2", "V33", "V44"], "setB": ["V3.6", "V4P.2", "V33S", "V44S", "V55S"]}, "150": {"R": 75, "space": 70, "bore": 17.5, "tk": 1, "shaftR": 17.25, "threadR": 17.25, "yMin": -44, "aside": 160, "nutR": 37, "washerR": 47.5, "teeth": 43, "label": "Ø 150", "sub": "HSK 50 · 70 mm", "setA": ["V3.6", "V3.12", "V33", "V44"], "setB": ["V3.6", "V4P.2", "V33S", "V44S", "V55S"]}, "100": {"R": 50, "space": 62, "bore": 11, "tk": 1, "shaftR": 10.8, "threadR": 10.8, "yMin": -110, "aside": 120, "nutR": 17, "washerR": 14.5, "teeth": 36, "label": "Ø 100", "sub": "ISO 40 · 62 mm", "setA": ["POLISH", "SPACER", "V33S", "V3.6"], "setB": ["POLISH", "V44S", "V3.12"]}}, "families": [{"id": "pencil", "versions": {"tagli": ["V33", "V44", "V55", "V66"], "settori": ["V33S", "V44S", "V55S", "V66S"]}}, {"id": "v", "versions": {"cont": ["V3.6", "V3.12"]}}, {"id": "p", "versions": {"tagli": ["V4P.2"]}}, {"id": "acc", "versions": {"all": ["SPACER", "POLISH"]}, "only": "100"}]};             // catalog.json, injected by build.py — edit the JSON, not this file
+const BUILD = '20261021-122700';           // stamped by build.py
+const CAT = {"wheels": {"V3.6": {"t": 12, "kind": "cont", "prof": "v", "d": 4, "rim": "bronze", "title": "Mola D200 V3.6"}, "V3.12": {"t": 16, "kind": "cont", "prof": "v", "d": 6, "rim": "bronze", "title": "Mola D200 V3.12"}, "V4P.2": {"t": 12, "kind": "tagli", "prof": "p", "title": "Mola D200 V4P.2"}, "V33": {"t": 12, "kind": "tagli", "prof": "pencil", "L": 1, "title": "Mola D200 V33", "tw": 1.2, "fw": 1.4}, "V44": {"t": 14, "kind": "tagli", "prof": "pencil", "L": 1, "title": "Mola D200 V44", "tw": 2, "fw": 2}, "V55": {"t": 14, "kind": "tagli", "prof": "pencil", "L": 0.5, "title": "Mola D200 V55", "tw": 2, "fw": 3}, "V66": {"t": 18, "kind": "tagli", "prof": "pencil", "L": 0.5, "title": "Mola D200 V66", "tw": 2, "fw": 3}, "V33S": {"t": 12, "kind": "settori", "prof": "pencil", "L": 1, "code": "V33", "title": "Mola V33 a settori", "tw": 1.2, "fw": 1.4}, "V44S": {"t": 14, "kind": "settori", "prof": "pencil", "L": 1, "code": "V44", "title": "Mola V44 a settori", "tw": 2, "fw": 2}, "V55S": {"t": 14, "kind": "settori", "prof": "pencil", "L": 0.5, "code": "V55", "title": "Mola V55 a settori", "tw": 2, "fw": 3}, "V66S": {"t": 18, "kind": "settori", "prof": "pencil", "L": 0.5, "code": "V66", "title": "Mola V66 a settori", "tw": 2, "fw": 3}, "SPACER": {"t": 10, "kind": "spacer", "name": "Spacer", "title": "Spacer 10 mm", "only": "100"}, "POLISH": {"t": 20, "kind": "polish", "name": "Lucidante", "title": "Mola lucidante", "only": "100"}}, "order": ["V3.6", "V3.12", "V4P.2", "V33", "V44", "V55", "V66", "V33S", "V44S", "V55S", "V66S", "SPACER", "POLISH"], "presets": {"tagli": ["V3.6", "V3.12", "V4P.2", "V33", "V44", "V55"], "settori": ["V3.6", "V3.12", "V4P.2", "V33S", "V44S", "V55S"], "iso": ["POLISH", "SPACER", "V33S", "V3.6"]}, "maxWheels": 8, "cone": {"200": {"R": 100, "space": 80, "bore": 17.5, "tk": 1, "shaftR": 17.25, "threadR": 17.25, "yMin": -67, "aside": 185, "nutR": 37, "washerR": 47.5, "teeth": 57, "label": "Ø 200", "sub": "80 mm", "setA": ["V3.6", "V3.12", "V4P.2", "V33", "V44"], "setB": ["V3.6", "V4P.2", "V33S", "V44S", "V55S"], "tech": "HSK 80 B"}, "150": {"R": 75, "space": 70, "bore": 17.5, "tk": 1, "shaftR": 17.25, "threadR": 17.25, "yMin": -44, "aside": 160, "nutR": 37, "washerR": 47.5, "teeth": 43, "label": "Ø 150", "sub": "HSK 50 · 70 mm", "setA": ["V3.6", "V3.12", "V33", "V44"], "setB": ["V3.6", "V4P.2", "V33S", "V44S", "V55S"], "tech": "HSK 50 E"}, "100": {"R": 50, "space": 62, "bore": 11, "tk": 1, "shaftR": 10.8, "threadR": 10.8, "yMin": -110, "aside": 120, "nutR": 17, "washerR": 14.5, "teeth": 36, "label": "Ø 100", "sub": "ISO 40 · 62 mm", "setA": ["POLISH", "SPACER", "V33S", "V3.6"], "setB": ["POLISH", "V44S", "V3.12"], "tech": "ISO 40"}}, "families": [{"id": "pencil", "versions": {"tagli": ["V33", "V44", "V55", "V66"], "settori": ["V33S", "V44S", "V55S", "V66S"]}}, {"id": "v", "versions": {"cont": ["V3.6", "V3.12"]}}, {"id": "p", "versions": {"tagli": ["V4P.2"]}}, {"id": "acc", "versions": {"all": ["SPACER", "POLISH"]}, "only": "100"}]};             // catalog.json, injected by build.py — edit the JSON, not this file
 
 /* ==================================================================
    CATALOGO — misure dai disegni Diamant (tavole del 17-19/06/2026)
@@ -1064,7 +1074,7 @@ function renderUI(){
   document.querySelectorAll('.card[data-k]').forEach(c => { c.querySelector('b').textContent = code(c.dataset.k); c.querySelector('small').textContent = `${tOf(c.dataset.k)} mm`; });
   document.querySelectorAll('.card.famc').forEach(c => { c.querySelector('b').textContent = U.fam[c.dataset.fam]; });
   if (FAM.open) openFam(FAM.open);
-  document.querySelectorAll('#cones button').forEach(b => { const cc = CONE[b.dataset.cone]; b.querySelector('b').textContent = U.use[b.dataset.cone]; b.querySelector('small').textContent = `${cc.label} · ${cc.sub.split(' · ').pop()}`; b.setAttribute('aria-pressed', b.dataset.cone === state.cone); });
+  document.querySelectorAll('#cones button').forEach(b => { const cc = CONE[b.dataset.cone]; b.querySelector('b').textContent = cc.tech; b.querySelector('small').textContent = cc.label; b.setAttribute('aria-pressed', b.dataset.cone === state.cone); });
   renderStack(); renderSingle(); buildLabels();
   if (!$('sheet').hidden) openSheet(sheetCtx);
 }
@@ -1210,7 +1220,9 @@ $('t-spin').onclick = () => setTool('spin', !state.spin);
 $('t-show').onclick = e => { e.stopPropagation(); startShow(false); };
 function resetView(){ setTool('explode', false); setTool('section', false); setTool('spin', false); flyHome(); };
 try { state.draw = localStorage.getItem('diamant-draw') === '1'; } catch(e){}
-function renderLangMenu(){ $('l-menu').innerHTML = `<div class="scroll">` + LANGS.map(l => `<button role="menuitemradio" aria-checked="${l === state.lang}" data-l="${l}">${UI[l].name}<small>${l.toUpperCase()}</small></button>`).join('') + `</div><div class="fixed"><hr><button data-act="reset">${T().reset}</button>` + (fsAvailable ? `<button data-act="fs">${T().fsBtn}</button>` : '') + `</div>`; }
+const FLAGS = {it:'🇮🇹',en:'🇬🇧',de:'🇩🇪',fr:'🇫🇷',es:'🇪🇸',pt:'🇵🇹',ru:'🇷🇺',tr:'🇹🇷',zh:'🇨🇳',ja:'🇯🇵',nl:'🇳🇱',pl:'🇵🇱',sv:'🇸🇪',ko:'🇰🇷',el:'🇬🇷'};
+const ICO_VIEW = '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/><circle cx="12" cy="12" r="8"/></svg>', ICO_FS = '<svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>';
+function renderLangMenu(){ $('l-menu').innerHTML = `<div class="scroll">` + LANGS.map(l => `<button role="menuitemradio" aria-checked="${l === state.lang}" data-l="${l}"><span class="fl">${FLAGS[l] || ''}</span>${UI[l].name}<small>${l.toUpperCase()}</small></button>`).join('') + `</div><div class="fixed"><hr><button data-act="reset"><span class="ico">${ICO_VIEW}</span>${T().reset}</button>` + (fsAvailable ? `<button data-act="fs"><span class="ico">${ICO_FS}</span>${T().fsBtn}</button>` : '') + `</div>`; }
 function setMenu(open){ $('l-menu').hidden = !open; $('l-btn').setAttribute('aria-expanded', open); }
 $('l-btn').onclick = e => { e.stopPropagation(); setMenu($('l-menu').hidden); };
 $('l-menu').addEventListener('click', e => { const a = e.target.closest('[data-act]'); if (a){ setMenu(false); if (a.dataset.act === 'fs') toggleFs(); else if (a.dataset.act === 'spin') setTool('spin', !state.spin); else if (a.dataset.act === 'show'){ if (!state.ro) startShow(false); } else resetView(); return; }
@@ -1430,6 +1442,9 @@ function makeThumbs(){
     [...CONE[c].setA].reverse().forEach(k => { const g = buildWheel(k); g.position.y = y; y += tOf(k); tmp.add(g); });
     tmp.add(buildShaft(y)); const ws = c === '100' ? buildWasher100() : buildWasher(); ws.position.y = y; const nt = c === '100' ? buildNut100() : buildNut(); nt.position.y = y; tmp.add(ws, nt);
     tmp.position.y = -(y + 17 + CONE[c].yMin)/2; out['stack' + c] = shot(tmp, c === '100' ? 1.15 : c === '150' ? 1.2 : 1.25, new THREE.Vector3(.6, .45, .7));
+    const e = new THREE.Group(); e.add(c === '100' ? buildBase100() : c === '150' ? buildBase150() : buildBase()); const H = CONE[c].space; e.add(buildShaft(H));
+    const ew = c === '100' ? buildWasher100() : buildWasher(); ew.position.y = H; const en = c === '100' ? buildNut100() : buildNut(); en.position.y = H; e.add(ew, en);
+    e.position.y = -(H + 17 + CONE[c].yMin)/2; out['base' + c] = shot(e, c === '100' ? 1.1 : c === '150' ? 1.0 : 1.05, new THREE.Vector3(.6, .35, .7));
   }
   state.cone = keep; SPACE = CONE[keep].space;
   shadow.visible = true; renderer.setPixelRatio(pr);
@@ -1444,7 +1459,7 @@ function layoutTargets(){
   const w = innerWidth, h = innerHeight, L = app.classList.contains('open-l'), B = app.classList.contains('open-b');
   if (SHOW.on){ lay.tx = wide() ? -w*.13 : 0; lay.ty = wide() ? 30 : -h*.1; lay.tz = 1; return; }   // CTA sits at the bottom centre
   const E = state.explode && state.mode === 'stack';   // exploded: taller and labelled on the right, so sit it lower and nearer the centre, away from the top-right tools
-  if (wide()){ lay.tx = (L ? -150 : 0) + (E ? 95 : 0); lay.ty = (B ? 64 : -36) + (state.section ? 48 : 0); lay.tz = 1; }   // centre of the free band: panel 300 px left, labels 190 px right, strip 196 px / pill 56 px bottom, bar 76 px top
+  if (wide()){ lay.tx = (L ? -150 : 0) + (E ? 95 : 0); lay.ty = (B ? 84 : -36) + (state.section ? 48 : 0); lay.tz = 1; }   // centre of the free band: panel 300 px left, labels 190 px right, strip 196 px / pill 56 px bottom, bar 76 px top
   else { lay.tx = 0; lay.ty = -h*.08 + (L ? h*.14 : 0) + (B ? -h*.02 : 0); lay.tz = 1 + (L ? .3 : 0) + (B ? .18 : 0); }
 }
 function applyLayout(dt){
@@ -1462,7 +1477,7 @@ addEventListener('resize', resize);
 /* camera distance that fills the free stage: projected extents of the cylinder (not its bounding sphere) against the area left by the open panels */
 function fitDist(){
   const w = innerWidth, h = innerHeight, S = SHOW.on, L = !S && app.classList.contains('open-l'), B = !S && app.classList.contains('open-b'), E = !S && state.explode && state.mode === 'stack';
-  const availH = Math.max(200, h - (S ? 40 : 76) - (S ? 110 : B ? (wide() ? 208 : 180) : 56) - (!S && state.section ? 96 : 0)),   // section: label + style pill sit under the model
+  const availH = Math.max(200, h - (S ? 40 : 76) - (S ? 110 : B ? (wide() ? 246 : 200) : 56) - (!S && state.section ? 96 : 0)),   // section: label + style pill sit under the model
         availW = Math.max(200, w - (L && wide() ? 300 : 24) - (E && wide() ? 190 : 0));
   const vfov = camera.fov * PI / 180, hfov = 2*Math.atan(Math.tan(vfov/2)*camera.aspect);
   const d = camFly ? camFly.dir : tmpDir.copy(camera.position).sub(controls.target).normalize();
@@ -1471,7 +1486,7 @@ function fitDist(){
 function fitFor(R, HH, d, availH, availW, vfov, hfov){
   const w = innerWidth, h = innerHeight;
   if (availH == null){ const S = SHOW.on, L = !S && app.classList.contains('open-l'), B = !S && app.classList.contains('open-b');
-    availH = Math.max(200, h - 76 - (B ? (wide() ? 208 : 180) : 56)); availW = Math.max(200, w - (L && wide() ? 300 : 24));
+    availH = Math.max(200, h - 76 - (B ? (wide() ? 246 : 200) : 56)); availW = Math.max(200, w - (L && wide() ? 300 : 24));
     vfov = camera.fov * PI / 180; hfov = 2*Math.atan(Math.tan(vfov/2)*camera.aspect); }
   const sph = Math.min(1, Math.abs(d.y)), cph = Math.sqrt(1 - sph*sph);
   const hv0 = R*sph + HH*cph, big = Math.max(HH, R) * 1.06, hv = hv0 + (big - hv0) * tiltV, hh = R + (big - R) * tiltV;      // half extents on screen (horizontal arbor: its length, whichever way it points)
@@ -1680,7 +1695,7 @@ function frameInner(now){
 try { await Promise.race([Promise.all([document.fonts.load('600 20px Archivo'), document.fonts.load('700 20px Archivo')]), new Promise(r => setTimeout(r, 2500))]); } catch(e){}
 try { const c = JSON.parse(localStorage.getItem('diamant-thumbs')); if (c && c.build === BUILD) thumbs = c.thumbs; } catch(e){}
 if (!thumbs['200']){ thumbs = makeThumbs(); try { localStorage.setItem('diamant-thumbs', JSON.stringify({build: BUILD, thumbs})); } catch(e){} }
-$('cones').innerHTML = CONES.map(c => `<button class="glass" data-cone="${c}" aria-pressed="${c === state.cone}"><img src="${thumbs['stack' + c]}" alt="" draggable="false"><span><b></b><small></small></span></button>`).join('');
+$('cones').innerHTML = CONES.map(c => `<button class="glass" data-cone="${c}" aria-pressed="${c === state.cone}"><img src="${thumbs['base' + c] || thumbs['stack' + c]}" alt="" draggable="false"><span><b></b><small></small></span></button>`).join('');
 $('cones').addEventListener('click', e => { const b = e.target.closest('[data-cone]'); if (!b) return; if (b.dataset.cone !== state.cone) switchCone(b.dataset.cone); else if (state.mode !== 'stack'){ enterMode('stack', true); flyHome(); } });
 $('strip').innerHTML = CAT.families.map(f => `<button class="card famc" data-fam="${f.id}" aria-expanded="false"><img src="" alt="" draggable="false"><b></b><small></small></button>`).join('');
 $('fam-row').innerHTML = ORDER.map(k => `<button class="card" data-k="${k}"><i class="info" data-info="${k}">i</i><img src="${thumbs[state.cone][k] || ''}" alt="" draggable="false"><b></b><small></small></button>`).join('');
@@ -1743,7 +1758,6 @@ document.addEventListener('visibilitychange', () => { lastRaw = performance.now(
 let errT = []; addEventListener('error', () => { const n = performance.now(); errT = errT.filter(t => n - t < 60000); errT.push(n); if (errT.length > 12) location.reload(); });
 if ('serviceWorker' in navigator && location.hostname !== 'localhost' && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(() => {});
 stat('session');
-try { if (!localStorage.getItem('diamant-langpicked') && !state.ro){ $('langbar').hidden = false; $('hint').classList.add('off'); } } catch(e){}
 $('langbar').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; $('langbar').hidden = true; try { localStorage.setItem('diamant-langpicked', '1'); } catch(x){} if (b.dataset.more){ setMenu(true); } else { state.lang = b.dataset.l; try { localStorage.setItem('diamant-lang', state.lang); } catch(x){} renderUI(); } if (!guided) $('hint').classList.remove('off'); });
 if (state.ro){ $('app').classList.add('ro','open-l'); $('app').classList.remove('open-b'); $('robadge').hidden = false; layoutTargets(); stat('ro-view'); }
 </script>
