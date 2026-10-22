@@ -566,7 +566,7 @@ dl.specs dd{font-size:15px;font-weight:500;font-variant-numeric:tabular-nums}
 import * as THREE from 'three';
 import { OrbitControls } from './vendor/OrbitControls.js';
 import { RoomEnvironment } from './vendor/RoomEnvironment.js';
-const BUILD = '20261022-132636';           // stamped by build.py
+const BUILD = '20261022-132956';           // stamped by build.py
 const CAT = {"wheels": {"V3.6": {"t": 12, "kind": "cont", "prof": "v", "d": 4, "rim": "bronze", "title": "Mola D200 V3.6"}, "V3.12": {"t": 16, "kind": "cont", "prof": "v", "d": 6, "rim": "bronze", "title": "Mola D200 V3.12"}, "V4P.2": {"t": 12, "kind": "tagli", "prof": "p", "title": "Mola D200 V4P.2"}, "V33": {"t": 12, "kind": "tagli", "prof": "pencil", "L": 1, "title": "Mola D200 V33", "tw": 1.2, "fw": 1.4}, "V44": {"t": 14, "kind": "tagli", "prof": "pencil", "L": 1, "title": "Mola D200 V44", "tw": 2, "fw": 2}, "V55": {"t": 14, "kind": "tagli", "prof": "pencil", "L": 0.5, "title": "Mola D200 V55", "tw": 2, "fw": 3}, "V66": {"t": 18, "kind": "tagli", "prof": "pencil", "L": 0.5, "title": "Mola D200 V66", "tw": 2, "fw": 3}, "V33S": {"t": 12, "kind": "settori", "prof": "pencil", "L": 1, "code": "V33", "title": "Mola V33 a settori", "tw": 1.2, "fw": 1.4}, "V44S": {"t": 14, "kind": "settori", "prof": "pencil", "L": 1, "code": "V44", "title": "Mola V44 a settori", "tw": 2, "fw": 2}, "V55S": {"t": 14, "kind": "settori", "prof": "pencil", "L": 0.5, "code": "V55", "title": "Mola V55 a settori", "tw": 2, "fw": 3}, "V66S": {"t": 18, "kind": "settori", "prof": "pencil", "L": 0.5, "code": "V66", "title": "Mola V66 a settori", "tw": 2, "fw": 3}, "SPACER": {"t": 10, "kind": "spacer", "name": "Spacer", "title": "Spacer 10 mm", "only": "100"}, "POLISH": {"t": 20, "kind": "polish", "name": "Lucidante", "title": "Mola lucidante", "only": "100"}}, "order": ["V3.6", "V3.12", "V4P.2", "V33", "V44", "V55", "V66", "V33S", "V44S", "V55S", "V66S", "SPACER", "POLISH"], "presets": {"tagli": ["V3.6", "V3.12", "V4P.2", "V33", "V44", "V55"], "settori": ["V3.6", "V3.12", "V4P.2", "V33S", "V44S", "V55S"], "iso": ["POLISH", "SPACER", "V33S", "V3.6"]}, "maxWheels": 8, "cone": {"200": {"R": 100, "space": 80, "bore": 17.5, "tk": 1, "shaftR": 17.25, "threadR": 17.25, "yMin": -67, "aside": 185, "nutR": 37, "washerR": 47.5, "teeth": 57, "label": "Ø 200", "sub": "80 mm", "setA": ["V3.6", "V3.12", "V4P.2", "V33", "V44"], "setB": ["V3.6", "V4P.2", "V33S", "V44S", "V55S"], "tech": "HSK 80 B"}, "150": {"R": 75, "space": 70, "bore": 17.5, "tk": 1, "shaftR": 17.25, "threadR": 17.25, "yMin": -44, "aside": 160, "nutR": 37, "washerR": 47.5, "teeth": 43, "label": "Ø 150", "sub": "HSK 50 · 70 mm", "setA": ["V3.6", "V3.12", "V33", "V44"], "setB": ["V3.6", "V4P.2", "V33S", "V44S", "V55S"], "tech": "HSK 50 E"}, "100": {"R": 50, "space": 62, "bore": 11, "tk": 1, "shaftR": 10.8, "threadR": 10.8, "yMin": -110, "aside": 120, "nutR": 17, "washerR": 14.5, "teeth": 36, "label": "Ø 100", "sub": "ISO 40 · 62 mm", "setA": ["POLISH", "SPACER", "V33S", "V3.6"], "setB": ["POLISH", "V44S", "V3.12"], "tech": "ISO 40"}}, "families": [{"id": "pencil", "versions": {"tagli": ["V33", "V44", "V55", "V66"], "settori": ["V33S", "V44S", "V55S", "V66S"]}}, {"id": "v", "versions": {"cont": ["V3.6", "V3.12"]}}, {"id": "p", "versions": {"tagli": ["V4P.2"]}}, {"id": "acc", "versions": {"all": ["SPACER", "POLISH"]}, "only": "100"}]};             // catalog.json, injected by build.py — edit the JSON, not this file
 
 /* ==================================================================
@@ -1792,36 +1792,36 @@ let capCur = 0, capIdx = -1;   // two caption layers: the new one fades in while
 function caption(i){
   const layers = [$('cap'), $('cap2')];
   if (i < 0){ layers.forEach(c => c.classList.remove('on')); capIdx = -1; return; }
-  if (i === capIdx) return;                       // same title: no flash
-  const [e, t] = T().caps[i]; capIdx = i; capCur = 1 - capCur;
+  const key = Array.isArray(i) ? i.join('|') : i; if (key === capIdx) return;                       // same title: no flash
+  const [e, t] = Array.isArray(i) ? i : T().caps[i]; capIdx = key; capCur = 1 - capCur;
   const c = layers[capCur], old = layers[1 - capCur];
   c.querySelector('em').textContent = e; c.querySelector('b').textContent = t;
   old.classList.remove('on'); c.classList.add('on');
 }
 
-/* the script: four chapters alternating the two arbors. Each: wheels drop in from above one at a time, the nut screws down,
-   the set spins, the arbor tips horizontal for one slow 360°, then everything lifts out through the top. One language per chapter. */
-let EV = [], SHOW_LEN = 60; const STEP = 1.5;
+/* the script: six chapters over the three arbors, always horizontal. Each: the empty arbor is introduced, the wheels glide in
+   along the axis from off-stage one at a time, the nut screws down, the complete set makes two slow full turns, then the wheels
+   slide out again and the next arbor takes the stage. One language per chapter. */
+let EV = [], SHOW_LEN = 60; const STEP = 1.9, STEP_OUT = .9, TURN = 18;
 let tt = 0, tiltT = 0, tiltV = 0;
 function showCone(c){ for (const [uid, o] of W){ spin.remove(o.g); disposeTree(o.g); W.delete(uid); } state.stack = []; state.cone = c; SPACE = CONE[c].space; enterMode('stack', true); }
 function showLang(){ state.lang = SHOW.langs[SHOW.li++ % SHOW.langs.length]; renderUI(); $('attract-t').textContent = T().compose; }
-function chapter(c, set, capIn, capOut){
-  EV.push([tt, () => { showLang(); if (state.cone !== c) showCone(c); nutAside = true; caption(capIn); glowTo(1.2); }]);
-  [...set].reverse().forEach((k, i) => EV.push([tt + 1.4 + i*STEP, () => dropIn(k)]));          // bottom wheel first
-  tt += 1.4 + set.length*STEP + 1.4;
-  EV.push([tt, () => { nutAside = false; }]);                                                    // the nut comes back down and screws on (title stays)
-  EV.push([tt + 3, () => { setTool('spin', true); glowTo(2.4); caption(3); }]);
-  EV.push([tt + 7, () => { caption(capIn === 2 ? 5 : 2); tiltT = 1; SHOW.turn0 = SHOW.t; }]);    // horizontal, one slow full turn
-  EV.push([tt + 20, () => { tiltT = 0; }]);
-  EV.push([tt + 23, () => { setTool('spin', false); glowTo(1.2); }]);
-  tt += 25;
-  EV.push([tt, () => { nutAside = true; caption(capOut); }]);
-  set.forEach((k, i) => EV.push([tt + 1.4 + i*STEP, liftOff]));                                 // top wheel first
-  tt += 1.4 + set.length*STEP + 1.4;
+function chapter(c, set, capA, capB){
+  EV.push([tt, () => { showLang(); if (state.cone !== c) showCone(c); nutAside = false; setTool('spin', false); caption([CONE[c].tech, T().use[c]]); glowTo(1.2); }]);
+  tt += 3.2;                                                                                     // the empty arbor, horizontal
+  EV.push([tt, () => { nutAside = true; caption(capA); }]);
+  [...set].reverse().forEach((k, i) => EV.push([tt + 1.2 + i*STEP, () => dropIn(k)]));          // innermost wheel first, each one glides in along the axis
+  tt += 1.2 + set.length*STEP + 1.4;
+  EV.push([tt, () => { nutAside = false; }]);                                                    // the nut comes back and screws on
+  EV.push([tt + 3, () => { setTool('spin', true); glowTo(2.4); caption(capB); SHOW.turn0 = SHOW.t; }]);   // complete: two slow full turns
+  tt += 3 + TURN + .8;
+  EV.push([tt, () => { setTool('spin', false); glowTo(1.2); nutAside = true; caption(3); }]);
+  set.forEach((k, i) => EV.push([tt + 1.2 + i*STEP_OUT, liftOff]));                             // outermost wheel first
+  tt += 1.2 + set.length*STEP_OUT + 1.4;
   EV.push([tt, () => { nutAside = false; }]);
-  tt += 1.5;
+  tt += 1.4;
 }
-function buildScript(){ EV = []; tt = 0; chapter('200', CONE['200'].setA, 1, 0); chapter('150', CONE['150'].setA, 2, 5); chapter('100', CONE['100'].setA, 2, 0); chapter('200', CONE['200'].setB, 4, 5); chapter('150', CONE['150'].setB, 1, 0); chapter('100', CONE['100'].setB, 4, 5); SHOW_LEN = tt + 1; }
+function buildScript(){ EV = []; tt = 0; chapter('200', CONE['200'].setA, 1, 2); chapter('150', CONE['150'].setA, 1, 5); chapter('100', CONE['100'].setA, 1, 2); chapter('200', CONE['200'].setB, 4, 5); chapter('150', CONE['150'].setB, 4, 2); chapter('100', CONE['100'].setB, 4, 5); SHOW_LEN = tt + 1; }
 
 let glowTarget = 0;
 window.__show = SHOW; window.__dbg = () => ({d: camera.position.distanceTo(controls.target), f: fitDist(), z: zoomRatio, hh: viewHH, R: cone().R, fly: !!camFly, orb: orbiting});
@@ -1831,7 +1831,7 @@ function startShow(auto){
   SHOW.on = true; SHOW.auto = auto; SHOW.t = 0; SHOW.i = 0; SHOW.orbit = 1; capIdx = -1; buildScript(); stat(auto ? 'show-auto' : 'show-tap');
   SHOW.saved = state.stack.map(({type, locked}) => ({type, locked})); SHOW.savedCone = state.cone; SHOW.savedLang = state.lang;
   const others = LANGS.filter(l => l !== 'en'); for (let i = others.length - 1; i > 0; i--){ const j = Math.random() * (i + 1) | 0; [others[i], others[j]] = [others[j], others[i]]; }
-  SHOW.langs = ['en', ...others]; SHOW.li = 0; tiltT = 0; tiltV = 0; SHOW.turn0 = null;   // English first, then every other language in random order
+  SHOW.langs = ['en', ...others]; SHOW.li = 0; tiltT = 1; tiltV = 0; SHOW.turn0 = null;   // English first, then every other language in random order
   closeSheet(); setMenu(false); if (state.mode !== 'stack'){ if (catFrom.cone){ state.cone = catFrom.cone; SPACE = CONE[state.cone].space; } state.sheet = false; sheetUnlocked = false; $('t-cat').setAttribute('aria-pressed', false); enterMode('stack', true); SHOW.savedCone = state.cone; }
   setTool('explode', false); setTool('section', false); setTool('spin', false); camFly = null;
   for (const [uid, o] of W){ spin.remove(o.g); disposeTree(o.g); W.delete(uid); } state.stack = []; syncStack(true);
@@ -1856,11 +1856,11 @@ function tickShow(dt){
   if (SHOW.t >= SHOW_LEN){ SHOW.t = 0; SHOW.i = 0; SHOW.turn0 = null; capIdx = -1; for (const [uid, o] of W){ spin.remove(o.g); disposeTree(o.g); W.delete(uid); } state.stack = []; syncStack(true); }
   while (SHOW.i < EV.length && SHOW.t >= EV[SHOW.i][0]){ EV[SHOW.i][1](); SHOW.i++; }
   // camera: one slow orbit, breathing gently; framing follows the stack (fitDist) with room for wheels in flight
-  let turn = 0; if (SHOW.turn0 != null){ const u = (SHOW.t - SHOW.turn0) / 13; if (u >= 0 && u <= 1) turn = PI*2/13 * Math.sin(PI*u) * PI/2; }   // one smooth 360° while horizontal
+  let turn = 0, turning = 0; if (SHOW.turn0 != null){ const u = (SHOW.t - SHOW.turn0) / TURN; if (u >= 0 && u <= 1){ turn = (4*PI/TURN) * Math.sin(PI*u) * PI/2; turning = Math.sin(PI*u); } }   // two smooth 360° turns, eased in and out
   let flying = false; for (const o of W.values()) if (o.entering || (o.leaving && !o.vanish)) flying = true;
   SHOW.orbit += (((flying ? 0 : 1)) - SHOW.orbit) * (1 - Math.pow(.05, dt));   // the arbor holds still while a wheel comes or goes
-  SHOW.theta += dt * ((.16 + .05*Math.sin(SHOW.t*.11)) * SHOW.orbit + turn);
-  const phi = 1.02 + .14*Math.sin(SHOW.t*.23), dist = fitDist() * (wide() ? 1.12 : 1.2) * (1 + .04*Math.sin(SHOW.t*.17));
+  SHOW.theta += dt * ((.16 + .05*Math.sin(SHOW.t*.11)) * SHOW.orbit * (1 - turning) + turn);
+  const phi = 1.12 + .1*Math.sin(SHOW.t*.23), dist = fitDist() * (wide() ? 1.1 : 1.2) * (1 + .03*Math.sin(SHOW.t*.17));
   camera.position.setFromSphericalCoords(dist, phi, SHOW.theta); camera.lookAt(0, 0, 0);
   glow.intensity += (glowTarget - glow.intensity) * (1 - Math.pow(.1, dt));
   glow.position.set(Math.cos(SHOW.t*.7)*2.2, .9 + .5*Math.sin(SHOW.t*.5), Math.sin(SHOW.t*.7)*2.2);
@@ -1917,7 +1917,7 @@ function frameInner(now){
       if (o.leaving){ if (clear || o.y > H + 30){ o.y += (o.base - o.y) * (1 - Math.pow(.003, dt)) + 60*dt; } o.g.position.y = o.y;
         const left = o.base - o.y; if (!SHOW.on && left < 45) o.g.scale.setScalar(Math.max(.001, left / 45));                         // fades out as it goes
         if (o.y > o.base - 3){ spin.remove(o.g); disposeTree(o.g); W.delete(uid); } continue; }
-      if (SHOW.on && o.entering){ if (clear){ o.et = (o.et || 0) + dt; const u = Math.min(1, o.et / 1.3), ease = u*u*(3 - 2*u); o.y = o.base + 600 * (1 - ease); if (u >= 1) o.entering = false; } }
+      if (SHOW.on && o.entering){ if (clear){ o.et = (o.et || 0) + dt; const u = Math.min(1, o.et / 1.9), ease = u*u*u*(u*(6*u - 15) + 10); o.y = o.base + 600 * (1 - ease); if (u >= 1) o.entering = false; } }
       else if (drag3d && drag3d.uid === uid && drag3d.fy != null) o.y += (drag3d.fy - o.y) * (1 - Math.pow(.00001, dt));
       else if (!o.entering || clear) o.y += (o.base - o.y) * (1 - Math.pow(.0008, dt));
       if (o.entering){ const sc = o.g.scale.x + (1 - o.g.scale.x) * (1 - Math.pow(.0005, dt)); o.g.scale.setScalar(sc > .995 ? 1 : sc); }   // materialises on its way down
@@ -1932,7 +1932,7 @@ function frameInner(now){
     const px = SHOW.on ? (back.x*.7 + right.x*.7) : back.x, pz = SHOW.on ? (back.z*.7 + right.z*.7) : back.z;
     washer.position.set(px*nutX, washerY + ex*(n + 1)*GAP, pz*nutX); nut.position.set(px*nutX, washerY + ex*(n + 2.3)*GAP, pz*nutX);
     yMin = cone().yMin; yMax = Math.max(H, shaftH) + 17 + ex*(n + 2.3)*GAP + (SHOW.on ? 0 : hover);
-    for (const o of W.values()) if (!o.leaving && o.y > o.base + 1.5) yMax = Math.max(yMax, o.y + tOf(o.type));   // keep a wheel in flight in frame
+    if (!SHOW.on) for (const o of W.values()) if (!o.leaving && o.y > o.base + 1.5) yMax = Math.max(yMax, o.y + tOf(o.type));   // keep a wheel in flight in frame (show: they come from off-stage)
     const so = state.sel && W.get(state.sel);
     rings.forEach(m => m.visible = false);
     if (repl){ let i = 0; for (const s of state.stack){ const o = W.get(s.uid); if (!o || !canRepl(s.uid, repl.k)) continue; ringAt(i++, o.g.position.y + tOf(s.type)/2, cone().R + 7, .5 + .4*Math.sin(now/220)); } }

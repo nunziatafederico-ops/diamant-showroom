@@ -1,5 +1,5 @@
 /* Diamant Showroom — offline cache. The build stamps BUILD; a new build installs a fresh cache and drops the old one. */
-const BUILD = '20261022-132636', CACHE = 'diamant-' + BUILD;
+const BUILD = '20261022-132956', CACHE = 'diamant-' + BUILD;
 const SHELL = ['./', 'index.html', 'manifest.webmanifest', 'icon.png', 'icon-180.png', 'icon-512.png',
   'vendor/three.module.js', 'vendor/OrbitControls.js', 'vendor/RoomEnvironment.js', 'vendor/qrcode.js', 'fonts/fonts.css', 'fonts/f00.woff2', 'fonts/f01.woff2', 'fonts/f02.woff2', 'fonts/f03.woff2', 'fonts/f04.woff2', 'fonts/f05.woff2', 'fonts/f06.woff2', 'fonts/f07.woff2', 'fonts/f08.woff2', 'fonts/f09.woff2', 'fonts/f10.woff2', 'fonts/f11.woff2', 'fonts/f12.woff2'];
 self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(SHELL)).then(() => self.skipWaiting())); });
