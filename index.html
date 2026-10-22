@@ -412,6 +412,47 @@ dl.specs dd{font-size:15px;font-weight:500;font-variant-numeric:tabular-nums}
 @media (min-aspect-ratio:1/1) and (max-height:620px){ .panel{top:calc(env(safe-area-inset-top,0px) + 80px)} .panel h1{font-size:24px} .row{height:40px;flex:0 0 40px} .desc{display:none} }
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 .card[hidden],[data-preset][hidden]{display:none !important}
+/* ---- catalogue + product sheet ---- */
+#app.catalog .tab,#app.catalog .dock,#app.catalog #p-stack,#app.catalog #labels,#app.catalog .wact,#app.catalog .sect,#app.catalog #sstyle,#app.catalog .tools .tool:not(#t-cat),#app.catalog .back{display:none !important}
+#app.sheet .tab,#app.sheet .dock,#app.sheet #p-single,#app.sheet #t-explode,#app.sheet #t-spin,#app.sheet .garr{display:none !important}
+.logo{pointer-events:auto;cursor:pointer}
+#cat-labels{position:absolute;inset:0;pointer-events:none;z-index:3;overflow:hidden}
+#app.catalog::before{content:"";position:absolute;left:0;right:0;top:0;height:118px;background:linear-gradient(var(--ink),rgba(7,11,18,0));z-index:2;pointer-events:none}
+#app.catalog::after{content:"";position:absolute;left:0;right:0;bottom:0;height:90px;background:linear-gradient(rgba(7,11,18,0),var(--ink));z-index:2;pointer-events:none}
+.cl{position:absolute;left:0;top:0;transform:translate(-50%,-50%);white-space:nowrap;opacity:0;transition:opacity .3s;will-change:transform}
+.cl.g{font:600 22px/1.2 var(--f-display);letter-spacing:.01em;color:#fff;transform:translate(0,-50%);display:flex;align-items:center;gap:14px}
+.cl.g::before{content:"";width:28px;height:1px;background:var(--blue-hi)}
+.cl.g small{font:500 11.5px/1 var(--f-mono);letter-spacing:.16em;text-transform:uppercase;color:var(--blue-hi);margin-left:4px}
+.cl.w{text-align:center}
+.cl.w b{display:block;font:600 15px/1.2 var(--f-display);color:#fff}
+.cl.w small{display:block;font:500 11px/1.6 var(--f-mono);letter-spacing:.1em;color:var(--mute)}
+.cathint{position:absolute;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 22px);transform:translateX(-50%);padding:10px 18px;border-radius:24px;font:500 12px/1 var(--f-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--mute);z-index:5;pointer-events:none}
+#p-sheet{padding:0;gap:0;top:calc(env(safe-area-inset-top,0px) + 96px);bottom:0;border-bottom:0}
+#p-sheet .sh-in{flex:1;overflow:auto;padding:18px 20px 32px 22px;display:flex;flex-direction:column;gap:14px;-webkit-overflow-scrolling:touch;transition:filter .5s}
+#p-sheet .sh-in h1{font:600 30px/1.05 var(--f-display);margin:2px 0 0;letter-spacing:-.01em}
+#p-sheet .sh-in h1 small{display:block;font:500 13px/1.8 var(--f-mono);letter-spacing:.1em;color:var(--mute)}
+#p-sheet.locked .sh-in>*:not(.keep){filter:blur(11px);pointer-events:none;user-select:none}
+#p-sheet .sh-in .lockable{display:flex;flex-direction:column;gap:14px}
+#p-sheet.locked .lockable{filter:blur(11px);pointer-events:none;user-select:none}
+#p-sheet .sh-draw svg{width:100%;height:auto;display:block;margin:0}
+#p-sheet dl.specs{border-top:1px solid var(--line)}
+#p-sheet .ctrl{border-radius:10px;overflow:hidden;background:#f6f3ea;box-shadow:0 10px 30px -14px rgba(0,0,0,.8)}
+#p-sheet .ctrl svg{width:100%;height:auto;display:block}
+#p-sheet .sh-eye{font:500 11.5px/1.4 var(--f-mono);letter-spacing:.16em;text-transform:uppercase;color:var(--blue-hi);display:flex;align-items:center;gap:10px}
+#p-sheet .sh-eye::before{content:"";width:22px;height:1px;background:var(--blue-hi)}
+#kp{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;z-index:3;background:linear-gradient(180deg,rgba(10,15,26,.2),rgba(10,15,26,.55))}
+#kp[hidden]{display:none}
+#kp .kp-t{font:500 12px/1 var(--f-mono);letter-spacing:.18em;text-transform:uppercase;color:#cfd6e3}
+#kp .dots{display:flex;gap:14px;height:16px}
+#kp .dots i{width:14px;height:14px;border-radius:50%;border:1.5px solid rgba(255,255,255,.55);transition:background .15s}
+#kp .dots i.on{background:#fff;border-color:#fff}
+#kp .dots.err{animation:shake .4s}
+@keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
+#kp .keys{display:grid;grid-template-columns:repeat(3,66px);gap:10px}
+#kp .keys button{all:unset;height:60px;border-radius:16px;display:grid;place-items:center;font:500 24px/1 var(--f-display);color:#fff;background:rgba(255,255,255,.08);border:1px solid var(--line);cursor:pointer;touch-action:manipulation}
+#kp .keys button:active{background:var(--blue)}
+#kp .keys button svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+#kp .keys button.ghost{visibility:hidden}
 /* action puck beside the selected wheel on the arbor: up / down / remove */
 .wact{position:absolute;left:0;top:0;display:flex;flex-direction:column;gap:6px;padding:6px;border-radius:30px;z-index:5;transform:translate(0,-50%);transition:opacity .18s;pointer-events:auto}
 .wact[hidden]{display:none}
@@ -434,6 +475,7 @@ dl.specs dd{font-size:15px;font-weight:500;font-variant-numeric:tabular-nums}
         <button class="tool glass" id="t-section" aria-pressed="false"><svg viewBox="0 0 28 28"><circle cx="14" cy="14" r="10"/><path d="M14 4v20"/><path d="M14 8l5-3M14 13l8.5-5M14 18l9.5-5.5M14 23l7-4" stroke-width="1.1"/></svg><span data-t="section"></span></button>
         <button class="tool glass" id="t-spin" aria-pressed="false"><svg viewBox="0 0 28 28"><path d="M22.5 9.5A10 10 0 1 0 24 15"/><path d="M23.5 4.5v5.5H18"/><circle cx="14" cy="14" r="2.2"/></svg><span data-t="spin"></span></button>
         <button class="tool glass" id="t-show" aria-pressed="false"><svg viewBox="0 0 28 28"><path d="M6 5.5v17l14-8.5z"/></svg><span data-t="show"></span></button>
+        <button class="tool glass" id="t-cat" aria-pressed="false"><svg viewBox="0 0 28 28"><rect x="4" y="4" width="8" height="8" rx="2"/><rect x="16" y="4" width="8" height="8" rx="2"/><rect x="4" y="16" width="8" height="8" rx="2"/><rect x="16" y="16" width="8" height="8" rx="2"/></svg><span data-t="cat"></span></button>
       </nav>
       <div class="lang">
         <button class="pill glass" id="l-btn" aria-haspopup="menu" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3.3 3 14.7 0 18M12 3c-3 3.3-3 14.7 0 18"/></svg><span id="l-cur">IT</span></button>
@@ -458,6 +500,15 @@ dl.specs dd{font-size:15px;font-weight:500;font-variant-numeric:tabular-nums}
           <div class="menu glass" id="pre-menu" role="menu" hidden><button data-preset="tagli" data-t="pTagli"></button><button data-preset="settori" data-t="pSettori"></button><button data-preset="iso">Set ISO 40</button></div></div>
     </div>
   </section>
+
+  <!-- product sheet (catalogue) -->
+  <section class="panel" id="p-sheet" hidden>
+    <div class="sh-in" id="sh-in"></div>
+    <div id="kp" hidden><div class="kp-t" data-t="code4"></div><div class="dots" id="kp-dots"><i></i><i></i><i></i><i></i></div>
+      <div class="keys"><button data-d="1">1</button><button data-d="2">2</button><button data-d="3">3</button><button data-d="4">4</button><button data-d="5">5</button><button data-d="6">6</button><button data-d="7">7</button><button data-d="8">8</button><button data-d="9">9</button><button class="ghost"></button><button data-d="0">0</button><button data-d="bs"><svg viewBox="0 0 24 24"><path d="M9 5h11v14H9l-6-7zM13 9l4 6M17 9l-4 6"/></svg></button></div></div>
+  </section>
+  <div id="cat-labels"></div>
+  <div class="cathint glass" id="cathint" hidden><span data-t="catHint"></span></div>
 
   <!-- single wheel -->
   <section class="panel" id="p-single" hidden>
@@ -515,7 +566,7 @@ dl.specs dd{font-size:15px;font-weight:500;font-variant-numeric:tabular-nums}
 import * as THREE from 'three';
 import { OrbitControls } from './vendor/OrbitControls.js';
 import { RoomEnvironment } from './vendor/RoomEnvironment.js';
-const BUILD = '20261022-131247';           // stamped by build.py
+const BUILD = '20261022-132636';           // stamped by build.py
 const CAT = {"wheels": {"V3.6": {"t": 12, "kind": "cont", "prof": "v", "d": 4, "rim": "bronze", "title": "Mola D200 V3.6"}, "V3.12": {"t": 16, "kind": "cont", "prof": "v", "d": 6, "rim": "bronze", "title": "Mola D200 V3.12"}, "V4P.2": {"t": 12, "kind": "tagli", "prof": "p", "title": "Mola D200 V4P.2"}, "V33": {"t": 12, "kind": "tagli", "prof": "pencil", "L": 1, "title": "Mola D200 V33", "tw": 1.2, "fw": 1.4}, "V44": {"t": 14, "kind": "tagli", "prof": "pencil", "L": 1, "title": "Mola D200 V44", "tw": 2, "fw": 2}, "V55": {"t": 14, "kind": "tagli", "prof": "pencil", "L": 0.5, "title": "Mola D200 V55", "tw": 2, "fw": 3}, "V66": {"t": 18, "kind": "tagli", "prof": "pencil", "L": 0.5, "title": "Mola D200 V66", "tw": 2, "fw": 3}, "V33S": {"t": 12, "kind": "settori", "prof": "pencil", "L": 1, "code": "V33", "title": "Mola V33 a settori", "tw": 1.2, "fw": 1.4}, "V44S": {"t": 14, "kind": "settori", "prof": "pencil", "L": 1, "code": "V44", "title": "Mola V44 a settori", "tw": 2, "fw": 2}, "V55S": {"t": 14, "kind": "settori", "prof": "pencil", "L": 0.5, "code": "V55", "title": "Mola V55 a settori", "tw": 2, "fw": 3}, "V66S": {"t": 18, "kind": "settori", "prof": "pencil", "L": 0.5, "code": "V66", "title": "Mola V66 a settori", "tw": 2, "fw": 3}, "SPACER": {"t": 10, "kind": "spacer", "name": "Spacer", "title": "Spacer 10 mm", "only": "100"}, "POLISH": {"t": 20, "kind": "polish", "name": "Lucidante", "title": "Mola lucidante", "only": "100"}}, "order": ["V3.6", "V3.12", "V4P.2", "V33", "V44", "V55", "V66", "V33S", "V44S", "V55S", "V66S", "SPACER", "POLISH"], "presets": {"tagli": ["V3.6", "V3.12", "V4P.2", "V33", "V44", "V55"], "settori": ["V3.6", "V3.12", "V4P.2", "V33S", "V44S", "V55S"], "iso": ["POLISH", "SPACER", "V33S", "V3.6"]}, "maxWheels": 8, "cone": {"200": {"R": 100, "space": 80, "bore": 17.5, "tk": 1, "shaftR": 17.25, "threadR": 17.25, "yMin": -67, "aside": 185, "nutR": 37, "washerR": 47.5, "teeth": 57, "label": "Ø 200", "sub": "80 mm", "setA": ["V3.6", "V3.12", "V4P.2", "V33", "V44"], "setB": ["V3.6", "V4P.2", "V33S", "V44S", "V55S"], "tech": "HSK 80 B"}, "150": {"R": 75, "space": 70, "bore": 17.5, "tk": 1, "shaftR": 17.25, "threadR": 17.25, "yMin": -44, "aside": 160, "nutR": 37, "washerR": 47.5, "teeth": 43, "label": "Ø 150", "sub": "HSK 50 · 70 mm", "setA": ["V3.6", "V3.12", "V33", "V44"], "setB": ["V3.6", "V4P.2", "V33S", "V44S", "V55S"], "tech": "HSK 50 E"}, "100": {"R": 50, "space": 62, "bore": 11, "tk": 1, "shaftR": 10.8, "threadR": 10.8, "yMin": -110, "aside": 120, "nutR": 17, "washerR": 14.5, "teeth": 36, "label": "Ø 100", "sub": "ISO 40 · 62 mm", "setA": ["POLISH", "SPACER", "V33S", "V3.6"], "setB": ["POLISH", "V44S", "V3.12"], "tech": "ISO 40"}}, "families": [{"id": "pencil", "versions": {"tagli": ["V33", "V44", "V55", "V66"], "settori": ["V33S", "V44S", "V55S", "V66S"]}}, {"id": "v", "versions": {"cont": ["V3.6", "V3.12"]}}, {"id": "p", "versions": {"tagli": ["V4P.2"]}}, {"id": "acc", "versions": {"all": ["SPACER", "POLISH"]}, "only": "100"}]};             // catalog.json, injected by build.py — edit the JSON, not this file
 
 /* ==================================================================
@@ -533,7 +584,7 @@ const radMap = r => r - (100 - cone().R);   // Ø200 drawings on the Ø150 arbor
 const fits = t => stackH() + t <= SPACE && state.stack.length < MAX_WHEELS;
 
 const UI = {
-  it:{back:'Torna al cono',conesLbl:'Coni',use:{'200':'Molatrici verticali','150':'Lisec','100':'Centri CNC'},take:'Portalo con te',complete:'Cono completo',roTitle:'Il tuo set Diamant',roHint:'sola lettura · ruota e ingrandisci',fam:{pencil:'Doppio trapezio',v:'Gola a V · sfilettatura',p:'Trapezio',acc:'Accessori'},ver:{tagli:'A tagli',settori:'A settori',cont:'',all:''},sizes:'misure',pickReplace:'Tocca la mola da sostituire',replaced:(a,b)=>`${a} sostituita con ${b}`,share:'Porta con te il set',shareHint:'Inquadra il codice con il telefono: il set si apre lì, pronto da condividere.',styleMat:'Materico',styleDraw:'Disegno',fsBtn:'Schermo intero',wheelsBtn:'Mole',removed:'tolta dal set',up:'Su',down:'Giù',compose:'Componi il tuo set',show:'Show',caps:[['Diamant · dal 1975','Around your Edges'],['Un cono','Il tuo set su misura'],['Profili su disegno','La sezione racconta il filo'],['Made in Italy','Brevettate'],['Mole a settori','Stesso cono, un altro set'],['Precisione','Ogni profilo al suo posto']],empty:'Set vuoto · trascina qui una mola dal catalogo, o toccane una',del:'Elimina',clear:'Svuota',name:'Italiano',seg:' settori',explode:'Esplodi',section:'Sezione',spin:'In moto',reset:'Vista',sectionOn:'Sezione sul profilo',hint:'Tocca una mola per montarla',
+  it:{back:'Torna al cono',cat:'Catalogo',catBack:'Torna al catalogo',code4:'Inserisci il codice',wrongCode:'Codice errato',ctrl:'Controllo dimensionale',balance:'Equilibratura',stamp:'Punzonatura',iso:'Mole Ø100 · ISO 40',catHint:'Tocca una mola per aprire la scheda',fitsOn:'Montabile su',checked:'Verificato',codeLbl:'Codice',conesLbl:'Coni',use:{'200':'Molatrici verticali','150':'Lisec','100':'Centri CNC'},take:'Portalo con te',complete:'Cono completo',roTitle:'Il tuo set Diamant',roHint:'sola lettura · ruota e ingrandisci',fam:{pencil:'Doppio trapezio',v:'Gola a V · sfilettatura',p:'Trapezio',acc:'Accessori'},ver:{tagli:'A tagli',settori:'A settori',cont:'',all:''},sizes:'misure',pickReplace:'Tocca la mola da sostituire',replaced:(a,b)=>`${a} sostituita con ${b}`,share:'Porta con te il set',shareHint:'Inquadra il codice con il telefono: il set si apre lì, pronto da condividere.',styleMat:'Materico',styleDraw:'Disegno',fsBtn:'Schermo intero',wheelsBtn:'Mole',removed:'tolta dal set',up:'Su',down:'Giù',compose:'Componi il tuo set',show:'Show',caps:[['Diamant · dal 1975','Around your Edges'],['Un cono','Il tuo set su misura'],['Profili su disegno','La sezione racconta il filo'],['Made in Italy','Brevettate'],['Mole a settori','Stesso cono, un altro set'],['Precisione','Ogni profilo al suo posto']],empty:'Set vuoto · trascina qui una mola dal catalogo, o toccane una',del:'Elimina',clear:'Svuota',name:'Italiano',seg:' settori',explode:'Esplodi',section:'Sezione',spin:'In moto',reset:'Vista',sectionOn:'Sezione sul profilo',hint:'Tocca una mola per montarla',
       stackEy:'',stackTitle:'Il tuo cono',shuffle:'Mescola',add:'Aggiungi',presets:'Parti da',
       pTagli:'Set a tagli',pSettori:'Set a settori',remove:'Rimuovi dal set',cancel:'Annulla',addThis:'Aggiungi al set',
       pickPos:n=>`Posizione ${n} dall'alto`,pickTitle:'Scegli la mola',addEy:'Nuova mola in cima al set',
@@ -544,7 +595,7 @@ const UI = {
       sp:{d:'Diametro',t:'Spessore',b:'Foro',rim:'Corona',prof:'Profilo',fix:'Fissaggio'},
       gola:d=>`Gola a V 90°, prof. ${d} mm`,fix:'6 fori Ø 6,5',
       parts:{nut:'Dado di serraggio',washer:'Rondella',base:'Cono'}, hero:'Cono', heroSub:'assieme'},
-  en:{back:'Back to the arbor',conesLbl:'Arbors',use:{'200':'Vertical edgers','150':'Lisec','100':'CNC centres'},take:'Take it with you',complete:'Arbor complete',roTitle:'Your Diamant set',roHint:'view only · rotate and zoom',fam:{pencil:'Double trapezoid',v:'V-groove · arrissing',p:'Trapezoid',acc:'Accessories'},ver:{tagli:'Slotted',settori:'Segmented',cont:'',all:''},sizes:'sizes',pickReplace:'Tap the wheel to replace',replaced:(a,b)=>`${a} replaced by ${b}`,share:'Take the set with you',shareHint:'Scan the code with your phone: the set opens there, ready to share.',styleMat:'Material',styleDraw:'Drawing',fsBtn:'Full screen',wheelsBtn:'Wheels',removed:'removed from the set',up:'Up',down:'Down',compose:'Build your set',show:'Show',caps:[['Diamant · since 1975','Around your Edges'],['One arbor','Your set, your way'],['Profiles to drawing','The section tells the edge'],['Made in Italy','Patented'],['Segmented wheels','Same arbor, another set'],['Precision','Every profile in its place']],empty:'Empty set · drag a wheel here from the catalogue, or tap one',del:'Delete',clear:'Clear',name:'English',seg:' segm.',explode:'Explode',section:'Section',spin:'Spin',reset:'View',sectionOn:'Section through the profile',hint:'Tap a wheel to mount it',
+  en:{back:'Back to the arbor',cat:'Catalogue',catBack:'Back to the catalogue',code4:'Enter the code',wrongCode:'Wrong code',ctrl:'Dimensional check',balance:'Balancing',stamp:'Stamping',iso:'Ø100 wheels · ISO 40',catHint:'Tap a wheel to open its sheet',fitsOn:'Fits',checked:'Checked',codeLbl:'Code',conesLbl:'Arbors',use:{'200':'Vertical edgers','150':'Lisec','100':'CNC centres'},take:'Take it with you',complete:'Arbor complete',roTitle:'Your Diamant set',roHint:'view only · rotate and zoom',fam:{pencil:'Double trapezoid',v:'V-groove · arrissing',p:'Trapezoid',acc:'Accessories'},ver:{tagli:'Slotted',settori:'Segmented',cont:'',all:''},sizes:'sizes',pickReplace:'Tap the wheel to replace',replaced:(a,b)=>`${a} replaced by ${b}`,share:'Take the set with you',shareHint:'Scan the code with your phone: the set opens there, ready to share.',styleMat:'Material',styleDraw:'Drawing',fsBtn:'Full screen',wheelsBtn:'Wheels',removed:'removed from the set',up:'Up',down:'Down',compose:'Build your set',show:'Show',caps:[['Diamant · since 1975','Around your Edges'],['One arbor','Your set, your way'],['Profiles to drawing','The section tells the edge'],['Made in Italy','Patented'],['Segmented wheels','Same arbor, another set'],['Precision','Every profile in its place']],empty:'Empty set · drag a wheel here from the catalogue, or tap one',del:'Delete',clear:'Clear',name:'English',seg:' segm.',explode:'Explode',section:'Section',spin:'Spin',reset:'View',sectionOn:'Section through the profile',hint:'Tap a wheel to mount it',
       stackEy:'',stackTitle:'Your arbor',shuffle:'Shuffle',add:'Add',presets:'Start from',
       pTagli:'Slotted set',pSettori:'Segmented set',remove:'Remove from stack',cancel:'Cancel',addThis:'Add to stack',
       pickPos:n=>`Position ${n} from the top`,pickTitle:'Choose a wheel',addEy:'New wheel on top of the stack',
@@ -555,7 +606,7 @@ const UI = {
       sp:{d:'Diameter',t:'Thickness',b:'Bore',rim:'Rim',prof:'Profile',fix:'Fixing'},
       gola:d=>`90° V-groove, ${d} mm deep`,fix:'6 holes Ø 6.5',
       parts:{nut:'Clamping nut',washer:'Washer',base:'arbor'}, hero:'arbor', heroSub:'assembly'},
-  de:{back:'Zurück zum Dorn',conesLbl:'Dorne',use:{'200':'Vertikalschleifer','150':'Lisec','100':'CNC-Zentren'},take:'Mitnehmen',complete:'Dorn komplett',roTitle:'Ihr Diamant-Set',roHint:'nur Ansicht · drehen und zoomen',fam:{pencil:'Doppeltrapez',v:'V-Nut · Kantenbrechen',p:'Trapez',acc:'Zubehör'},ver:{tagli:'Geschlitzt',settori:'Segmentiert',cont:'',all:''},sizes:'Größen',pickReplace:'Tippe auf die zu ersetzende Scheibe',replaced:(a,b)=>`${a} durch ${b} ersetzt`,share:'Set mitnehmen',shareHint:'Code mit dem Handy scannen: das Set öffnet sich dort, bereit zum Teilen.',styleMat:'Material',styleDraw:'Zeichnung',fsBtn:'Vollbild',wheelsBtn:'Scheiben',removed:'aus dem Set entfernt',up:'Nach oben',down:'Nach unten',compose:'Stellen Sie Ihr Set zusammen',show:'Show',caps:[['Diamant · seit 1975','Around your Edges'],['Ein Dorn','Ihr Set nach Maß'],['Profile nach Zeichnung','Der Schnitt zeigt die Kante'],['Made in Italy','Patentiert'],['Segmentscheiben','Gleicher Dorn, anderes Set'],['Präzision','Jedes Profil an seinem Platz']],empty:'Leeres Set · Scheibe aus dem Katalog hierher ziehen oder antippen',del:'Löschen',clear:'Leeren',name:'Deutsch',seg:' Segm.',explode:'Explosion',section:'Schnitt',spin:'Drehen',reset:'Ansicht',sectionOn:'Schnitt durch das Profil',hint:'Tippe auf eine Scheibe, um sie zu montieren',
+  de:{back:'Zurück zum Dorn',cat:'Katalog',catBack:'Zurück zum Katalog',code4:'Code eingeben',wrongCode:'Falscher Code',ctrl:'Maßkontrolle',balance:'Auswuchten',stamp:'Stempelung',iso:'Ø100-Scheiben · ISO 40',catHint:'Scheibe antippen für das Datenblatt',fitsOn:'Passend für',checked:'Geprüft',codeLbl:'Code',conesLbl:'Dorne',use:{'200':'Vertikalschleifer','150':'Lisec','100':'CNC-Zentren'},take:'Mitnehmen',complete:'Dorn komplett',roTitle:'Ihr Diamant-Set',roHint:'nur Ansicht · drehen und zoomen',fam:{pencil:'Doppeltrapez',v:'V-Nut · Kantenbrechen',p:'Trapez',acc:'Zubehör'},ver:{tagli:'Geschlitzt',settori:'Segmentiert',cont:'',all:''},sizes:'Größen',pickReplace:'Tippe auf die zu ersetzende Scheibe',replaced:(a,b)=>`${a} durch ${b} ersetzt`,share:'Set mitnehmen',shareHint:'Code mit dem Handy scannen: das Set öffnet sich dort, bereit zum Teilen.',styleMat:'Material',styleDraw:'Zeichnung',fsBtn:'Vollbild',wheelsBtn:'Scheiben',removed:'aus dem Set entfernt',up:'Nach oben',down:'Nach unten',compose:'Stellen Sie Ihr Set zusammen',show:'Show',caps:[['Diamant · seit 1975','Around your Edges'],['Ein Dorn','Ihr Set nach Maß'],['Profile nach Zeichnung','Der Schnitt zeigt die Kante'],['Made in Italy','Patentiert'],['Segmentscheiben','Gleicher Dorn, anderes Set'],['Präzision','Jedes Profil an seinem Platz']],empty:'Leeres Set · Scheibe aus dem Katalog hierher ziehen oder antippen',del:'Löschen',clear:'Leeren',name:'Deutsch',seg:' Segm.',explode:'Explosion',section:'Schnitt',spin:'Drehen',reset:'Ansicht',sectionOn:'Schnitt durch das Profil',hint:'Tippe auf eine Scheibe, um sie zu montieren',
       stackEy:'',stackTitle:'Dein Dorn',shuffle:'Mischen',add:'Hinzufügen',presets:'Starten mit',
       pTagli:'Paket mit Schlitzen',pSettori:'Paket mit Segmenten',remove:'Aus dem Paket entfernen',cancel:'Abbrechen',addThis:'Zum Paket hinzufügen',
       pickPos:n=>`Position ${n} von oben`,pickTitle:'Scheibe wählen',addEy:'Neue Scheibe oben auf dem Paket',
@@ -566,7 +617,7 @@ const UI = {
       sp:{d:'Durchmesser',t:'Dicke',b:'Bohrung',rim:'Kranz',prof:'Profil',fix:'Befestigung'},
       gola:d=>`90°-V-Nut, ${d} mm tief`,fix:'6 Bohrungen Ø 6,5',
       parts:{nut:'Spannmutter',washer:'Scheibe',base:'Dorn'}, hero:'Dorn', heroSub:'Baugruppe'},
-  es:{back:'Volver al cono',conesLbl:'Conos',use:{'200':'Canteadoras verticales','150':'Lisec','100':'Centros CNC'},take:'Llévatelo',complete:'Cono completo',roTitle:'Tu set Diamant',roHint:'solo lectura · gira y amplía',fam:{pencil:'Doble trapecio',v:'Ranura en V · aristas',p:'Trapecio',acc:'Accesorios'},ver:{tagli:'Ranurada',settori:'Segmentada',cont:'',all:''},sizes:'medidas',pickReplace:'Toca la muela a sustituir',replaced:(a,b)=>`${a} sustituida por ${b}`,share:'Llévate el set',shareHint:'Escanea el código con el móvil: el set se abre allí, listo para compartir.',styleMat:'Material',styleDraw:'Dibujo',fsBtn:'Pantalla',wheelsBtn:'Muelas',removed:'quitada del set',up:'Subir',down:'Bajar',compose:'Compón tu set',show:'Show',caps:[['Diamant · desde 1975','Around your Edges'],['Un cono','Tu set a medida'],['Perfiles según plano','La sección cuenta el canto'],['Made in Italy','Patentadas'],['Muelas de segmentos','Mismo cono, otro set'],['Precisión','Cada perfil en su sitio']],empty:'Set vacío · arrastra aquí una muela del catálogo, o tócala',del:'Eliminar',clear:'Vaciar',name:'Español',seg:' segm.',explode:'Explosión',section:'Sección',spin:'Girar',reset:'Vista',sectionOn:'Sección por el perfil',hint:'Toca una muela para montarla',
+  es:{back:'Volver al cono',cat:'Catálogo',catBack:'Volver al catálogo',code4:'Introduce el código',wrongCode:'Código incorrecto',ctrl:'Control dimensional',balance:'Equilibrado',stamp:'Punzonado',iso:'Muelas Ø100 · ISO 40',catHint:'Toca una muela para abrir su ficha',fitsOn:'Compatible con',checked:'Verificado',codeLbl:'Código',conesLbl:'Conos',use:{'200':'Canteadoras verticales','150':'Lisec','100':'Centros CNC'},take:'Llévatelo',complete:'Cono completo',roTitle:'Tu set Diamant',roHint:'solo lectura · gira y amplía',fam:{pencil:'Doble trapecio',v:'Ranura en V · aristas',p:'Trapecio',acc:'Accesorios'},ver:{tagli:'Ranurada',settori:'Segmentada',cont:'',all:''},sizes:'medidas',pickReplace:'Toca la muela a sustituir',replaced:(a,b)=>`${a} sustituida por ${b}`,share:'Llévate el set',shareHint:'Escanea el código con el móvil: el set se abre allí, listo para compartir.',styleMat:'Material',styleDraw:'Dibujo',fsBtn:'Pantalla',wheelsBtn:'Muelas',removed:'quitada del set',up:'Subir',down:'Bajar',compose:'Compón tu set',show:'Show',caps:[['Diamant · desde 1975','Around your Edges'],['Un cono','Tu set a medida'],['Perfiles según plano','La sección cuenta el canto'],['Made in Italy','Patentadas'],['Muelas de segmentos','Mismo cono, otro set'],['Precisión','Cada perfil en su sitio']],empty:'Set vacío · arrastra aquí una muela del catálogo, o tócala',del:'Eliminar',clear:'Vaciar',name:'Español',seg:' segm.',explode:'Explosión',section:'Sección',spin:'Girar',reset:'Vista',sectionOn:'Sección por el perfil',hint:'Toca una muela para montarla',
       stackEy:'',stackTitle:'Tu cono',shuffle:'Mezclar',add:'Añadir',presets:'Empezar desde',
       pTagli:'Paquete con ranuras',pSettori:'Paquete con segmentos',remove:'Quitar del paquete',cancel:'Cancelar',addThis:'Añadir al paquete',
       pickPos:n=>`Posición ${n} desde arriba`,pickTitle:'Elige la muela',addEy:'Nueva muela encima del paquete',
@@ -577,7 +628,7 @@ const UI = {
       sp:{d:'Diámetro',t:'Espesor',b:'Agujero',rim:'Corona',prof:'Perfil',fix:'Fijación'},
       gola:d=>`Garganta en V 90°, prof. ${d} mm`,fix:'6 agujeros Ø 6,5',
       parts:{nut:'Tuerca de apriete',washer:'Arandela',base:'Cono'}, hero:'Cono', heroSub:'conjunto'},
-  fr:{back:'Retour au cône',conesLbl:'Cônes',use:{'200':'Rectifieuses verticales','150':'Lisec','100':'Centres CNC'},take:'Emportez-le',complete:'Cône complet',roTitle:'Votre jeu Diamant',roHint:'lecture seule · tourner et zoomer',fam:{pencil:'Double trapèze',v:'Gorge en V · arêtage',p:'Trapèze',acc:'Accessoires'},ver:{tagli:'À fentes',settori:'À segments',cont:'',all:''},sizes:'tailles',pickReplace:'Touchez la meule à remplacer',replaced:(a,b)=>`${a} remplacée par ${b}`,share:'Emportez le jeu',shareHint:'Scannez le code avec votre téléphone : le jeu s\'y ouvre, prêt à partager.',styleMat:'Matière',styleDraw:'Dessin',fsBtn:'Écran',wheelsBtn:'Meules',removed:'retirée du jeu',up:'Monter',down:'Descendre',compose:'Composez votre jeu',show:'Show',caps:[['Diamant · depuis 1975','Around your Edges'],['Un cône','Votre jeu sur mesure'],['Profils sur plan','La coupe révèle le chant'],['Made in Italy','Brevetées'],['Meules à segments','Même cône, autre jeu'],['Précision','Chaque profil à sa place']],empty:'Jeu vide · glissez ici une meule du catalogue, ou touchez-en une',del:'Supprimer',clear:'Vider',name:'Français',seg:' segm.',explode:'Éclaté',section:'Coupe',spin:'Rotation',reset:'Vue',sectionOn:'Coupe sur le profil',hint:'Touchez une meule pour la monter',
+  fr:{back:'Retour au cône',cat:'Catalogue',catBack:'Retour au catalogue',code4:'Saisissez le code',wrongCode:'Code incorrect',ctrl:'Contrôle dimensionnel',balance:'Équilibrage',stamp:'Poinçonnage',iso:'Meules Ø100 · ISO 40',catHint:'Touchez une meule pour ouvrir sa fiche',fitsOn:'Compatible avec',checked:'Vérifié',codeLbl:'Code',conesLbl:'Cônes',use:{'200':'Rectifieuses verticales','150':'Lisec','100':'Centres CNC'},take:'Emportez-le',complete:'Cône complet',roTitle:'Votre jeu Diamant',roHint:'lecture seule · tourner et zoomer',fam:{pencil:'Double trapèze',v:'Gorge en V · arêtage',p:'Trapèze',acc:'Accessoires'},ver:{tagli:'À fentes',settori:'À segments',cont:'',all:''},sizes:'tailles',pickReplace:'Touchez la meule à remplacer',replaced:(a,b)=>`${a} remplacée par ${b}`,share:'Emportez le jeu',shareHint:'Scannez le code avec votre téléphone : le jeu s\'y ouvre, prêt à partager.',styleMat:'Matière',styleDraw:'Dessin',fsBtn:'Écran',wheelsBtn:'Meules',removed:'retirée du jeu',up:'Monter',down:'Descendre',compose:'Composez votre jeu',show:'Show',caps:[['Diamant · depuis 1975','Around your Edges'],['Un cône','Votre jeu sur mesure'],['Profils sur plan','La coupe révèle le chant'],['Made in Italy','Brevetées'],['Meules à segments','Même cône, autre jeu'],['Précision','Chaque profil à sa place']],empty:'Jeu vide · glissez ici une meule du catalogue, ou touchez-en une',del:'Supprimer',clear:'Vider',name:'Français',seg:' segm.',explode:'Éclaté',section:'Coupe',spin:'Rotation',reset:'Vue',sectionOn:'Coupe sur le profil',hint:'Touchez une meule pour la monter',
       stackEy:'',stackTitle:'Votre cône',shuffle:'Mélanger',add:'Ajouter',presets:'Partir de',
       pTagli:'Jeu à fentes',pSettori:'Jeu à segments',remove:'Retirer du jeu',cancel:'Annuler',addThis:'Ajouter au jeu',
       pickPos:n=>`Position ${n} depuis le haut`,pickTitle:'Choisir la meule',addEy:'Nouvelle meule en haut du jeu',
@@ -588,7 +639,7 @@ const UI = {
       sp:{d:'Diamètre',t:'Épaisseur',b:'Alésage',rim:'Couronne',prof:'Profil',fix:'Fixation'},
       gola:d=>`Gorge en V 90°, prof. ${d} mm`,fix:'6 trous Ø 6,5',
       parts:{nut:'Écrou de serrage',washer:'Rondelle',base:'Cône'}, hero:'Cône', heroSub:'ensemble'},
-  pt:{back:'Voltar ao cone',conesLbl:'Cones',use:{'200':'Lapidadoras verticais','150':'Lisec','100':'Centros CNC'},take:'Leve-o consigo',complete:'Cone completo',roTitle:'O seu conjunto Diamant',roHint:'só leitura · rode e amplie',fam:{pencil:'Duplo trapézio',v:'Ranhura em V · arestas',p:'Trapézio',acc:'Acessórios'},ver:{tagli:'Ranhurada',settori:'Segmentada',cont:'',all:''},sizes:'medidas',pickReplace:'Toque na mó a substituir',replaced:(a,b)=>`${a} substituída por ${b}`,share:'Leve o conjunto consigo',shareHint:'Leia o código com o telemóvel: o conjunto abre lá, pronto a partilhar.',styleMat:'Material',styleDraw:'Desenho',fsBtn:'Ecrã',wheelsBtn:'Mós',removed:'removida do conjunto',up:'Subir',down:'Descer',compose:'Monte o seu conjunto',show:'Show',caps:[['Diamant · desde 1975','Around your Edges'],['Um cone','O seu conjunto à medida'],['Perfis sob desenho','A secção mostra a aresta'],['Made in Italy','Patenteadas'],['Mós de segmentos','Mesmo cone, outro conjunto'],['Precisão','Cada perfil no seu lugar']],empty:'Conjunto vazio · arraste para aqui uma mó do catálogo, ou toque numa',del:'Eliminar',clear:'Esvaziar',name:'Português',seg:' segm.',explode:'Explodir',section:'Secção',spin:'Rodar',reset:'Vista',sectionOn:'Secção pelo perfil',hint:'Toque numa mó para a montar',
+  pt:{back:'Voltar ao cone',cat:'Catálogo',catBack:'Voltar ao catálogo',code4:'Introduza o código',wrongCode:'Código errado',ctrl:'Controlo dimensional',balance:'Equilibragem',stamp:'Punçoamento',iso:'Mós Ø100 · ISO 40',catHint:'Toque numa mó para abrir a ficha',fitsOn:'Compatível com',checked:'Verificado',codeLbl:'Código',conesLbl:'Cones',use:{'200':'Lapidadoras verticais','150':'Lisec','100':'Centros CNC'},take:'Leve-o consigo',complete:'Cone completo',roTitle:'O seu conjunto Diamant',roHint:'só leitura · rode e amplie',fam:{pencil:'Duplo trapézio',v:'Ranhura em V · arestas',p:'Trapézio',acc:'Acessórios'},ver:{tagli:'Ranhurada',settori:'Segmentada',cont:'',all:''},sizes:'medidas',pickReplace:'Toque na mó a substituir',replaced:(a,b)=>`${a} substituída por ${b}`,share:'Leve o conjunto consigo',shareHint:'Leia o código com o telemóvel: o conjunto abre lá, pronto a partilhar.',styleMat:'Material',styleDraw:'Desenho',fsBtn:'Ecrã',wheelsBtn:'Mós',removed:'removida do conjunto',up:'Subir',down:'Descer',compose:'Monte o seu conjunto',show:'Show',caps:[['Diamant · desde 1975','Around your Edges'],['Um cone','O seu conjunto à medida'],['Perfis sob desenho','A secção mostra a aresta'],['Made in Italy','Patenteadas'],['Mós de segmentos','Mesmo cone, outro conjunto'],['Precisão','Cada perfil no seu lugar']],empty:'Conjunto vazio · arraste para aqui uma mó do catálogo, ou toque numa',del:'Eliminar',clear:'Esvaziar',name:'Português',seg:' segm.',explode:'Explodir',section:'Secção',spin:'Rodar',reset:'Vista',sectionOn:'Secção pelo perfil',hint:'Toque numa mó para a montar',
       stackEy:'',stackTitle:'O seu cone',shuffle:'Baralhar',add:'Adicionar',presets:'Começar de',
       pTagli:'Conjunto com ranhuras',pSettori:'Conjunto com segmentos',remove:'Remover do conjunto',cancel:'Cancelar',addThis:'Adicionar ao conjunto',
       pickPos:n=>`Posição ${n} a contar de cima`,pickTitle:'Escolha a mó',addEy:'Nova mó no topo do conjunto',
@@ -599,7 +650,7 @@ const UI = {
       sp:{d:'Diâmetro',t:'Espessura',b:'Furo',rim:'Coroa',prof:'Perfil',fix:'Fixação'},
       gola:d=>`Garganta em V 90°, prof. ${d} mm`,fix:'6 furos Ø 6,5',
       parts:{nut:'Porca de aperto',washer:'Anilha',base:'Cone'}, hero:'Cone', heroSub:'conjunto'},
-  ru:{back:'Назад к оправке',conesLbl:'Оправки',use:{'200':'Вертикальные станки','150':'Lisec','100':'Обрабатывающие центры'},take:'Забрать с собой',complete:'Оправка собрана',roTitle:'Ваш набор Diamant',roHint:'только просмотр · вращайте и масштабируйте',fam:{pencil:'Двойная трапеция',v:'V-паз · снятие кромки',p:'Трапеция',acc:'Аксессуары'},ver:{tagli:'С прорезями',settori:'Сегментный',cont:'',all:''},sizes:'размеров',pickReplace:'Нажмите на круг для замены',replaced:(a,b)=>`${a} заменён на ${b}`,share:'Забрать набор с собой',shareHint:'Отсканируйте код телефоном: набор откроется там, готовый к отправке.',styleMat:'Материал',styleDraw:'Чертёж',fsBtn:'Экран',wheelsBtn:'Круги',removed:'убран из набора',up:'Вверх',down:'Вниз',compose:'Соберите свой набор',show:'Шоу',caps:[['Diamant · с 1975','Around your Edges'],['Одна оправка','Ваш набор на заказ'],['Профили по чертежу','Разрез показывает кромку'],['Made in Italy','Запатентовано'],['Сегментные круги','Та же оправка, другой набор'],['Точность','Каждый профиль на своём месте']],empty:'Набор пуст · перетащите круг из каталога или коснитесь его',del:'Удалить',clear:'Очистить',name:'Русский',seg:' сегм.',explode:'Разнести',section:'Разрез',spin:'Вращение',reset:'Вид',sectionOn:'Разрез по профилю',hint:'Нажмите на круг, чтобы установить его',
+  ru:{back:'Назад к оправке',cat:'Каталог',catBack:'Назад в каталог',code4:'Введите код',wrongCode:'Неверный код',ctrl:'Контроль размеров',balance:'Балансировка',stamp:'Клеймение',iso:'Круги Ø100 · ISO 40',catHint:'Нажмите на круг, чтобы открыть карточку',fitsOn:'Подходит для',checked:'Проверено',codeLbl:'Код',conesLbl:'Оправки',use:{'200':'Вертикальные станки','150':'Lisec','100':'Обрабатывающие центры'},take:'Забрать с собой',complete:'Оправка собрана',roTitle:'Ваш набор Diamant',roHint:'только просмотр · вращайте и масштабируйте',fam:{pencil:'Двойная трапеция',v:'V-паз · снятие кромки',p:'Трапеция',acc:'Аксессуары'},ver:{tagli:'С прорезями',settori:'Сегментный',cont:'',all:''},sizes:'размеров',pickReplace:'Нажмите на круг для замены',replaced:(a,b)=>`${a} заменён на ${b}`,share:'Забрать набор с собой',shareHint:'Отсканируйте код телефоном: набор откроется там, готовый к отправке.',styleMat:'Материал',styleDraw:'Чертёж',fsBtn:'Экран',wheelsBtn:'Круги',removed:'убран из набора',up:'Вверх',down:'Вниз',compose:'Соберите свой набор',show:'Шоу',caps:[['Diamant · с 1975','Around your Edges'],['Одна оправка','Ваш набор на заказ'],['Профили по чертежу','Разрез показывает кромку'],['Made in Italy','Запатентовано'],['Сегментные круги','Та же оправка, другой набор'],['Точность','Каждый профиль на своём месте']],empty:'Набор пуст · перетащите круг из каталога или коснитесь его',del:'Удалить',clear:'Очистить',name:'Русский',seg:' сегм.',explode:'Разнести',section:'Разрез',spin:'Вращение',reset:'Вид',sectionOn:'Разрез по профилю',hint:'Нажмите на круг, чтобы установить его',
       stackEy:'',stackTitle:'Ваша оправка',shuffle:'Перемешать',add:'Добавить',presets:'Начать с',
       pTagli:'Набор с прорезями',pSettori:'Набор с сегментами',remove:'Убрать из набора',cancel:'Отмена',addThis:'Добавить в набор',
       pickPos:n=>`Позиция ${n} сверху`,pickTitle:'Выберите круг',addEy:'Новый круг сверху набора',
@@ -610,7 +661,7 @@ const UI = {
       sp:{d:'Диаметр',t:'Толщина',b:'Посадочное отверстие',rim:'Алмазный слой',prof:'Профиль',fix:'Крепление'},
       gola:d=>`V-канавка 90°, глубина ${d} мм`,fix:'6 отверстий Ø 6,5',
       parts:{nut:'Зажимная гайка',washer:'Шайба',base:'Оправка'}, hero:'Оправка', heroSub:'сборка'},
-  tr:{back:'Mile dön',conesLbl:'Miller',use:{'200':'Dikey rodaj','150':'Lisec','100':'CNC merkezleri'},take:'Yanına al',complete:'Mil tamamlandı',roTitle:'Diamant setiniz',roHint:'salt görüntüleme · döndür ve yakınlaştır',fam:{pencil:'Çift trapez',v:'V kanal · pah kırma',p:'Trapez',acc:'Aksesuarlar'},ver:{tagli:'Yarıklı',settori:'Segmentli',cont:'',all:''},sizes:'ölçü',pickReplace:'Değiştirilecek taşa dokun',replaced:(a,b)=>`${a} yerine ${b}`,share:'Seti yanına al',shareHint:'Kodu telefonunla tara: set orada açılır, paylaşmaya hazır.',styleMat:'Malzeme',styleDraw:'Çizim',fsBtn:'Ekran',wheelsBtn:'Taşlar',removed:'setten çıkarıldı',up:'Yukarı',down:'Aşağı',compose:'Setinizi oluşturun',show:'Show',caps:[['Diamant · 1975’ten beri','Around your Edges'],['Tek mil','Size özel set'],['Çizime göre profiller','Kesit kenarı anlatır'],['Made in Italy','Patentli'],['Segmentli taşlar','Aynı mil, başka set'],['Hassasiyet','Her profil yerli yerinde']],empty:'Set boş · katalogdan bir taşı buraya sürükleyin veya dokunun',del:'Sil',clear:'Boşalt',name:'Türkçe',seg:' segm.',explode:'Dağıt',section:'Kesit',spin:'Döndür',reset:'Görünüm',sectionOn:'Profil boyunca kesit',hint:'Takmak için bir taşa dokun',
+  tr:{back:'Mile dön',cat:'Katalog',catBack:'Kataloğa dön',code4:'Kodu girin',wrongCode:'Yanlış kod',ctrl:'Boyut kontrolü',balance:'Balans',stamp:'Damgalama',iso:'Ø100 taşlar · ISO 40',catHint:'Ürün kartı için bir taşa dokunun',fitsOn:'Uyumlu',checked:'Kontrol edildi',codeLbl:'Kod',conesLbl:'Miller',use:{'200':'Dikey rodaj','150':'Lisec','100':'CNC merkezleri'},take:'Yanına al',complete:'Mil tamamlandı',roTitle:'Diamant setiniz',roHint:'salt görüntüleme · döndür ve yakınlaştır',fam:{pencil:'Çift trapez',v:'V kanal · pah kırma',p:'Trapez',acc:'Aksesuarlar'},ver:{tagli:'Yarıklı',settori:'Segmentli',cont:'',all:''},sizes:'ölçü',pickReplace:'Değiştirilecek taşa dokun',replaced:(a,b)=>`${a} yerine ${b}`,share:'Seti yanına al',shareHint:'Kodu telefonunla tara: set orada açılır, paylaşmaya hazır.',styleMat:'Malzeme',styleDraw:'Çizim',fsBtn:'Ekran',wheelsBtn:'Taşlar',removed:'setten çıkarıldı',up:'Yukarı',down:'Aşağı',compose:'Setinizi oluşturun',show:'Show',caps:[['Diamant · 1975’ten beri','Around your Edges'],['Tek mil','Size özel set'],['Çizime göre profiller','Kesit kenarı anlatır'],['Made in Italy','Patentli'],['Segmentli taşlar','Aynı mil, başka set'],['Hassasiyet','Her profil yerli yerinde']],empty:'Set boş · katalogdan bir taşı buraya sürükleyin veya dokunun',del:'Sil',clear:'Boşalt',name:'Türkçe',seg:' segm.',explode:'Dağıt',section:'Kesit',spin:'Döndür',reset:'Görünüm',sectionOn:'Profil boyunca kesit',hint:'Takmak için bir taşa dokun',
       stackEy:'',stackTitle:'Senin milin',shuffle:'Karıştır',add:'Ekle',presets:'Şununla başla',
       pTagli:'Yarıklı set',pSettori:'Segmentli set',remove:'Setten çıkar',cancel:'İptal',addThis:'Sete ekle',
       pickPos:n=>`Üstten ${n}. konum`,pickTitle:'Taşı seçin',addEy:'Setin üstüne yeni taş',
@@ -621,7 +672,7 @@ const UI = {
       sp:{d:'Çap',t:'Kalınlık',b:'Delik',rim:'Taç',prof:'Profil',fix:'Bağlantı'},
       gola:d=>`90° V kanal, ${d} mm derinlik`,fix:'6 delik Ø 6,5',
       parts:{nut:'Sıkma somunu',washer:'Rondela',base:'mili'}, hero:'mili', heroSub:'montaj'},
-  zh:{back:'返回主轴',conesLbl:'主轴',use:{'200':'立式磨边机','150':'Lisec','100':'CNC加工中心'},take:'带走',complete:'主轴已装满',roTitle:'您的 Diamant 套装',roHint:'仅查看 · 旋转与缩放',fam:{pencil:'双梯形',v:'V槽 · 磨边',p:'梯形',acc:'附件'},ver:{tagli:'开槽',settori:'分段',cont:'',all:''},sizes:'种规格',pickReplace:'点击要替换的磨轮',replaced:(a,b)=>`${a} 已替换为 ${b}`,share:'带走你的套装',shareHint:'用手机扫描二维码：套装将在手机上打开，可直接分享。',styleMat:'材质',styleDraw:'图纸',fsBtn:'全屏',wheelsBtn:'磨轮',removed:'已从组中移除',up:'上移',down:'下移',compose:'组合您的磨轮组',show:'演示',caps:[['Diamant · 始于 1975','Around your Edges'],['一根主轴','您的定制磨轮组'],['按图纸定制轮廓','剖面展现磨边'],['意大利制造','已获专利'],['节块磨轮','同一主轴，另一组'],['精准','每个轮廓各就其位']],empty:'空组 · 从目录拖一片磨轮到这里，或点击一片',del:'删除',clear:'清空',name:'中文',seg:' 节块',explode:'爆炸图',section:'剖面',spin:'旋转',reset:'视图',sectionOn:'沿轮廓剖切',hint:'点击磨轮即可安装',
+  zh:{back:'返回主轴',cat:'产品目录',catBack:'返回目录',code4:'请输入密码',wrongCode:'密码错误',ctrl:'尺寸检验',balance:'动平衡',stamp:'打标',iso:'Ø100 磨轮 · ISO 40',catHint:'点击磨轮打开产品页',fitsOn:'适用于',checked:'已检验',codeLbl:'代码',conesLbl:'主轴',use:{'200':'立式磨边机','150':'Lisec','100':'CNC加工中心'},take:'带走',complete:'主轴已装满',roTitle:'您的 Diamant 套装',roHint:'仅查看 · 旋转与缩放',fam:{pencil:'双梯形',v:'V槽 · 磨边',p:'梯形',acc:'附件'},ver:{tagli:'开槽',settori:'分段',cont:'',all:''},sizes:'种规格',pickReplace:'点击要替换的磨轮',replaced:(a,b)=>`${a} 已替换为 ${b}`,share:'带走你的套装',shareHint:'用手机扫描二维码：套装将在手机上打开，可直接分享。',styleMat:'材质',styleDraw:'图纸',fsBtn:'全屏',wheelsBtn:'磨轮',removed:'已从组中移除',up:'上移',down:'下移',compose:'组合您的磨轮组',show:'演示',caps:[['Diamant · 始于 1975','Around your Edges'],['一根主轴','您的定制磨轮组'],['按图纸定制轮廓','剖面展现磨边'],['意大利制造','已获专利'],['节块磨轮','同一主轴，另一组'],['精准','每个轮廓各就其位']],empty:'空组 · 从目录拖一片磨轮到这里，或点击一片',del:'删除',clear:'清空',name:'中文',seg:' 节块',explode:'爆炸图',section:'剖面',spin:'旋转',reset:'视图',sectionOn:'沿轮廓剖切',hint:'点击磨轮即可安装',
       stackEy:'',stackTitle:'你的主轴',shuffle:'打乱',add:'添加',presets:'从以下开始',
       pTagli:'开槽磨轮组',pSettori:'节块磨轮组',remove:'从组中移除',cancel:'取消',addThis:'加入磨轮组',
       pickPos:n=>`自上而下第 ${n} 位`,pickTitle:'选择磨轮',addEy:'新磨轮置于最上方',
@@ -632,7 +683,7 @@ const UI = {
       sp:{d:'直径',t:'厚度',b:'内孔',rim:'工作层',prof:'轮廓',fix:'固定'},
       gola:d=>`90° V 形槽，深 ${d} mm`,fix:'6 孔 Ø 6.5',
       parts:{nut:'锁紧螺母',washer:'垫圈',base:'主轴'}, hero:'主轴', heroSub:'总成'},
-  ja:{back:'アーバーに戻る',conesLbl:'アーバー',use:{'200':'縦型研削機','150':'Lisec','100':'CNCセンター'},take:'持ち帰る',complete:'アーバー完成',roTitle:'あなたの Diamant セット',roHint:'閲覧のみ · 回転とズーム',fam:{pencil:'ダブル台形',v:'V溝 · 面取り',p:'台形',acc:'アクセサリー'},ver:{tagli:'スリット',settori:'セグメント',cont:'',all:''},sizes:'サイズ',pickReplace:'交換するホイールをタップ',replaced:(a,b)=>`${a} を ${b} に交換`,share:'セットを持ち帰る',shareHint:'スマートフォンでコードを読み取ると、セットがそのまま開き、共有できます。',styleMat:'質感',styleDraw:'図面',fsBtn:'全画面',wheelsBtn:'ホイール',removed:'セットから外しました',up:'上へ',down:'下へ',compose:'あなたのセットを組む',show:'ショー',caps:[['Diamant · 1975年創業','Around your Edges'],['ひとつのアーバー','あなただけのセット'],['図面どおりのプロファイル','断面がエッジを語る'],['Made in Italy','特許取得'],['セグメントホイール','同じアーバー、別のセット'],['精密','すべてのプロファイルが定位置に']],empty:'空のセット · カタログからホイールをここへドラッグ、またはタップ',del:'削除',clear:'すべて外す',name:'日本語',seg:' セグ',explode:'分解',section:'断面',spin:'回転',reset:'表示',sectionOn:'プロファイル断面',hint:'ホイールをタップして取り付け',
+  ja:{back:'アーバーに戻る',cat:'カタログ',catBack:'カタログに戻る',code4:'コードを入力',wrongCode:'コードが違います',ctrl:'寸法検査',balance:'バランス調整',stamp:'刻印',iso:'Ø100 ホイール · ISO 40',catHint:'ホイールをタップして製品シートを開く',fitsOn:'適合',checked:'検査済み',codeLbl:'コード',conesLbl:'アーバー',use:{'200':'縦型研削機','150':'Lisec','100':'CNCセンター'},take:'持ち帰る',complete:'アーバー完成',roTitle:'あなたの Diamant セット',roHint:'閲覧のみ · 回転とズーム',fam:{pencil:'ダブル台形',v:'V溝 · 面取り',p:'台形',acc:'アクセサリー'},ver:{tagli:'スリット',settori:'セグメント',cont:'',all:''},sizes:'サイズ',pickReplace:'交換するホイールをタップ',replaced:(a,b)=>`${a} を ${b} に交換`,share:'セットを持ち帰る',shareHint:'スマートフォンでコードを読み取ると、セットがそのまま開き、共有できます。',styleMat:'質感',styleDraw:'図面',fsBtn:'全画面',wheelsBtn:'ホイール',removed:'セットから外しました',up:'上へ',down:'下へ',compose:'あなたのセットを組む',show:'ショー',caps:[['Diamant · 1975年創業','Around your Edges'],['ひとつのアーバー','あなただけのセット'],['図面どおりのプロファイル','断面がエッジを語る'],['Made in Italy','特許取得'],['セグメントホイール','同じアーバー、別のセット'],['精密','すべてのプロファイルが定位置に']],empty:'空のセット · カタログからホイールをここへドラッグ、またはタップ',del:'削除',clear:'すべて外す',name:'日本語',seg:' セグ',explode:'分解',section:'断面',spin:'回転',reset:'表示',sectionOn:'プロファイル断面',hint:'ホイールをタップして取り付け',
       stackEy:'',stackTitle:'あなたのアーバー',shuffle:'シャッフル',add:'追加',presets:'ここから始める',
       pTagli:'スリット付きセット',pSettori:'セグメントセット',remove:'セットから外す',cancel:'キャンセル',addThis:'セットに追加',
       pickPos:n=>`上から ${n} 番目`,pickTitle:'ホイールを選ぶ',addEy:'新しいホイールを最上段に',
@@ -643,7 +694,7 @@ const UI = {
       sp:{d:'直径',t:'厚さ',b:'穴径',rim:'ダイヤ層',prof:'プロファイル',fix:'固定'},
       gola:d=>`90° V 溝、深さ ${d} mm`,fix:'穴 6 個 Ø 6.5',
       parts:{nut:'締付ナット',washer:'ワッシャー',base:'アーバー'}, hero:'アーバー', heroSub:'一式'},
-  nl:{back:'Terug naar de opname',conesLbl:'Opnames',use:{'200':'Verticale slijpers','150':'Lisec','100':'CNC-centra'},take:'Neem mee',complete:'Opname compleet',roTitle:'Jouw Diamant-set',roHint:'alleen bekijken · draaien en zoomen',fam:{pencil:'Dubbel trapezium',v:'V-groef · afkanten',p:'Trapezium',acc:'Accessoires'},ver:{tagli:'Met sleuven',settori:'Gesegmenteerd',cont:'',all:''},sizes:'maten',pickReplace:'Tik op de schijf die je wilt vervangen',replaced:(a,b)=>`${a} vervangen door ${b}`,share:'Neem de set mee',shareHint:'Scan de code met je telefoon: de set opent daar, klaar om te delen.',styleMat:'Materiaal',styleDraw:'Tekening',fsBtn:'Scherm',wheelsBtn:'Schijven',removed:'uit de set gehaald',up:'Omhoog',down:'Omlaag',compose:'Stel je set samen',show:'Show',caps:[['Diamant · sinds 1975','Around your Edges'],['Eén opname','Jouw set op maat'],['Profielen naar tekening','De doorsnede toont de rand'],['Made in Italy','Gepatenteerd'],['Segmentschijven','Zelfde opname, andere set'],['Precisie','Elk profiel op zijn plaats']],empty:'Lege set · sleep hier een schijf uit de catalogus, of tik erop',del:'Verwijderen',clear:'Leegmaken',name:'Nederlands',seg:' segm.',explode:'Exploderen',section:'Doorsnede',spin:'Draaien',reset:'Beeld',sectionOn:'Doorsnede door het profiel',hint:'Tik op een schijf om die te monteren',
+  nl:{back:'Terug naar de opname',cat:'Catalogus',catBack:'Terug naar de catalogus',code4:'Voer de code in',wrongCode:'Verkeerde code',ctrl:'Maatcontrole',balance:'Balanceren',stamp:'Stempelen',iso:'Ø100-schijven · ISO 40',catHint:'Tik op een schijf voor de productkaart',fitsOn:'Past op',checked:'Gecontroleerd',codeLbl:'Code',conesLbl:'Opnames',use:{'200':'Verticale slijpers','150':'Lisec','100':'CNC-centra'},take:'Neem mee',complete:'Opname compleet',roTitle:'Jouw Diamant-set',roHint:'alleen bekijken · draaien en zoomen',fam:{pencil:'Dubbel trapezium',v:'V-groef · afkanten',p:'Trapezium',acc:'Accessoires'},ver:{tagli:'Met sleuven',settori:'Gesegmenteerd',cont:'',all:''},sizes:'maten',pickReplace:'Tik op de schijf die je wilt vervangen',replaced:(a,b)=>`${a} vervangen door ${b}`,share:'Neem de set mee',shareHint:'Scan de code met je telefoon: de set opent daar, klaar om te delen.',styleMat:'Materiaal',styleDraw:'Tekening',fsBtn:'Scherm',wheelsBtn:'Schijven',removed:'uit de set gehaald',up:'Omhoog',down:'Omlaag',compose:'Stel je set samen',show:'Show',caps:[['Diamant · sinds 1975','Around your Edges'],['Eén opname','Jouw set op maat'],['Profielen naar tekening','De doorsnede toont de rand'],['Made in Italy','Gepatenteerd'],['Segmentschijven','Zelfde opname, andere set'],['Precisie','Elk profiel op zijn plaats']],empty:'Lege set · sleep hier een schijf uit de catalogus, of tik erop',del:'Verwijderen',clear:'Leegmaken',name:'Nederlands',seg:' segm.',explode:'Exploderen',section:'Doorsnede',spin:'Draaien',reset:'Beeld',sectionOn:'Doorsnede door het profiel',hint:'Tik op een schijf om die te monteren',
       stackEy:'',stackTitle:'Jouw opname',shuffle:'Schudden',add:'Toevoegen',presets:'Begin met',
       pTagli:'Set met sleuven',pSettori:'Set met segmenten',remove:'Uit de set halen',cancel:'Annuleren',addThis:'Aan de set toevoegen',
       pickPos:n=>`Positie ${n} van boven`,pickTitle:'Kies een schijf',addEy:'Nieuwe schijf bovenop de set',
@@ -654,7 +705,7 @@ const UI = {
       sp:{d:'Diameter',t:'Dikte',b:'Boring',rim:'Rand',prof:'Profiel',fix:'Bevestiging'},
       gola:d=>`V-groef 90°, ${d} mm diep`,fix:'6 gaten Ø 6,5',
       parts:{nut:'Spanmoer',washer:'Sluitring',base:'Opname'}, hero:'Opname', heroSub:'samenstel'},
-  pl:{back:'Wróć do trzpienia',conesLbl:'Trzpienie',use:{'200':'Szlifierki pionowe','150':'Lisec','100':'Centra CNC'},take:'Zabierz ze sobą',complete:'Trzpień gotowy',roTitle:'Twój zestaw Diamant',roHint:'tylko podgląd · obracaj i powiększaj',fam:{pencil:'Podwójny trapez',v:'Rowek V · fazowanie',p:'Trapez',acc:'Akcesoria'},ver:{tagli:'Nacinana',settori:'Segmentowa',cont:'',all:''},sizes:'rozmiary',pickReplace:'Dotknij tarczę do wymiany',replaced:(a,b)=>`${a} zastąpiona przez ${b}`,share:'Zabierz zestaw ze sobą',shareHint:'Zeskanuj kod telefonem: zestaw otworzy się tam, gotowy do udostępnienia.',styleMat:'Materiał',styleDraw:'Rysunek',fsBtn:'Ekran',wheelsBtn:'Tarcze',removed:'usunięta z zestawu',up:'W górę',down:'W dół',compose:'Złóż swój zestaw',show:'Pokaz',caps:[['Diamant · od 1975','Around your Edges'],['Jeden trzpień','Twój zestaw na miarę'],['Profile według rysunku','Przekrój pokazuje krawędź'],['Made in Italy','Opatentowane'],['Tarcze segmentowe','Ten sam trzpień, inny zestaw'],['Precyzja','Każdy profil na swoim miejscu']],empty:'Pusty zestaw · przeciągnij tu tarczę z katalogu albo ją dotknij',del:'Usuń',clear:'Wyczyść',name:'Polski',seg:' segm.',explode:'Rozsuń',section:'Przekrój',spin:'Obroty',reset:'Widok',sectionOn:'Przekrój przez profil',hint:'Dotknij tarczę, aby ją zamontować',
+  pl:{back:'Wróć do trzpienia',cat:'Katalog',catBack:'Wróć do katalogu',code4:'Wpisz kod',wrongCode:'Błędny kod',ctrl:'Kontrola wymiarów',balance:'Wyważanie',stamp:'Znakowanie',iso:'Tarcze Ø100 · ISO 40',catHint:'Dotknij tarczy, aby otworzyć kartę',fitsOn:'Pasuje do',checked:'Sprawdzono',codeLbl:'Kod',conesLbl:'Trzpienie',use:{'200':'Szlifierki pionowe','150':'Lisec','100':'Centra CNC'},take:'Zabierz ze sobą',complete:'Trzpień gotowy',roTitle:'Twój zestaw Diamant',roHint:'tylko podgląd · obracaj i powiększaj',fam:{pencil:'Podwójny trapez',v:'Rowek V · fazowanie',p:'Trapez',acc:'Akcesoria'},ver:{tagli:'Nacinana',settori:'Segmentowa',cont:'',all:''},sizes:'rozmiary',pickReplace:'Dotknij tarczę do wymiany',replaced:(a,b)=>`${a} zastąpiona przez ${b}`,share:'Zabierz zestaw ze sobą',shareHint:'Zeskanuj kod telefonem: zestaw otworzy się tam, gotowy do udostępnienia.',styleMat:'Materiał',styleDraw:'Rysunek',fsBtn:'Ekran',wheelsBtn:'Tarcze',removed:'usunięta z zestawu',up:'W górę',down:'W dół',compose:'Złóż swój zestaw',show:'Pokaz',caps:[['Diamant · od 1975','Around your Edges'],['Jeden trzpień','Twój zestaw na miarę'],['Profile według rysunku','Przekrój pokazuje krawędź'],['Made in Italy','Opatentowane'],['Tarcze segmentowe','Ten sam trzpień, inny zestaw'],['Precyzja','Każdy profil na swoim miejscu']],empty:'Pusty zestaw · przeciągnij tu tarczę z katalogu albo ją dotknij',del:'Usuń',clear:'Wyczyść',name:'Polski',seg:' segm.',explode:'Rozsuń',section:'Przekrój',spin:'Obroty',reset:'Widok',sectionOn:'Przekrój przez profil',hint:'Dotknij tarczę, aby ją zamontować',
       stackEy:'',stackTitle:'Twój trzpień',shuffle:'Przetasuj',add:'Dodaj',presets:'Zacznij od',
       pTagli:'Zestaw nacinany',pSettori:'Zestaw segmentowy',remove:'Usuń z zestawu',cancel:'Anuluj',addThis:'Dodaj do zestawu',
       pickPos:n=>`Pozycja ${n} od góry`,pickTitle:'Wybierz tarczę',addEy:'Nowa tarcza na górze zestawu',
@@ -665,7 +716,7 @@ const UI = {
       sp:{d:'Średnica',t:'Grubość',b:'Otwór',rim:'Wieniec',prof:'Profil',fix:'Mocowanie'},
       gola:d=>`Rowek V 90°, gł. ${d} mm`,fix:'6 otworów Ø 6,5',
       parts:{nut:'Nakrętka mocująca',washer:'Podkładka',base:'Trzpień'}, hero:'Trzpień', heroSub:'zespół'},
-  sv:{back:'Tillbaka till hållaren',conesLbl:'Hållare',use:{'200':'Vertikala kantslipar','150':'Lisec','100':'CNC-center'},take:'Ta med dig',complete:'Hållaren klar',roTitle:'Ditt Diamant-set',roHint:'endast visning · rotera och zooma',fam:{pencil:'Dubbel trapets',v:'V-spår · kantbrytning',p:'Trapets',acc:'Tillbehör'},ver:{tagli:'Slitsad',settori:'Segmenterad',cont:'',all:''},sizes:'storlekar',pickReplace:'Tryck på skivan som ska bytas',replaced:(a,b)=>`${a} ersatt av ${b}`,share:'Ta med dig setet',shareHint:'Skanna koden med mobilen: setet öppnas där, redo att delas.',styleMat:'Material',styleDraw:'Ritning',fsBtn:'Skärm',wheelsBtn:'Skivor',removed:'borttagen från setet',up:'Upp',down:'Ned',compose:'Bygg ditt set',show:'Show',caps:[['Diamant · sedan 1975','Around your Edges'],['En hållare','Ditt set, på ditt sätt'],['Profiler enligt ritning','Snittet visar kanten'],['Made in Italy','Patenterade'],['Segmentskivor','Samma hållare, annat set'],['Precision','Varje profil på sin plats']],empty:'Tomt set · dra hit en skiva från katalogen eller tryck på en',del:'Ta bort',clear:'Töm',name:'Svenska',seg:' segm.',explode:'Sprängvy',section:'Snitt',spin:'Rotera',reset:'Vy',sectionOn:'Snitt genom profilen',hint:'Tryck på en skiva för att montera den',
+  sv:{back:'Tillbaka till hållaren',cat:'Katalog',catBack:'Tillbaka till katalogen',code4:'Ange koden',wrongCode:'Fel kod',ctrl:'Måttkontroll',balance:'Balansering',stamp:'Stämpling',iso:'Ø100-skivor · ISO 40',catHint:'Tryck på en skiva för produktbladet',fitsOn:'Passar',checked:'Kontrollerad',codeLbl:'Kod',conesLbl:'Hållare',use:{'200':'Vertikala kantslipar','150':'Lisec','100':'CNC-center'},take:'Ta med dig',complete:'Hållaren klar',roTitle:'Ditt Diamant-set',roHint:'endast visning · rotera och zooma',fam:{pencil:'Dubbel trapets',v:'V-spår · kantbrytning',p:'Trapets',acc:'Tillbehör'},ver:{tagli:'Slitsad',settori:'Segmenterad',cont:'',all:''},sizes:'storlekar',pickReplace:'Tryck på skivan som ska bytas',replaced:(a,b)=>`${a} ersatt av ${b}`,share:'Ta med dig setet',shareHint:'Skanna koden med mobilen: setet öppnas där, redo att delas.',styleMat:'Material',styleDraw:'Ritning',fsBtn:'Skärm',wheelsBtn:'Skivor',removed:'borttagen från setet',up:'Upp',down:'Ned',compose:'Bygg ditt set',show:'Show',caps:[['Diamant · sedan 1975','Around your Edges'],['En hållare','Ditt set, på ditt sätt'],['Profiler enligt ritning','Snittet visar kanten'],['Made in Italy','Patenterade'],['Segmentskivor','Samma hållare, annat set'],['Precision','Varje profil på sin plats']],empty:'Tomt set · dra hit en skiva från katalogen eller tryck på en',del:'Ta bort',clear:'Töm',name:'Svenska',seg:' segm.',explode:'Sprängvy',section:'Snitt',spin:'Rotera',reset:'Vy',sectionOn:'Snitt genom profilen',hint:'Tryck på en skiva för att montera den',
       stackEy:'',stackTitle:'Din hållare',shuffle:'Blanda',add:'Lägg till',presets:'Börja från',
       pTagli:'Slitsat set',pSettori:'Segmenterat set',remove:'Ta bort från setet',cancel:'Avbryt',addThis:'Lägg till i setet',
       pickPos:n=>`Position ${n} uppifrån`,pickTitle:'Välj en skiva',addEy:'Ny skiva överst i setet',
@@ -676,7 +727,7 @@ const UI = {
       sp:{d:'Diameter',t:'Tjocklek',b:'Hål',rim:'Krans',prof:'Profil',fix:'Infästning'},
       gola:d=>`V-spår 90°, ${d} mm djupt`,fix:'6 hål Ø 6,5',
       parts:{nut:'Spännmutter',washer:'Bricka',base:'Hållare'}, hero:'Hållare', heroSub:'enhet'},
-  ko:{back:'아버로 돌아가기',conesLbl:'아버',use:{'200':'수직 연삭기','150':'Lisec','100':'CNC 센터'},take:'가져가기',complete:'아버 완성',roTitle:'나의 Diamant 세트',roHint:'보기 전용 · 회전 및 확대',fam:{pencil:'이중 사다리꼴',v:'V홈 · 모서리 가공',p:'사다리꼴',acc:'액세서리'},ver:{tagli:'슬롯형',settori:'세그먼트형',cont:'',all:''},sizes:'종',pickReplace:'교체할 휠을 탭하세요',replaced:(a,b)=>`${a} → ${b} 교체됨`,share:'세트 가져가기',shareHint:'휴대폰으로 코드를 스캔하면 세트가 열리고 바로 공유할 수 있습니다.',styleMat:'재질',styleDraw:'도면',fsBtn:'전체 화면',wheelsBtn:'휠',removed:'세트에서 제거됨',up:'위로',down:'아래로',compose:'나만의 세트 구성',show:'쇼',caps:[['Diamant · 1975년부터','Around your Edges'],['하나의 아버','맞춤 세트'],['도면 그대로의 프로파일','단면이 엣지를 말해줍니다'],['Made in Italy','특허 취득'],['세그먼트 휠','같은 아버, 다른 세트'],['정밀','모든 프로파일이 제자리에']],empty:'빈 세트 · 카탈로그에서 휠을 끌어오거나 탭하세요',del:'삭제',clear:'비우기',name:'한국어',seg:' 세그',explode:'분해',section:'단면',spin:'회전',reset:'보기',sectionOn:'프로파일 단면',hint:'휠을 탭하면 장착됩니다',
+  ko:{back:'아버로 돌아가기',cat:'카탈로그',catBack:'카탈로그로 돌아가기',code4:'코드를 입력하세요',wrongCode:'잘못된 코드',ctrl:'치수 검사',balance:'밸런싱',stamp:'각인',iso:'Ø100 휠 · ISO 40',catHint:'휠을 탭하면 제품 시트가 열립니다',fitsOn:'적합',checked:'검사 완료',codeLbl:'코드',conesLbl:'아버',use:{'200':'수직 연삭기','150':'Lisec','100':'CNC 센터'},take:'가져가기',complete:'아버 완성',roTitle:'나의 Diamant 세트',roHint:'보기 전용 · 회전 및 확대',fam:{pencil:'이중 사다리꼴',v:'V홈 · 모서리 가공',p:'사다리꼴',acc:'액세서리'},ver:{tagli:'슬롯형',settori:'세그먼트형',cont:'',all:''},sizes:'종',pickReplace:'교체할 휠을 탭하세요',replaced:(a,b)=>`${a} → ${b} 교체됨`,share:'세트 가져가기',shareHint:'휴대폰으로 코드를 스캔하면 세트가 열리고 바로 공유할 수 있습니다.',styleMat:'재질',styleDraw:'도면',fsBtn:'전체 화면',wheelsBtn:'휠',removed:'세트에서 제거됨',up:'위로',down:'아래로',compose:'나만의 세트 구성',show:'쇼',caps:[['Diamant · 1975년부터','Around your Edges'],['하나의 아버','맞춤 세트'],['도면 그대로의 프로파일','단면이 엣지를 말해줍니다'],['Made in Italy','특허 취득'],['세그먼트 휠','같은 아버, 다른 세트'],['정밀','모든 프로파일이 제자리에']],empty:'빈 세트 · 카탈로그에서 휠을 끌어오거나 탭하세요',del:'삭제',clear:'비우기',name:'한국어',seg:' 세그',explode:'분해',section:'단면',spin:'회전',reset:'보기',sectionOn:'프로파일 단면',hint:'휠을 탭하면 장착됩니다',
       stackEy:'',stackTitle:'나의 아버',shuffle:'섞기',add:'추가',presets:'기본 세트',
       pTagli:'슬롯 세트',pSettori:'세그먼트 세트',remove:'세트에서 제거',cancel:'취소',addThis:'세트에 추가',
       pickPos:n=>`위에서 ${n}번째`,pickTitle:'휠 선택',addEy:'세트 맨 위에 새 휠',
@@ -687,7 +738,7 @@ const UI = {
       sp:{d:'직경',t:'두께',b:'내경',rim:'림',prof:'프로파일',fix:'고정'},
       gola:d=>`90° V 홈, 깊이 ${d} mm`,fix:'구멍 6개 Ø 6.5',
       parts:{nut:'클램핑 너트',washer:'와셔',base:'아버'}, hero:'아버', heroSub:'조립'},
-  el:{back:'Πίσω στον άξονα',conesLbl:'Άξονες',use:{'200':'Κάθετες τροχιστικές','150':'Lisec','100':'Κέντρα CNC'},take:'Πάρε το μαζί σου',complete:'Άξονας πλήρης',roTitle:'Το σετ Diamant σου',roHint:'μόνο προβολή · περιστροφή και ζουμ',fam:{pencil:'Διπλό τραπέζιο',v:'Αυλάκι V · ξεφλούδισμα',p:'Τραπέζιο',acc:'Αξεσουάρ'},ver:{tagli:'Με εγκοπές',settori:'Τμηματικός',cont:'',all:''},sizes:'μεγέθη',pickReplace:'Άγγιξε τον τροχό προς αντικατάσταση',replaced:(a,b)=>`${a} αντικαταστάθηκε από ${b}`,share:'Πάρε το σετ μαζί σου',shareHint:'Σκάναρε τον κωδικό με το κινητό: το σετ ανοίγει εκεί, έτοιμο για κοινοποίηση.',styleMat:'Υλικό',styleDraw:'Σχέδιο',fsBtn:'Οθόνη',wheelsBtn:'Τροχοί',removed:'αφαιρέθηκε από το σετ',up:'Πάνω',down:'Κάτω',compose:'Φτιάξε το σετ σου',show:'Show',caps:[['Diamant · από το 1975','Around your Edges'],['Ένας άξονας','Το σετ στα μέτρα σου'],['Προφίλ κατά σχέδιο','Η τομή δείχνει την ακμή'],['Made in Italy','Κατοχυρωμένα'],['Τροχοί τμημάτων','Ίδιος άξονας, άλλο σετ'],['Ακρίβεια','Κάθε προφίλ στη θέση του']],empty:'Άδειο σετ · σύρε εδώ έναν τροχό από τον κατάλογο ή άγγιξέ τον',del:'Διαγραφή',clear:'Άδειασμα',name:'Ελληνικά',seg:' τμημ.',explode:'Ανάπτυγμα',section:'Τομή',spin:'Περιστροφή',reset:'Προβολή',sectionOn:'Τομή στο προφίλ',hint:'Άγγιξε έναν τροχό για να τον τοποθετήσεις',
+  el:{back:'Πίσω στον άξονα',cat:'Κατάλογος',catBack:'Πίσω στον κατάλογο',code4:'Εισάγετε τον κωδικό',wrongCode:'Λάθος κωδικός',ctrl:'Διαστασιολογικός έλεγχος',balance:'Ζυγοστάθμιση',stamp:'Σφράγιση',iso:'Τροχοί Ø100 · ISO 40',catHint:'Πατήστε έναν τροχό για την καρτέλα',fitsOn:'Ταιριάζει σε',checked:'Ελέγχθηκε',codeLbl:'Κωδικός',conesLbl:'Άξονες',use:{'200':'Κάθετες τροχιστικές','150':'Lisec','100':'Κέντρα CNC'},take:'Πάρε το μαζί σου',complete:'Άξονας πλήρης',roTitle:'Το σετ Diamant σου',roHint:'μόνο προβολή · περιστροφή και ζουμ',fam:{pencil:'Διπλό τραπέζιο',v:'Αυλάκι V · ξεφλούδισμα',p:'Τραπέζιο',acc:'Αξεσουάρ'},ver:{tagli:'Με εγκοπές',settori:'Τμηματικός',cont:'',all:''},sizes:'μεγέθη',pickReplace:'Άγγιξε τον τροχό προς αντικατάσταση',replaced:(a,b)=>`${a} αντικαταστάθηκε από ${b}`,share:'Πάρε το σετ μαζί σου',shareHint:'Σκάναρε τον κωδικό με το κινητό: το σετ ανοίγει εκεί, έτοιμο για κοινοποίηση.',styleMat:'Υλικό',styleDraw:'Σχέδιο',fsBtn:'Οθόνη',wheelsBtn:'Τροχοί',removed:'αφαιρέθηκε από το σετ',up:'Πάνω',down:'Κάτω',compose:'Φτιάξε το σετ σου',show:'Show',caps:[['Diamant · από το 1975','Around your Edges'],['Ένας άξονας','Το σετ στα μέτρα σου'],['Προφίλ κατά σχέδιο','Η τομή δείχνει την ακμή'],['Made in Italy','Κατοχυρωμένα'],['Τροχοί τμημάτων','Ίδιος άξονας, άλλο σετ'],['Ακρίβεια','Κάθε προφίλ στη θέση του']],empty:'Άδειο σετ · σύρε εδώ έναν τροχό από τον κατάλογο ή άγγιξέ τον',del:'Διαγραφή',clear:'Άδειασμα',name:'Ελληνικά',seg:' τμημ.',explode:'Ανάπτυγμα',section:'Τομή',spin:'Περιστροφή',reset:'Προβολή',sectionOn:'Τομή στο προφίλ',hint:'Άγγιξε έναν τροχό για να τον τοποθετήσεις',
       stackEy:'',stackTitle:'Ο άξονάς σου',shuffle:'Ανακάτεμα',add:'Προσθήκη',presets:'Ξεκίνα από',
       pTagli:'Σετ με εγκοπές',pSettori:'Σετ τμημάτων',remove:'Αφαίρεση από το σετ',cancel:'Άκυρο',addThis:'Προσθήκη στο σετ',
       pickPos:n=>`Θέση ${n} από πάνω`,pickTitle:'Διάλεξε τροχό',addEy:'Νέος τροχός στην κορυφή',
@@ -866,7 +917,7 @@ function outlineOf(w){   // the (r, y) section outline of a wheel on the active 
 function profileSvg(type){   // dimensioned section drawing for the sheet
   const w = WHEELS[type], o = outlineOf(w), R = cone().R, t = w.t, rb = cone().bore, f = v => v.toFixed(2);
   const pts = o.map(p => `${f(p[0])},${f(t - p[1])}`).join(' '), mir = o.map(p => `${f(-p[0])},${f(t - p[1])}`).join(' ');
-  const x0 = -R - 34, W = 2*R + 68, y0 = -22, H = t + 46, mono = 'font-family:var(--f-mono);font-size:9px;fill:#9aa3b2';
+  const x0 = -R - 34, W = 2*R + 100, y0 = -22, H = t + 46, mono = 'font-family:var(--f-mono);font-size:9px;fill:#9aa3b2';
   const dim = (x1, y1, x2, y2, txt, tx, ty) => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#6f7886" stroke-width=".6" vector-effect="non-scaling-stroke"/><text x="${tx}" y="${ty}" text-anchor="middle" style="${mono}">${txt}</text>`;
   return `<svg viewBox="${x0} ${y0} ${W} ${H}" xmlns="http://www.w3.org/2000/svg">
     <polygon points="${pts}" fill="rgba(143,176,238,.08)" stroke="#fff" stroke-width="1" vector-effect="non-scaling-stroke"/><polygon points="${mir}" fill="rgba(143,176,238,.08)" stroke="#fff" stroke-width="1" vector-effect="non-scaling-stroke"/>
@@ -1036,12 +1087,18 @@ function enterMode(mode, instant){
     base = c100 ? buildBase100() : state.cone === '150' ? buildBase150() : buildBase(); washer = c100 ? buildWasher100() : buildWasher(); nut = c100 ? buildNut100() : buildNut(); spin.add(base, washer, nut, halo);
     halo.scale.setScalar(cone().R / 100);
     syncStack(instant !== false);
+  } else if (mode === 'catalog'){
+    buildCatalog(); viewC = 0; controls.enabled = false; if (state.explode) setTool('explode', false); if (state.section) setTool('section', false);
   } else {
     single = buildWheel(state.single); spin.add(single);
     if (state.explode) setTool('explode', false);
   }
-  $('t-explode').setAttribute('aria-disabled', mode !== 'stack'); app.classList.toggle('single', mode === 'single'); $('b-back').hidden = mode !== 'single';
-  $('p-stack').hidden = mode !== 'stack'; $('p-single').hidden = mode !== 'single';
+  if (mode !== 'catalog'){ controls.enabled = true; clearCatalog(); }
+  if (mode !== 'single') state.sheet = false;
+  $('t-explode').setAttribute('aria-disabled', mode !== 'stack'); app.classList.toggle('single', mode === 'single'); app.classList.toggle('catalog', mode === 'catalog'); app.classList.toggle('sheet', state.sheet);
+  $('b-back').hidden = mode !== 'single'; $('b-back').querySelector('span').textContent = state.sheet ? T().catBack : T().back;
+  $('p-stack').hidden = mode !== 'stack'; $('p-single').hidden = mode !== 'single' || state.sheet; $('p-sheet').hidden = !state.sheet; $('cathint').hidden = mode !== 'catalog';
+  if (state.sheet) renderSheet();
   document.querySelectorAll('.card[data-k]').forEach(c => c.setAttribute('aria-pressed', mode === 'single' && c.dataset.k === state.single));
   renderSingle(); buildLabels();
 }
@@ -1119,6 +1176,7 @@ function renderUI(){
   document.querySelectorAll('.card[data-k]').forEach(c => { c.querySelector('b').textContent = code(c.dataset.k); c.querySelector('small').textContent = `${tOf(c.dataset.k)} mm`; });
   document.querySelectorAll('.card.famc').forEach(c => { c.querySelector('b').textContent = U.fam[c.dataset.fam]; });
   if (FAM.open) openFam(FAM.open);
+  if (state.mode === 'catalog') buildCatLabels(); if (state.sheet){ renderSheet(); $('b-back').querySelector('span').textContent = U.catBack; }
   document.querySelectorAll('#cones button').forEach(b => { const cc = CONE[b.dataset.cone]; b.querySelector('b').textContent = cc.tech; b.querySelector('small').textContent = cc.label; b.setAttribute('aria-pressed', b.dataset.cone === state.cone); });
   renderStack(); renderSingle(); buildLabels();
   if (!$('sheet').hidden) openSheet(sheetCtx);
@@ -1131,6 +1189,7 @@ function select(uid){ state.sel = uid; renderStack(); const r = document.querySe
 
 /* list interactions */
 let drag = null;
+state.sheet = false;   // product sheet open (single mode, catalogue panel instead of the gallery one)
 const list = $('list');
 list.addEventListener('click', e => {
   if (clickBlock){ clickBlock = false; return; }
@@ -1168,6 +1227,7 @@ $('b-shuffle').onclick = shuffle;
 $('b-qr').onclick = () => { const url = location.origin + location.pathname + '?c=' + state.cone + '&s=' + state.stack.map(x => x.type).join(',') + '&ro=1'; const qr = qrcode(0, 'M'); qr.addData(url); qr.make(); $('qr-svg').innerHTML = qr.createSvgTag({cellSize:4, margin:0, scalable:true}); $('qr').hidden = false; stat('qr'); };
 $('qr-x').onclick = () => { $('qr').hidden = true; };
 let logoTaps = 0, logoT = 0;
+document.querySelector('.logo').addEventListener('click', () => { if (SHOW.on) return; if (state.mode === 'catalog' || state.sheet) goHome(); });
 document.querySelector('.logo').addEventListener('pointerdown', () => { const n = performance.now(); logoTaps = n - logoT < 600 ? logoTaps + 1 : 1; logoT = n; if (logoTaps >= 3){ logoTaps = 0; $('stats-t').textContent = statsText(); $('stats').hidden = false; } });
 $('stats-x').onclick = () => { $('stats').hidden = true; };
 $('stats-copy').onclick = () => { try { navigator.clipboard.writeText(statsText()); toast('Copiato'); } catch(e){} };
@@ -1273,6 +1333,7 @@ $('t-explode').onclick = () => setTool('explode', !state.explode);
 $('t-section').onclick = () => setTool('section', !state.section);
 $('t-spin').onclick = () => setTool('spin', !state.spin);
 $('t-show').onclick = e => { e.stopPropagation(); startShow(false); };
+$('t-cat').onclick = e => { e.stopPropagation(); if (SHOW.on) stopShow(); if (state.mode === 'catalog') goHome(); else openCatalog(); };
 function resetView(){ setTool('explode', false); setTool('section', false); setTool('spin', false); flyHome(); };
 try { state.draw = localStorage.getItem('diamant-draw') === '1'; } catch(e){}
 const FLAGS = {it:'🇮🇹',en:'🇬🇧',de:'🇩🇪',fr:'🇫🇷',es:'🇪🇸',pt:'🇵🇹',ru:'🇷🇺',tr:'🇹🇷',zh:'🇨🇳',ja:'🇯🇵',nl:'🇳🇱',pl:'🇵🇱',sv:'🇸🇪',ko:'🇰🇷',el:'🇬🇷'};
@@ -1322,6 +1383,7 @@ function slotAtY(y, skipUid){ // how many wheels sit above this height = inserti
 let dropSlot = -1;
 canvas.addEventListener('pointerdown', e => {
   if (SHOW.on || state.ro) return;
+  if (state.mode === 'catalog'){ if (!e.isPrimary) return; catDrag = {y0:e.clientY, x0:e.clientX, y:e.clientY, s0:CATV.scroll, t:performance.now(), v:0, id:e.pointerId, moved:false}; try { canvas.setPointerCapture(e.pointerId); } catch(x){} return; }
   down = {x:e.clientX, y:e.clientY, t:performance.now(), id:e.pointerId};
   clearTimeout(holdT);
   if (state.mode !== 'stack' || state.explode) return;
@@ -1333,6 +1395,9 @@ canvas.addEventListener('pointerdown', e => {
   holdT = setTimeout(() => { start(); toast(T().move + ' · ' + code(s.type)); }, 200);   // otherwise a short press picks it up, a flick still orbits
 });
 canvas.addEventListener('pointermove', e => {
+  if (catDrag && e.pointerId === catDrag.id){ const dy = e.clientY - catDrag.y; const now = performance.now(), dt = Math.max(1, now - catDrag.t); catDrag.v = dy / dt; catDrag.t = now; catDrag.y = e.clientY;
+    if (Math.abs(e.clientY - catDrag.y0) > 6 || Math.abs(e.clientX - catDrag.x0) > 6) catDrag.moved = true;
+    CATV.scroll = Math.max(0, Math.min(CATV.max, catDrag.s0 + (e.clientY - catDrag.y0) * CATV.mmPx)); return; }
   if (down && !drag3d && Math.hypot(e.clientX - down.x, e.clientY - down.y) > 14) clearTimeout(holdT);
   if (!drag3d || e.pointerId !== drag3d.id) return;
   // sideways = pull it off the arbor; up/down = the wheel follows the finger and takes the slot it hovers
@@ -1350,6 +1415,10 @@ canvas.addEventListener('pointermove', e => {
 });
 const endStage = e => {
   clearTimeout(holdT);
+  if (catDrag && e.pointerId === catDrag.id){ const d = catDrag; catDrag = null; if (e.type === 'pointercancel') return;
+    if (!d.moved){ const k = catAt(e.clientX, e.clientY); if (k) openWheelSheet(k.type, k.cone); }
+    else CATV.vel = -d.v * CATV.mmPx * 1000 * (performance.now() - d.t < 80 ? 1 : 0);   // flick: keep the momentum
+    return; }
   if (drag3d && e.pointerId === drag3d.id){
     const o = W.get(drag3d.uid);
     if (drag3d.out && e.type !== 'pointercancel' && o){ const s = state.stack.find(x => x.uid === drag3d.uid); o.vanish = true; state.stack = state.stack.filter(x => x.uid !== drag3d.uid); if (state.sel === drag3d.uid) state.sel = null; syncStack(); toast(code(s.type) + ' ' + T().removed); }
@@ -1364,6 +1433,133 @@ const endStage = e => {
   if (!uid){ if (state.sel){ state.sel = null; renderStack(); } return; }
   select(uid);
 };
+/* ================================================================== catalogue: every wheel standing in 3D, grouped by family; a tap opens the product sheet */
+const CATV = {scroll:0, max:0, vel:0, mmPx:1, D:30, vh:1, cols:4, cw:290, rh:330, gh:120, items:[], labels:[], total:0};
+let catGroup = null, catDrag = null;
+const catFrom = {cone:null, l:false, b:true, sel:null};
+function clearCatalog(){ if (catGroup){ spin.remove(catGroup); disposeTree(catGroup); catGroup = null; } CATV.items = []; CATV.labels = []; $('cat-labels').innerHTML = ''; }
+function catGroups(){   // [{title, sub, cone, types}]
+  const U = T(), g = [];
+  for (const f of CAT.families){ if (f.only) continue; const types = Object.keys(f.versions).flatMap(v => f.versions[v].filter(k => !WHEELS[k].only)); if (types.length) g.push({id:f.id, title:U.fam[f.id], sub:'Ø200 · HSK 80 B / HSK 50 E', cone:'200', types}); }
+  const iso = ORDER.filter(k => !WHEELS[k].only || WHEELS[k].only === '100'); g.push({id:'iso', title:U.iso, sub:'ISO 40', cone:'100', types:iso});
+  return g;
+}
+function buildCatalog(){
+  clearCatalog(); catGroup = new THREE.Group(); spin.add(catGroup);
+  const keepC = state.cone, keepS = SPACE; let y = 0;
+  for (const grp of catGroups()){
+    grp.y = y; y -= CATV.gh;
+    state.cone = grp.cone; SPACE = CONE[grp.cone].space;
+    grp.types.forEach((k, i) => { const col = i % CATV.cols, row = Math.floor(i / CATV.cols); const cx = (col - (CATV.cols - 1)/2) * CATV.cw, cy = y - row * CATV.rh - CATV.rh/2;
+      const h = new THREE.Group(); h.position.set(cx, cy, 0); h.rotation.x = .92; const g = buildWheel(k); g.position.y = -tOf(k)/2; g.rotation.y = Math.random() * PI * 2; h.add(g); catGroup.add(h);
+      CATV.items.push({h, g, type:k, cone:grp.cone, x:cx, y:cy, spin:.35 + Math.random() * .25}); });
+    y -= Math.ceil(grp.types.length / CATV.cols) * CATV.rh + 30;
+  }
+  state.cone = keepC; SPACE = keepS; CATV.total = -y; CATV.scroll = 0; CATV.vel = 0; CATV.groups = catGroups().map((g, i) => ({...g}));
+  buildCatLabels();
+}
+function buildCatLabels(){
+  const el = $('cat-labels'); el.innerHTML = ''; CATV.labels = []; if (!catGroup) return;
+  let y = 0;
+  for (const grp of catGroups()){
+    const d = document.createElement('div'); d.className = 'cl g'; d.innerHTML = `${grp.title}<small>${grp.sub}</small>`; el.appendChild(d);
+    CATV.labels.push({el:d, x:-(CATV.cols - 1)/2 * CATV.cw - 120, y:y - CATV.gh/2});
+    y -= CATV.gh + Math.ceil(grp.types.length / CATV.cols) * CATV.rh + 30;
+  }
+  for (const it of CATV.items){ const d = document.createElement('div'); d.className = 'cl w'; d.innerHTML = `<b>${code(it.type)}</b><small>${tOf(it.type)} mm</small>`; el.appendChild(d); CATV.labels.push({el:d, x:it.x, y:it.y - (it.cone === '100' ? 70 : 118)}); }
+}
+const catV = new THREE.Vector3();
+function catFrame(dt){
+  const w = innerWidth, h = innerHeight, vfov = camera.fov * PI / 180, hfov = 2*Math.atan(Math.tan(vfov/2)*camera.aspect);
+  const halfW = (CATV.cols * CATV.cw / 2 + 150) * MM; CATV.D = halfW / Math.tan(hfov/2); CATV.vh = CATV.D * Math.tan(vfov/2);
+  CATV.mmPx = (2 * CATV.vh / h) / MM;   // mm of content per screen pixel
+  const top = 100 * CATV.mmPx, bot = 70 * CATV.mmPx;   // top bar / bottom hint
+  CATV.max = Math.max(0, CATV.total + top + bot - 2 * CATV.vh / MM);
+  if (!catDrag && CATV.vel){ CATV.scroll += CATV.vel * dt; CATV.vel *= Math.pow(.08, dt); if (Math.abs(CATV.vel) < 2) CATV.vel = 0; if (CATV.scroll < 0 || CATV.scroll > CATV.max){ CATV.scroll = Math.max(0, Math.min(CATV.max, CATV.scroll)); CATV.vel = 0; } }
+  const cy = (-CATV.vh / MM + top - CATV.scroll) * MM;   // content y = 0 sits just under the top bar
+  camera.position.set(0, cy, CATV.D); controls.target.set(0, cy, 0); camera.lookAt(0, cy, 0);
+  for (const it of CATV.items) it.g.rotation.y += it.spin * dt;
+}
+function placeCatLabels(){
+  const w = innerWidth, h = innerHeight;
+  for (const L of CATV.labels){ catV.set(L.x, L.y, 0); spin.localToWorld(catV); catV.project(camera); const sy = (-catV.y*.5 + .5)*h;
+    L.el.style.transform = `translate(${(catV.x*.5 + .5)*w}px, ${sy}px)` + (L.el.classList.contains('g') ? ' translate(0,-50%)' : ' translate(-50%,-50%)'); L.el.style.opacity = sy > 88 && sy < h - 60 ? 1 : 0; }
+}
+function catAt(cx, cy){
+  const r = canvas.getBoundingClientRect(); ndc.set((cx - r.left)/r.width*2 - 1, -(cy - r.top)/r.height*2 + 1); ray.setFromCamera(ndc, camera);
+  const hit = ray.intersectObjects(CATV.items.map(i => i.h), true)[0]; if (!hit) return null;
+  let o = hit.object; while (o.parent && !CATV.items.some(i => i.h === o)) o = o.parent;
+  return CATV.items.find(i => i.h === o) || null;
+}
+function openCatalog(){
+  if (state.mode === 'stack'){ catFrom.cone = state.cone; catFrom.l = isOpen('l'); catFrom.b = isOpen('b'); catFrom.sel = state.sel; }
+  if (catFrom.cone && state.cone !== catFrom.cone){ state.cone = catFrom.cone; SPACE = CONE[state.cone].space; }
+  closeSheet(); setMenu(false); setRepl(null); state.sheet = false; camFly = null;
+  enterMode('catalog'); setOpen('l', false); setOpen('b', false); $('t-cat').setAttribute('aria-pressed', true); stat('catalog');
+}
+function goHome(){
+  if (state.mode === 'stack') return;
+  sheetUnlocked = false; state.sheet = false;
+  if (catFrom.cone){ state.cone = catFrom.cone; SPACE = CONE[state.cone].space; }
+  enterMode('stack', true); state.sel = catFrom.sel && state.stack.some(x => x.uid === catFrom.sel) ? catFrom.sel : null; renderStack();
+  setOpen('l', catFrom.l); setOpen('b', catFrom.b); $('t-cat').setAttribute('aria-pressed', false); flyHome();
+}
+/* product sheet: the wheel alone in 3D, every datum in the left panel, blurred until the code is typed */
+let sheetUnlocked = false, kpBuf = '';
+const SHEET_CODE = '0000';
+function openWheelSheet(type, coneId){
+  if (state.cone !== coneId){ state.cone = coneId; SPACE = CONE[coneId].space; }
+  state.single = type; state.sheet = true; setTool('explode', false); setTool('section', false); enterMode('single'); setOpen('l', true); flyHome(); stat('sheet:' + type);
+}
+function ctrlSvg(type){   // the "Controllo dimensionale" tag that travels with every wheel, redrawn from the catalogue data
+  const U = T(), w = WHEELS[type], o = outlineOf(w), t = w.t, Rmax = Math.max(...o.map(p => p[0]));
+  const band = 34, Rlo = Rmax - band, rim = o.filter(p => p[0] > Rlo + .01), Rbody = Math.min(...rim.map(p => p[0]));
+  const S = 5, X0 = 70, Y0 = 96, px = y => X0 + y * S, py = r => Y0 + (Rmax - r) * S;   // t runs left→right, radius runs top→bottom
+  const prof = o.map(p => [Math.max(Rlo, p[0]), p[1]]);
+  const poly = [[Rlo, 0], ...prof.filter(p => p[0] > Rlo), [Rlo, t]].map(p => `${px(p[1]).toFixed(1)},${py(p[0]).toFixed(1)}`).join(' ');
+  const W = X0 + t * S + 170, H = Y0 + band * S + 70;
+  const grooveX = px(t/2), hasG = !!w.prof;
+  const mono = 'font-family:var(--f-mono);fill:#1b1b1b', f2 = v => v.toFixed(2).replace('.', ',');
+  const arrow = (x1, y1, x2, y2) => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#1b1b1b" stroke-width="1"/>`;
+  const hash = [...(w.code || type)].reduce((a, c) => (a * 31 + c.charCodeAt(0)) >>> 0, 7);
+  const dm = (x, y) => { let r = hash, out = ''; for (let i = 0; i < 8; i++) for (let j = 0; j < 8; j++){ r = (r * 1103515245 + 12345) >>> 0; if ((r >> 16) & 1 || i === 7 || j === 0) out += `<rect x="${x + j*3}" y="${y + i*3}" width="3" height="3" fill="#1b1b1b"/>`; } return out; };
+  const check = (x, y, txt) => `<rect x="${x}" y="${y - 9}" width="12" height="12" fill="none" stroke="#1b1b1b" stroke-width="1"/><path d="M${x + 2.5} ${y - 3} l3 3 l5 -7" fill="none" stroke="#1b1b1b" stroke-width="1.6"/><text x="${x + 20}" y="${y + 1}" style="${mono};font-size:11px">${txt}</text>`;
+  return `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="background:#f6f3ea">
+    <defs><pattern id="hz" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="7" stroke="#2a2a2a" stroke-width="1"/></pattern></defs>
+    <text x="14" y="24" style="${mono};font-size:12px;letter-spacing:.12em">${U.ctrl.toUpperCase()}</text>${dm(W - 40, 10)}
+    <polygon points="${poly}" fill="url(#hz)" stroke="#1b1b1b" stroke-width="1.2" stroke-linejoin="round"/>
+    ${arrow(px(0), Y0 - 40, px(t), Y0 - 40)}<path d="M${px(0)} ${Y0 - 40} l6 -3 v6z M${px(t)} ${Y0 - 40} l-6 -3 v6z" fill="#1b1b1b"/><line x1="${px(0)}" y1="${Y0 - 46}" x2="${px(0)}" y2="${Y0 - 6}" stroke="#1b1b1b" stroke-width=".7"/><line x1="${px(t)}" y1="${Y0 - 46}" x2="${px(t)}" y2="${Y0 - 6}" stroke="#1b1b1b" stroke-width=".7"/>
+    <text x="${px(t/2)}" y="${Y0 - 45}" text-anchor="middle" style="${mono};font-size:12px">${f2(t)}</text>
+    ${hasG ? `${arrow(px(0), Y0 - 18, grooveX, Y0 - 18)}<path d="M${px(0)} ${Y0 - 18} l6 -3 v6z M${grooveX} ${Y0 - 18} l-6 -3 v6z" fill="#1b1b1b"/><text x="${(px(0) + grooveX)/2}" y="${Y0 - 22}" text-anchor="middle" style="${mono};font-size:11px">${f2(t/2)}</text><line x1="${grooveX}" y1="${Y0 - 16}" x2="${grooveX}" y2="${py(Rbody) + 10}" stroke="#1b1b1b" stroke-width=".6" stroke-dasharray="4 2"/>` : ''}
+    ${arrow(px(t) + 22, py(Rmax), px(t) + 22, py(Rbody))}<path d="M${px(t) + 22} ${py(Rmax)} l-3 6 h6z M${px(t) + 22} ${py(Rbody)} l-3 -6 h6z" fill="#1b1b1b"/>
+    <line x1="${px(t) + 4}" y1="${py(Rmax)}" x2="${px(t) + 60}" y2="${py(Rmax)}" stroke="#1b1b1b" stroke-width=".7"/><line x1="${px(t) + 4}" y1="${py(Rbody)}" x2="${px(t) + 60}" y2="${py(Rbody)}" stroke="#1b1b1b" stroke-width=".7"/>
+    <text x="${px(t) + 64}" y="${py(Rmax) + 4}" style="${mono};font-size:12px">Ø ${f2(2*Rmax)}</text><text x="${px(t) + 64}" y="${py(Rbody) + 12}" style="${mono};font-size:12px">Ø ${f2(2*Rbody)}</text>
+    ${check(14, H - 34, U.balance)}${check(14, H - 14, U.stamp)}
+    <text x="${W - 14}" y="${H - 14}" text-anchor="end" style="${mono};font-size:14px;font-weight:700">${w.code || type}</text>${dm(W - 40, H - 62)}
+  </svg>`;
+}
+function renderSheet(){
+  const U = T(), k = state.single, w = WHEELS[k], c = cone(), fam = famOfType(k), ver = verOfType(k);
+  const name = w.only === '100' ? (U.wn && U.wn[k] ? U.wn[k] : code(k)) : code(k);
+  const rows = [[U.sp.d, `Ø ${w.kind === 'spacer' ? c.bore*2 + 12 : c.R*2} mm`], [U.sp.t, `${tOf(k)} mm`], [U.sp.b, `Ø ${c.bore*2} mm`]];
+  if (w.prof === 'v') rows.push([U.sp.prof, U.gola(w.d)]); else if (w.prof) rows.push([U.sp.prof, w.code || k]);
+  if (w.kind === 'settori') rows.push([U.sp.fix, U.fix]);
+  rows.push([U.fitsOn, state.cone === '100' ? CONE['100'].tech : `${CONE['200'].tech} · ${CONE['150'].tech}`]);
+  rows.push([U.codeLbl, w.code || k]);
+  const tag = (w.kind === 'spacer' || w.kind === 'polish') ? '' : `<div class="sh-eye">${U.ctrl}</div><div class="ctrl">${ctrlSvg(k)}</div>`;
+  $('sh-in').innerHTML = `<div class="keep"><div class="sh-eye">${U.fam[fam.id]}${U.ver[ver] ? ' · ' + U.ver[ver] : ''}</div><h1>${name}<small>${U.kind[w.kind]} · Ø${c.R*2}</small></h1></div>
+    <div class="lockable"><div class="sh-draw">${profileSvg(k)}</div><dl class="specs">${rows.map(([a, b]) => `<dt>${a}</dt><dd>${b}</dd>`).join('')}</dl>${tag}</div>`;
+  $('p-sheet').classList.toggle('locked', !sheetUnlocked); $('kp').hidden = sheetUnlocked; kpBuf = ''; kpDots();
+}
+function kpDots(){ [...$('kp-dots').children].forEach((d, i) => d.classList.toggle('on', i < kpBuf.length)); }
+$('kp').addEventListener('click', e => {
+  const b = e.target.closest('[data-d]'); if (!b) return; const d = b.dataset.d;
+  if (d === 'bs') kpBuf = kpBuf.slice(0, -1); else if (kpBuf.length < 4) kpBuf += d;
+  kpDots();
+  if (kpBuf.length === 4){ if (kpBuf === SHEET_CODE){ sheetUnlocked = true; stat('unlock'); $('p-sheet').classList.remove('locked'); $('kp').hidden = true; }
+    else { const dots = $('kp-dots'); dots.classList.add('err'); toast(T().wrongCode); setTimeout(() => { dots.classList.remove('err'); kpBuf = ''; kpDots(); }, 420); } }
+});
+$('kp').addEventListener('pointerdown', e => e.stopPropagation());
 let lastTap = 0;
 /* the puck: three big buttons that float beside the selected wheel (up / down / remove) */
 const puck = $('wact'), puckV = new THREE.Vector3(), puckR = new THREE.Vector3();
@@ -1543,6 +1739,7 @@ const lay = {x:0, y:0, z:1, tx:0, ty:0, tz:1}; window.__lay = lay;
 function layoutTargets(){
   const w = innerWidth, h = innerHeight, L = app.classList.contains('open-l'), B = app.classList.contains('open-b');
   if (SHOW.on){ lay.tx = wide() ? -w*.13 : 0; lay.ty = wide() ? 30 : -h*.1; lay.tz = 1; return; }   // CTA sits at the bottom centre
+  if (state.mode === 'catalog'){ lay.tx = 0; lay.ty = 0; lay.tz = 1; return; }
   const E = state.explode && state.mode === 'stack';   // exploded: taller and labelled on the right, so sit it lower and nearer the centre, away from the top-right tools
   if (wide()){ lay.tx = (L ? -150 : 0) + (E ? 95 : 0); lay.ty = (B ? (dockH + 18 - 56) / 2 - 10 : -36) + (state.section ? 48 : 0); lay.tz = 1; }   // centre of the free band: panel 300 px left, labels 190 px right, strip 196 px / pill 56 px bottom, bar 76 px top
   else { lay.tx = 0; lay.ty = -h*.08 + (L ? h*.14 : 0) + (B ? -h*.02 : 0); lay.tz = 1 + (L ? .3 : 0) + (B ? .18 : 0); }
@@ -1635,7 +1832,7 @@ function startShow(auto){
   SHOW.saved = state.stack.map(({type, locked}) => ({type, locked})); SHOW.savedCone = state.cone; SHOW.savedLang = state.lang;
   const others = LANGS.filter(l => l !== 'en'); for (let i = others.length - 1; i > 0; i--){ const j = Math.random() * (i + 1) | 0; [others[i], others[j]] = [others[j], others[i]]; }
   SHOW.langs = ['en', ...others]; SHOW.li = 0; tiltT = 0; tiltV = 0; SHOW.turn0 = null;   // English first, then every other language in random order
-  closeSheet(); setMenu(false); if (state.mode !== 'stack') enterMode('stack', true);
+  closeSheet(); setMenu(false); if (state.mode !== 'stack'){ if (catFrom.cone){ state.cone = catFrom.cone; SPACE = CONE[state.cone].space; } state.sheet = false; sheetUnlocked = false; $('t-cat').setAttribute('aria-pressed', false); enterMode('stack', true); SHOW.savedCone = state.cone; }
   setTool('explode', false); setTool('section', false); setTool('spin', false); camFly = null;
   for (const [uid, o] of W){ spin.remove(o.g); disposeTree(o.g); W.delete(uid); } state.stack = []; syncStack(true);
   const sp = new THREE.Spherical().setFromVector3(camera.position); SHOW.theta = sp.theta;
@@ -1743,7 +1940,8 @@ function frameInner(now){
     if (pick && pick.on && dropSlot >= 0 && !pick.repl){ let hy = 0; for (let i = n - 1; i >= dropSlot; i--) hy += WHEELS[state.stack[i].type].t; halo.visible = true; halo.position.y = hy; halo.material.opacity = .9; }
     else { halo.visible = !!so; if (so){ halo.position.y = so.g.position.y + tOf(so.type)/2; halo.material.opacity = .55 + .35*Math.sin(now/260); } }
     placePuck(so);
-  } else { placePuck(null); yMin = 0; yMax = tOf(state.single); if (single) single.position.y = 0;
+  } else if (state.mode === 'catalog'){ placePuck(null); yMin = yMax = 0; }
+  else { placePuck(null); yMin = 0; yMax = tOf(state.single); if (single) single.position.y = 0;
     if (gal){ gal.t += dt; const u = Math.min(1, gal.t / gal.dur), e = u < .5 ? 4*u*u*u : 1 - Math.pow(-2*u + 2, 3)/2;   // ease in-out
       gal.neu.position.x = gal.dir * gal.D * (1 - e); gal.neu.scale.setScalar((gal.D ? .7 : .92) + ((gal.D ? .3 : .08)) * e); gal.neu.rotation.y = gal.dir * .9 * (1 - e);
       gal.old.position.x = -gal.dir * gal.D * e; gal.old.scale.setScalar(1 - (gal.D ? .4 : .08) * e); gal.old.rotation.y = -gal.dir * .9 * e; gal.old.position.y = gal.D ? -40 * e : 0;
@@ -1752,23 +1950,25 @@ function frameInner(now){
   spin.position.y = -viewC; root.rotation.z = tiltV * PI/2;   // root tilts about the model centre (show: horizontal arbor)
   viewR = Math.hypot(cone().R, (yMax - yMin)/2) * MM; viewHH = (yMax - yMin)/2 * MM;
   shadow.position.y = (yMin - viewC) * MM - .02;
-  shadow.scale.setScalar(viewR * 2.6); shadow.material.opacity = (1 - sec) * (1 - tiltV);
+  shadow.scale.setScalar(viewR * 2.6); shadow.material.opacity = (1 - sec) * (1 - tiltV) * (state.mode === 'catalog' ? 0 : 1);
 
   nrm.set(-camera.position.x, 0, -camera.position.z); if (nrm.lengthSq() < 1e-6) nrm.set(0,0,-1); nrm.normalize();
   sectionPlane.normal.copy(nrm); sectionPlane.constant = (1 - ease(sec)) * viewR * 1.6 + .0005;
 
-  if (camFly && !SHOW.on){
+  if (state.mode === 'catalog') catFrame(dt);
+  if (camFly && !SHOW.on && state.mode !== 'catalog'){
     camFly.to.copy(camFly.dir).multiplyScalar(fitDist());
     camFly.t += dt / camFly.dur; const t = ease(Math.min(1, camFly.t));
     camera.position.lerpVectors(camFly.from, camFly.to, t); controls.target.copy(camFly.tFrom).multiplyScalar(1 - t);
     if (camFly.t >= 1) camFly = null;
   }
   applyLayout(dt); if (DRAW.value) faceInk();
-  if (!camFly && !SHOW.on && !orbiting && !drag3d && !pick){ const cur = camera.position.distanceTo(controls.target), want = fitDist() * zoomRatio;
+  if (!camFly && !SHOW.on && !orbiting && !drag3d && !pick && state.mode !== 'catalog'){ const cur = camera.position.distanceTo(controls.target), want = fitDist() * zoomRatio;
     if (Math.abs(want - cur) > cur * .002){ const nd = cur + (want - cur) * (1 - Math.pow(.02, dt)); camera.position.sub(controls.target).multiplyScalar(nd / cur).add(controls.target); } }
   controls.minDistance = viewR * 1.2; controls.maxDistance = viewR * 8;
-  if (!SHOW.on) controls.update();
+  if (!SHOW.on && state.mode !== 'catalog') controls.update();
   renderer.render(scene, camera);
+  if (state.mode === 'catalog') placeCatLabels();
 
   if (labels.length){
     const w = innerWidth, h = innerHeight, show = ex > .6 && !state.section, tags = !state.section && !SHOW.on && !app.classList.contains('open-l') && state.mode === 'stack' && !pick && !repl;
@@ -1851,11 +2051,11 @@ function openSingle(k){
 function galleryTo(k, dir){ if (k === state.single || state.mode !== 'single') return; swapSingle(k, dir, cone().R * 3.2, .85); }
 function galFams(){ return CAT.families.filter(f => !f.only || f.only === state.cone); }
 function famPick(f){ const ver = famVer(f), list = f.versions[ver].filter(k => !WHEELS[k].only || WHEELS[k].only === state.cone); const last = FAM.size && FAM.size[f.id]; return list.includes(last) ? last : list[0]; }
-function galleryStep(dir){ const fs = galFams(), i = fs.findIndex(f => f.id === famOfType(state.single).id), n = fs.length; galleryTo(famPick(fs[(i + dir + n) % n]), dir); }
+function galleryStep(dir){ if (state.sheet) return; const fs = galFams(), i = fs.findIndex(f => f.id === famOfType(state.single).id), n = fs.length; galleryTo(famPick(fs[(i + dir + n) % n]), dir); }
 function galleryBack(){ if (state.mode !== 'single') return; const f = galleryFrom || {l:false, b:true}; enterMode('stack', true); state.sel = f.sel && state.stack.some(x => x.uid === f.sel) ? f.sel : null; renderStack(); setOpen('l', f.l); setOpen('b', f.b); flyHome(); }
-$('b-back').onclick = galleryBack; $('garr-l').onclick = () => galleryStep(-1); $('garr-r').onclick = () => galleryStep(1);
+$('b-back').onclick = () => { if (state.sheet) openCatalog(); else galleryBack(); }; $('garr-l').onclick = () => galleryStep(-1); $('garr-r').onclick = () => galleryStep(1);
 let flick = null;
-canvas.addEventListener('pointerdown', e => { flick = state.mode === 'single' && e.isPrimary ? {x:e.clientX, y:e.clientY, t:performance.now()} : null; }, {passive:true});
+canvas.addEventListener('pointerdown', e => { flick = state.mode === 'single' && !state.sheet && e.isPrimary ? {x:e.clientX, y:e.clientY, t:performance.now()} : null; }, {passive:true});
 canvas.addEventListener('pointerup', e => { if (!flick || state.mode !== 'single') return; const dx = e.clientX - flick.x, dy = e.clientY - flick.y, dt = performance.now() - flick.t; flick = null; if (dt < 450 && Math.abs(dx) > 70 && Math.abs(dy) < Math.abs(dx) * .6) galleryStep(dx < 0 ? 1 : -1); }, {passive:true});
 document.querySelectorAll('.card[data-k]').forEach(c => c.onclick = () => {
   if (cardBlock){ cardBlock = false; return; }
